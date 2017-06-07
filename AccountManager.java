@@ -11,12 +11,14 @@ public class AccountManager {
 
 	public void createAccount(String name, String surname, String username, String password, String confirmpass){
 		if (isValidUser(username) && isValidPass(password) && confirmPass(password, confirmpass)){
-			Account e = new Account(name, surname, username, password);
-			AccountList.add(e);
+			Database acc = new Database();
+			acc.addAccount(name, surname, username, password);
 		}else{
 			System.out.println("Can't create new user.");
 		}
 	}
+	
+	
 	
 	public boolean isValidUser(String username){
 		// return true if username can use.
@@ -51,12 +53,7 @@ public class AccountManager {
 	}
 	
 	private boolean isUsenameTaken(String username){
-		for(Account e: AccountList){
-			if(e.getUsername().equals(username)){
-				return true;
-			}
-		}
-		return false;
+		//
 	}
 	
 	public boolean isValidPass(String password){
@@ -98,5 +95,14 @@ public class AccountManager {
 	public String toString() {
 		return "AccountManager [AccountList=" + AccountList + "]";
 	}
-	
+		
+}
+
+class Main{
+    public static void main(String[] args){
+    	AccountManager x = new AccountManager();
+    	Database y = new Database();
+    	
+    	
+    }
 }
