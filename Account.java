@@ -53,15 +53,3 @@ public class Account {
 	}
 
 }
-
-class Main{
-    public static void main(String[] args){
-    	ArrayList<Account> a = new ArrayList<Account>();
-    	Account x = new Account("Araya","12345");
-    	Account y = new Account("QWERTY","2468");
-    	a.add(x);
-    	a.add(y);
-    	System.out.println(a.toString());
-        
-    }
-}
