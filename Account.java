@@ -1,7 +1,7 @@
 
 import java.sql.*;
 
-public class AccountDB {
+public class Account {
 	Connection connect = null;
 	Statement statement = null;
 
@@ -72,16 +72,17 @@ public class AccountDB {
 	public void deleteAccount(String username){
 		if (this.isUsenameIn(username)){
 			this.deleteFromUsername(username);
-			System.out.println("Delete "+username+" Successfully.")
+			System.out.println("Delete "+username+" Successfully.");
+		}else{
+			System.out.println(username+" :not in Database.");
 		}
-		System.out.println(username+" :not in Database.");
 	}
 	
 	public void deleteFromUsername(String username){
 		this.connect();
 		 try {
 		      this.statement = this.connect.createStatement();
-		      String sql = String.format("DELETE FROM Account WHERE name = %s", username);
+		      String sql = String.format("DELETE FROM Account WHERE username = '%s'", username);
 		      this.statement.executeUpdate(sql);
 		   }catch(SQLException se){
 		      se.printStackTrace();

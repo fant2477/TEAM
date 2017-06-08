@@ -1,9 +1,7 @@
-import java.util.*;
-
 
 public class AccountValidaiton {
 	
-	AccountDB acc = new AccountDB();
+	Account acc = new Account();
 	public AccountValidaiton() {}
 	
 	// User name Text Box
@@ -90,12 +88,4 @@ public class AccountValidaiton {
 		}
 		return null;
 	}
-}
-
-class Main{
-    public static void main(String[] args){
-    	AccountDB x = new AccountDB();
-    	AccountValidaiton y = new AccountValidaiton();
-    	x.createNewAccount("Araya", "Siriadun", "khonfuu", "12345678", "12345678");
-    }
 }
