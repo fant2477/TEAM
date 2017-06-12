@@ -1,7 +1,9 @@
+import java.sql.ResultSet;
+
 public class AccountValidaiton {
 
 	Account acc = new Account();
-	
+
 	// Name and surname Text Box
 	public static String validName(String name) {
 		// Valid of name and surname
@@ -19,7 +21,7 @@ public class AccountValidaiton {
 	}
 
 	// User name Text Box
-	public String validUsername(String username) {
+	public static String validUsername(String username) {
 		// You can use letter, numbers and full stops."
 
 		if (username.isEmpty()) {
@@ -36,20 +38,36 @@ public class AccountValidaiton {
 			return "Please use only letters (a-z, A-Z), numbers and full stops.";
 		}
 
-		if (this.isUsenameTaken(username)) {
+		if (AccountValidaiton.isUsenameTaken(username)) {
 			return "That username is taken. Try another.";
 		}
 
 		return "OK";
 	}
 
-	boolean isUsenameTaken(String username) {
-		return acc.isUsenameIn(username);
+	public static boolean isUsenameTaken(String username) {
+		ConnectionDB.connect();
+		try {
+			String sql = String.format(
+					"SELECT username FROM Account WHERE username = '%s'",
+					username);
+			ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+			if (rs.next()) {
+				rs.close();
+				ConnectionDB.disconnect();
+				return true;
+			}
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ConnectionDB.disconnect();
+		return false;
 	}
 
-	public boolean isValidUser(String username) {
+	public static boolean isValidUser(String username) {
 		// return true if user name can use.
-		return this.validUsername(username).equals("OK");
+		return AccountValidaiton.validUsername(username).equals("OK");
 	}
 
 	// Password Text Box
@@ -79,18 +97,18 @@ public class AccountValidaiton {
 		return password.equals(confirmpass);
 	}
 
-	// Confirm username in Login state
+	// Confirm user name in Login state
 	public String validUserLogin(String username) {
-		if (!this.isUsenameTaken(username)) {
+		if (!AccountValidaiton.isUsenameTaken(username)) {
 			return "Counld't find your account.";
 		}
 		return "OK";
 	}
 
 	public String validLogin(String username, String password) {
-		// Cofirm to login.
+		// Confirm to login.
 		if (this.validUserLogin(username) == "OK"
-				&& !acc.isLogin(username, password)) {
+				&& !Account.validLogin(username, password)) {
 			return "Wrong password. Try agian.";
 		} else {
 			return "OK";

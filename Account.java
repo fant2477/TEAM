@@ -2,126 +2,113 @@ import java.sql.*;
 
 public class Account {
 
-	Connection connect;
-	Statement statement;
-	
-	/*
-	public Connection connect() {
-		try {
-			String server = "jdbc:sqlserver://192.168.1.249;databaseName=STUDENT;user=sa;password=Team*2017";
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			connect = DriverManager.getConnection(server);
-			if (connect != null) {
-				System.out.println("Database Connected.");
-			} else {
-				System.out.println("Database Connect Failed.");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return connect;
-	}
-
-	public void disconnect() {
-		try {
-			connect.close();
-			System.out.println("Database Disconnected.");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	} */
-
 	public void createNewAccount(String name, String surname, String username,
 			String password, String confirmpass) {
-		AccountValidaiton acc = new AccountValidaiton();
-		if (acc.isValidUser(username) && AccountValidaiton.isValidPass(password)
+		if (AccountValidaiton.isValidUser(username)
+				&& AccountValidaiton.isValidPass(password)
 				&& AccountValidaiton.confirmPass(password, confirmpass)) {
-			this.addAccount(name, surname, username, password);
+			this.insertAccount(name, surname, username, password);
 		} else {
 			System.err.println("Can't create new user.");
 		}
 	}
 
-	private void addAccount(String name, String surname, String username,
+	private void insertAccount(String name, String surname, String username,
 			String password) {
-		connect = ConnectionDB.connect();
+		ConnectionDB.connect();
 		try {
-			this.statement = this.connect.createStatement();
 			String sql = String.format(
 					"INSERT INTO ACCOUNT VALUES('%s', '%s', '%s', '%s')", name,
 					surname, username, password);
-			System.out.println(sql);
-			this.statement.executeUpdate(sql);
-			System.out.println("Create new account successfully.");
+			ConnectionDB.statement.executeUpdate(sql);
+			System.out.printf("Create new account: %s successfully.\n",
+					username);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		ConnectionDB.disconnect(connect);
+		ConnectionDB.disconnect();
 	}
 
 	public void deleteAccount(String username) {
-		if (this.isUsenameIn(username)) {
-			this.deleteFromUsername(username);
-			System.out.println("Delete " + username + " Successfully.");
+		if (AccountValidaiton.isUsenameTaken(username)) {
+			ConnectionDB.connect();
+			try {
+				String sql = String.format(
+						"DELETE FROM Account WHERE username = '%s'", username);
+				ConnectionDB.statement.executeUpdate(sql);
+				System.out.printf("Delete account: %s Successfully.\n",
+						username);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			ConnectionDB.disconnect();
 		} else {
-			System.err.println(username + " :not in Database.");
+			System.err.println(username + " is not in Database.");
 		}
 	}
 
-	private void deleteFromUsername(String username) {
-		connect = ConnectionDB.connect();
+	public static boolean validLogin(String username, String password) {
+		ConnectionDB.connect();
 		try {
-			this.statement = this.connect.createStatement();
-			String sql = String.format(
-					"DELETE FROM Account WHERE username = '%s'", username);
-			this.statement.executeUpdate(sql);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		ConnectionDB.disconnect(connect);
-	}
-
-	public boolean isUsenameIn(String username) {
-		connect = ConnectionDB.connect();
-		try {
-			this.statement = this.connect.createStatement();
-			String sql = "SELECT username FROM Account";
-			ResultSet rs = this.statement.executeQuery(sql);
-			while (rs.next()) {
-				if (rs.getString("username").equals(username)) {
+			String sql = "SELECT password " + "FROM Account "
+					+ String.format("WHERE username = '%s'", username);
+			ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+			if (rs.next()) {
+				if (rs.getString("password").equals(password)) {
+					System.out.println("Login correctly");
 					rs.close();
-					ConnectionDB.disconnect(connect);
+					ConnectionDB.disconnect();
 					return true;
 				}
 			}
 			rs.close();
-			ConnectionDB.disconnect(connect);
-			return false;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		ConnectionDB.disconnect();
 		return false;
 	}
 
-	public boolean isLogin(String username, String password) {
-		connect = ConnectionDB.connect();
+	public static void setPassword(String username, String newPass) {
+		ConnectionDB.connect();
 		try {
-			this.statement = this.connect.createStatement();
-			String sql = "SELECT password " + "FROM Account "
-					+ String.format("WHERE username = '%s'", username);
-			ResultSet rs = this.statement.executeQuery(sql);
-			if (rs.getString("password").equals(password)) {
-				System.out.println("Login correctly");
-				rs.close();
-				ConnectionDB.disconnect(connect);
-				return true;
-			}
-			rs.close();
-			ConnectionDB.disconnect(connect);
-			return false;
+			String sql = String.format(
+					"UPDATE Account SET password = '%s' WHERE username = '%s'",
+					newPass, username);
+			ConnectionDB.statement.executeUpdate(sql);
+			System.out.println("Password has changed.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return false;
+		ConnectionDB.disconnect();
 	}
+
+	public static void setName(String username, String newName) {
+		ConnectionDB.connect();
+		try {
+			String sql = String.format(
+					"UPDATE Account SET name = '%s' WHERE username = '%s'",
+					newName, username);
+			ConnectionDB.statement.executeUpdate(sql);
+			System.out.printf("Change to %s\n", newName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ConnectionDB.disconnect();
+	}
+
+	public static void setSurname(String username, String newName) {
+		ConnectionDB.connect();
+		try {
+			String sql = String.format(
+					"UPDATE Account SET surname = '%s' WHERE username = '%s'",
+					newName, username);
+			ConnectionDB.statement.executeUpdate(sql);
+			System.out.printf("Change to %s\n", newName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ConnectionDB.disconnect();
+	}
+
 }

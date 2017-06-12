@@ -1,29 +1,35 @@
 import java.sql.*;
 
 public class ConnectionDB {
-	
-	public static Connection connect() {
-		Connection connect = null;
+	static Connection connect = null;
+	static Statement statement = null;
+	final static String localhost = "192.168.1.249";
+	final static String DatabaseName = "STUDENT";
+	final static String Username = "sa";
+	final static String Password = "Team*2017";
+
+	public static void connect() {
 		try {
-			String server = "jdbc:sqlserver://192.168.1.249;databaseName=STUDENT;user=sa;password=Team*2017";
+			String server = String.format(
+					"jdbc:sqlserver://%s;databaseName=%s;user=%s;password=%s",
+					localhost, DatabaseName, Username, Password);
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			connect = DriverManager.getConnection(server);
 			if (connect != null) {
-				System.out.println("Database Connected.");
-				return connect;
+				// System.out.println("Database Connected.");
 			} else {
-				System.out.println("Database Connect Failed.");
+				System.err.println("Database Connect Failed.");
 			}
+			statement = connect.createStatement();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return connect;
 	}
 
-	public static void disconnect(Connection connect) {
+	public static void disconnect() {
 		try {
 			connect.close();
-			System.out.println("Database Disconnected.");
+			// System.out.println("Database Disconnected.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

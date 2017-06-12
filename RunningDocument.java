@@ -1,13 +1,12 @@
 import java.sql.*;
 import java.io.File;
 import java.util.Calendar;
+import java.util.Date;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class RunningDocument {
 	String currentUser;
-
-	Connection connect;
-	Statement statement;
 
 	int lastestYear = getLastID() / 10000;
 
@@ -15,39 +14,35 @@ public class RunningDocument {
 		this.currentUser = currentUser;
 	}
 
-	public int getCurrentYear() {
+	public static int getCurrentThaiYear() {
 		// return 2 digit of year in <th>
 		return Calendar.getInstance().get(Calendar.YEAR) - 1957;
 	}
 
-	public String getFullCurrentTime() {
-		String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
-				.format(Calendar.getInstance().getTime());
-		return timeStamp;
+	public static String getFullCurrentTime() {
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(
+				new Date()).toString();
 	}
 
 	public int getLastID() {
-		int result = 0;
-		connect = ConnectionDB.connect();
+		int result = getCurrentThaiYear() * 1000;
+		ConnectionDB.connect();
 		try {
-			statement = connect.createStatement();
 			String sql = "SELECT MAX(ID) FROM History";
-			ResultSet rs = this.statement.executeQuery(sql);
-			// int currentValue = rs.getInt("ID");
+			ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+			// currentValue = rs.getInt("ID");
 			if (rs.next()) {
-				result = rs.getInt(1);
-			}
-			if (getCurrentYear() * 1000 > result) {
-				rs.close();
-				return getCurrentYear() * 1000;
+				int max = rs.getInt(1);
+				if (result > max) {
+					return result;
+				} else {
+					return max;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		/*
-		 * if (result % 10000 == 9999) { return -1; } else { return result; }
-		 */
 		return result;
 	}
 
@@ -58,24 +53,23 @@ public class RunningDocument {
 	public void addFile(String DocPath, String detail) {
 		File f = new File(DocPath);
 		if (f.exists()) {
-			connect = ConnectionDB.connect();
+			ConnectionDB.connect();
 			try {
-				this.statement = this.connect.createStatement();
-				String currentTime = this.getFullCurrentTime();
+				String currentTime = RunningDocument.getFullCurrentTime();
 				String sql = String
 						.format("INSERT INTO Document VALUES(%d, '%s', '%s', '%s', '%s', '%s')",
 								getLastID() + 1, f.getName(), currentTime,
 								this.currentUser, DocPath, detail);
-				System.out.println(sql);
-				this.statement.executeUpdate(sql);
-				System.out.println("Added new file Correctly.");
+				ConnectionDB.statement.executeUpdate(sql);
+				System.out.println(String.format("Added %s Correctly.",
+						f.getName()));
 				this.addLog("Added", f.getName(), getLastID() + 1, DocPath,
 						currentTime);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			lastestYear = this.getCurrentYear();
-			ConnectionDB.disconnect(connect);
+			lastestYear = RunningDocument.getCurrentThaiYear();
+			ConnectionDB.disconnect();
 		} else {
 			System.out.println("File doesn't exits.");
 		}
@@ -84,21 +78,19 @@ public class RunningDocument {
 	public void deleteFile(String DocPath) {
 		File f = new File(DocPath);
 		if (f.exists()) {
-			connect = ConnectionDB.connect();
+			ConnectionDB.connect();
 			try {
-				this.statement = this.connect.createStatement();
 				// get ID of file in Database.
 				String sql = String.format(
 						"SELECT ID FROM Document WHERE Path = '%s'", DocPath);
 
-				System.out.println(sql);
-				ResultSet rs = this.statement.executeQuery(sql);
+				ResultSet rs = ConnectionDB.statement.executeQuery(sql);
 				int id = 0;
 				if (rs.next()) {
 					id = rs.getInt("ID");
-					System.out.println("ID: " + id);
+					// System.out.println("ID: " + id);
 				} else {
-					System.out.println("No row.");
+					System.err.println("No row.");
 				}
 
 				rs.close();
@@ -106,16 +98,17 @@ public class RunningDocument {
 				// Delete that file.
 				sql = String.format("DELETE FROM Document WHERE Path = '%s'",
 						DocPath);
-				String currentTime = this.getFullCurrentTime();
-				this.statement.executeUpdate(sql);
-				System.out.println("deleted file Correctly.");
+				String currentTime = RunningDocument.getFullCurrentTime();
+				ConnectionDB.statement.executeUpdate(sql);
+				System.out.println(String.format("Deleted %s Correctly.",
+						f.getName()));
 
 				// Add log
 				this.addLog("Deleted", f.getName(), id, DocPath, currentTime);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			ConnectionDB.disconnect(connect);
+			ConnectionDB.disconnect();
 		} else {
 			System.out.println("File doesn't exits.");
 		}
@@ -123,42 +116,84 @@ public class RunningDocument {
 
 	public void addLog(String status, String filename, int id, String path,
 			String currentTime) {
-		connect = ConnectionDB.connect();
+		ConnectionDB.connect();
 		try {
-			this.statement = this.connect.createStatement();
 			String sql = String
 					.format("INSERT INTO History VALUES('%s', '%s %s by %s', %d, '%s')",
 							currentTime, status, filename, currentUser, id,
 							path);
-			this.statement.executeUpdate(sql);
+			ConnectionDB.statement.executeUpdate(sql);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		ConnectionDB.disconnect(connect);
+		ConnectionDB.disconnect();
 	}
 
-	public void getAllHistory() {
-		connect = ConnectionDB.connect();
+	public static int getMaxLenFilename() {
+		int maxLen = 0;
+		int currentLen;
+		ConnectionDB.connect();
 		try {
-			this.statement = this.connect.createStatement();
-			String sql = String
-					.format("SELECT ID, Description, Time FROM History");
-			ResultSet rs = this.statement.executeQuery(sql);
+			String sql = String.format("SELECT Filename FROM Document");
+			ResultSet rs = ConnectionDB.statement.executeQuery(sql);
 			while (rs.next()) {
-				int id = rs.getInt("ID");
-				String descript = rs.getString("Description");
-				Time t = rs.getTime("Time");
-
-				// Display values
-				System.out.print("ID: " + id);
-				System.out.print(", Descript: " + descript);
-				System.out.println(", Time: " + t);
+				currentLen = rs.getString("Filename").length();
+				if (currentLen > maxLen)
+					;
+				maxLen = currentLen;
 			}
 			rs.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		ConnectionDB.disconnect(connect);
+		ConnectionDB.disconnect();
+		return maxLen;
 	}
-	
+
+	public void getAllHistory() {
+		ConnectionDB.connect();
+		try {
+			String sql = String
+					.format("SELECT ID, Description, Time FROM History ORDER BY Time");
+			ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+			while (rs.next()) {
+				int id = rs.getInt("ID");
+				String descript = rs.getString("Description");
+				Timestamp ts = rs.getTimestamp("Time");
+
+				// Display values
+
+				System.out.println("Time: "
+						+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
+								.format(ts));
+				System.out.print(": " + descript);
+				System.out.println(" ID: " + id);
+
+			}
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ConnectionDB.disconnect();
+	}
+
+	public void changePassword(String oldPass, String newPass) {
+		if (Account.validLogin(currentUser, oldPass)
+				&& AccountValidaiton.isValidPass(newPass)) {
+			Account.setPassword(currentUser, newPass);
+		}
+	}
+
+	public void changeName(String newName) {
+		if (!newName.isEmpty()) {
+			Account.setName(currentUser, newName);
+		}
+	}
+
+	public void changeSurname(String newName) {
+		if (!newName.isEmpty()) {
+			Account.setSurname(currentUser, newName);
+		}
+	}
+
 }

@@ -2,32 +2,16 @@ import java.sql.*;
 
 public class SQLCommand {
 	public static void deleteAllRecord(String table_name) {
-		Connection connect = null;
-		Statement statement = null;
 		try {
-			String server = "jdbc:sqlserver://192.168.1.249;databaseName=STUDENT;user=sa;password=Team*2017";
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			connect = DriverManager.getConnection(server);
-			if (connect != null) {
-				System.out.println("Database Connected.");
-				//this.connect = DriverManager.getConnection(server);
-			} else {
-				System.out.println("Database Connect Failed.");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			// "jdbc:sqlserver://192.168.1.249;databaseName=STUDENT;user=sa;password=Team*2017";
+			ConnectionDB.connect();
 
-		try {
-			statement = connect.createStatement();
+			// Delete record in table
 			String sql = String.format("DELETE FROM %s", table_name);
-			statement.executeUpdate(sql);
+			ConnectionDB.statement.executeUpdate(sql);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			connect.close();
+			// Close connection
+			ConnectionDB.disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
