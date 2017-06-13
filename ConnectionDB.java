@@ -10,14 +10,11 @@ public class ConnectionDB {
 
 	public static void connect() {
 		try {
-			String server = String.format(
-					"jdbc:sqlserver://%s;databaseName=%s;user=%s;password=%s",
-					localhost, DatabaseName, Username, Password);
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			connect = DriverManager.getConnection(server);
-			if (connect != null) {
-				// System.out.println("Database Connected.");
-			} else {
+			connect = DriverManager.getConnection(String.format(
+					"jdbc:sqlserver://%s;databaseName=%s;user=%s;password=%s",
+					localhost, DatabaseName, Username, Password));
+			if (connect == null) {
 				System.err.println("Database Connect Failed.");
 			}
 			statement = connect.createStatement();
@@ -29,7 +26,7 @@ public class ConnectionDB {
 	public static void disconnect() {
 		try {
 			connect.close();
-			// System.out.println("Database Disconnected.");
+			statement.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

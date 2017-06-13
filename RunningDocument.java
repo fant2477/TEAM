@@ -1,14 +1,15 @@
 import java.sql.*;
+import java.text.*;
 import java.io.File;
-import java.util.Calendar;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class RunningDocument {
 	String currentUser;
-
-	int lastestYear = getLastID() / 10000;
 
 	public RunningDocument(String currentUser) {
 		this.currentUser = currentUser;
@@ -16,7 +17,7 @@ public class RunningDocument {
 
 	public static int getCurrentThaiYear() {
 		// return 2 digit of year in <th>
-		return Calendar.getInstance().get(Calendar.YEAR) - 1957;
+		return (Calendar.getInstance().get(Calendar.YEAR) + 543) % 100;
 	}
 
 	public static String getFullCurrentTime() {
@@ -25,33 +26,39 @@ public class RunningDocument {
 	}
 
 	public int getLastID() {
-		int result = getCurrentThaiYear() * 1000;
+		int currentYear = getCurrentThaiYear();
+		int maxLastID = 0;
 		ConnectionDB.connect();
 		try {
 			String sql = "SELECT MAX(ID) FROM History";
 			ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-			// currentValue = rs.getInt("ID");
 			if (rs.next()) {
-				int max = rs.getInt(1);
-				if (result > max) {
-					return result;
+				maxLastID = rs.getInt(1);
+				if (currentYear != maxLastID / 1000) {
+					return currentYear * 1000;
 				} else {
-					return max;
+					return maxLastID;
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return result;
+		return 0;
 	}
 
-	public void addFile(String DocPath) {
-		addFile(DocPath, "");
+	public void addFile(String FilePath) {
+		addFile(FilePath, "");
 	}
 
-	public void addFile(String DocPath, String detail) {
-		File f = new File(DocPath);
+	public void addFile(String FilePath, String detail) {
+		PreparedStatement pstmt;
+		File f = new File(FilePath);
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(f);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
 		if (f.exists()) {
 			ConnectionDB.connect();
 			try {
@@ -59,62 +66,92 @@ public class RunningDocument {
 				String sql = String
 						.format("INSERT INTO Document VALUES(%d, '%s', '%s', '%s', '%s', '%s')",
 								getLastID() + 1, f.getName(), currentTime,
-								this.currentUser, DocPath, detail);
+								this.currentUser, FilePath, detail);
 				ConnectionDB.statement.executeUpdate(sql);
 				System.out.println(String.format("Added %s Correctly.",
 						f.getName()));
-				this.addLog("Added", f.getName(), getLastID() + 1, DocPath,
+
+				// Add Data of file to DataBase.
+				sql = ("INSERT INTO DataFile VALUES(?,?,?,?)");
+				pstmt = ConnectionDB.connect.prepareStatement(sql);
+				pstmt.setInt(1, getLastID() + 1);
+				pstmt.setString(2, f.getName());
+				pstmt.setInt(3, (int) f.length());
+				pstmt.setBinaryStream(4, fis, (int) f.length());
+				pstmt.executeUpdate();
+				pstmt.close();
+
+				// Add log
+				this.addLog("Added", f.getName(), getLastID() + 1, FilePath,
 						currentTime);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			lastestYear = RunningDocument.getCurrentThaiYear();
 			ConnectionDB.disconnect();
 		} else {
-			System.out.println("File doesn't exits.");
+			System.err.println("File doesn't exits.");
 		}
 	}
 
-	public void deleteFile(String DocPath) {
-		File f = new File(DocPath);
-		if (f.exists()) {
-			ConnectionDB.connect();
-			try {
-				// get ID of file in Database.
-				String sql = String.format(
-						"SELECT ID FROM Document WHERE Path = '%s'", DocPath);
-
-				ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-				int id = 0;
-				if (rs.next()) {
-					id = rs.getInt("ID");
-					// System.out.println("ID: " + id);
-				} else {
-					System.err.println("No row.");
-				}
-
+	public void deleteFile(int id) {
+		ConnectionDB.connect();
+		try {
+			String sql = String.format("SELECT * FROM Document WHERE ID = %d",
+					id);
+			ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+			String name = "";
+			String path = "";
+			if (rs.next()) {
+				name = rs.getString("Filename");
+				path = rs.getString("Path");
 				rs.close();
-
-				// Delete that file.
-				sql = String.format("DELETE FROM Document WHERE Path = '%s'",
-						DocPath);
-				String currentTime = RunningDocument.getFullCurrentTime();
-				ConnectionDB.statement.executeUpdate(sql);
-				System.out.println(String.format("Deleted %s Correctly.",
-						f.getName()));
-
-				// Add log
-				this.addLog("Deleted", f.getName(), id, DocPath, currentTime);
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+			// Delete that file.
+			sql = String.format("DELETE FROM Document WHERE ID = %d", id);
+			String currentTime = RunningDocument.getFullCurrentTime();
+			ConnectionDB.statement.executeUpdate(sql);
+			System.out.println(String.format("Deleted %s Correctly.", name));
+
+			// Delete from Data file
+			sql = String.format("DELETE FROM Datafile WHERE ID = %d", id);
+			ConnectionDB.statement.executeUpdate(sql);
+
+			// Add log
+			this.addLog("Deleted", name, id, path, currentTime);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ConnectionDB.disconnect();
+	}
+
+	public void getFile(int id, String targetPath) {
+		byte[] fileBytes;
+		String query;
+		try {
+			ConnectionDB.connect();
+			query = String.format("select * from DataFile where ID = %d", id);
+			Statement state = ConnectionDB.connect.createStatement();
+			ResultSet rs = state.executeQuery(query);
+			if (rs.next()) {
+				fileBytes = rs.getBytes("data");
+				String name = rs.getString("filename");
+
+				OutputStream targetFile = new FileOutputStream(targetPath + id
+						+ name);
+				rs.close();
+				targetFile.write(fileBytes);
+				targetFile.close();
+				System.out.println("file closed.");
+			}
+			System.out.println("get finished.");
 			ConnectionDB.disconnect();
-		} else {
-			System.out.println("File doesn't exits.");
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	public void addLog(String status, String filename, int id, String path,
+	private void addLog(String status, String filename, int id, String path,
 			String currentTime) {
 		ConnectionDB.connect();
 		try {
@@ -138,9 +175,9 @@ public class RunningDocument {
 			ResultSet rs = ConnectionDB.statement.executeQuery(sql);
 			while (rs.next()) {
 				currentLen = rs.getString("Filename").length();
-				if (currentLen > maxLen)
-					;
-				maxLen = currentLen;
+				if (currentLen > maxLen) {
+					maxLen = currentLen;
+				}
 			}
 			rs.close();
 		} catch (Exception e) {
