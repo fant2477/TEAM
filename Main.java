@@ -24,7 +24,7 @@ class Main {
 
 		// "C:\\Users\\plait\\Desktop\\Fintech.docx"
 
-		/*
+		
 		SQLCommand.deleteAllRecord("History");
 		SQLCommand.deleteAllRecord("Document");
 		SQLCommand.deleteAllRecord("DataFile");
@@ -33,16 +33,14 @@ class Main {
 		x.addFile("C:\\Users\\plait\\Desktop\\Fintech.docx");
 		x.addFile("C:\\Users\\plait\\Desktop\\Fintech2.docx","This is detail");
 		x.addFile("C:\\Users\\plait\\Desktop\\Fintech3.docx");
-		x.deleteFile(60002);
+		x.deleteFile(600002);
 		x.addFile("C:\\Users\\plait\\Desktop\\Fintech.docx","This is detail");
-		x.deleteFile(60003);
+		x.deleteFile(600003);
 		x.addFile("C:\\Users\\plait\\Desktop\\Fintech3.docx");
-		x.getFile(60004, "C:\\Users\\plait\\Downloads\\");
-		x.getAllHistory();  */
+		x.getFile(600004, "C:\\Users\\plait\\Downloads\\");
+		x.getAllHistory(); 
 		
-		SQLCommand.tabletoString("History");
-		
-		
+				
 		//DB db = new DB();
 
 		//db.insertPDF("C:\\Users\\plait\\Desktop\\dc.pdf");

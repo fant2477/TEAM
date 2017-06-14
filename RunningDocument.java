@@ -48,8 +48,8 @@ public class RunningDocument {
 			ResultSet rs = ConnectionDB.statement.executeQuery(sql);
 			if (rs.next()) {
 				maxLastID = rs.getInt(1);
-				if (currentYear != maxLastID / 1000) {
-					return currentYear * 1000;
+				if (currentYear != maxLastID / 10000) {
+					return currentYear * 10000;
 				} else {
 					return maxLastID;
 				}
