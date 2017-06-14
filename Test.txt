@@ -1,0 +1,7 @@
+final Date currentTime = new Date();
+
+final SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a z");
+
+// Give it to me in GMT time.
+sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+System.out.println("GMT time: " + sdf.format(currentTime));
