@@ -5,14 +5,20 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.List;
 
 public class RunningDocument {
 	String currentUser;
 
 	public RunningDocument(String currentUser) {
 		this.currentUser = currentUser;
+	}
+
+	public String getCurrentUser() {
+		return currentUser;
 	}
 
 	public static int getCurrentThaiYear() {
@@ -23,6 +29,14 @@ public class RunningDocument {
 	public static String getFullCurrentTime() {
 		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(
 				new Date()).toString();
+	}
+
+	public static String toSize(long bytes) {
+		if (bytes < 1024)
+			return bytes + " B";
+		int exp = (int) (Math.log(bytes) / Math.log(1024));
+		char pre = "KMGTPE".charAt(exp - 1);
+		return String.format("%.2f %sB", bytes / Math.pow(1024, exp), pre);
 	}
 
 	public int getLastID() {
@@ -64,8 +78,9 @@ public class RunningDocument {
 			try {
 				String currentTime = RunningDocument.getFullCurrentTime();
 				String sql = String
-						.format("INSERT INTO Document VALUES(%d, '%s', '%s', '%s', '%s', '%s')",
+						.format("INSERT INTO Document VALUES(%d, '%s', '%s','%s', '%s', '%s', '%s')",
 								getLastID() + 1, f.getName(), currentTime,
+								RunningDocument.toSize(f.length()),
 								this.currentUser, FilePath, detail);
 				ConnectionDB.statement.executeUpdate(sql);
 				System.out.println(String.format("Added %s Correctly.",
@@ -76,13 +91,13 @@ public class RunningDocument {
 				pstmt = ConnectionDB.connect.prepareStatement(sql);
 				pstmt.setInt(1, getLastID() + 1);
 				pstmt.setString(2, f.getName());
-				pstmt.setInt(3, (int) f.length());
-				pstmt.setBinaryStream(4, fis, (int) f.length());
+				pstmt.setDouble(3, f.length());
+				pstmt.setBinaryStream(4, fis, f.length());
 				pstmt.executeUpdate();
 				pstmt.close();
 
 				// Add log
-				this.addLog("Added", f.getName(), getLastID() + 1, FilePath,
+				this.addLog("added", f.getName(), getLastID() + 1, FilePath,
 						currentTime);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -117,7 +132,7 @@ public class RunningDocument {
 			ConnectionDB.statement.executeUpdate(sql);
 
 			// Add log
-			this.addLog("Deleted", name, id, path, currentTime);
+			this.addLog("deleted", name, id, path, currentTime);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -129,21 +144,19 @@ public class RunningDocument {
 		String query;
 		try {
 			ConnectionDB.connect();
-			query = String.format("select * from DataFile where ID = %d", id);
+			query = String.format("SELECT * FROM DataFile WHERE ID = %d", id);
 			Statement state = ConnectionDB.connect.createStatement();
 			ResultSet rs = state.executeQuery(query);
 			if (rs.next()) {
-				fileBytes = rs.getBytes("data");
-				String name = rs.getString("filename");
+				fileBytes = rs.getBytes("Data");
+				String name = rs.getString("Filename");
 
 				OutputStream targetFile = new FileOutputStream(targetPath + id
 						+ name);
 				rs.close();
 				targetFile.write(fileBytes);
 				targetFile.close();
-				System.out.println("file closed.");
 			}
-			System.out.println("get finished.");
 			ConnectionDB.disconnect();
 
 		} catch (Exception e) {
@@ -156,8 +169,8 @@ public class RunningDocument {
 		ConnectionDB.connect();
 		try {
 			String sql = String
-					.format("INSERT INTO History VALUES('%s', '%s %s by %s', %d, '%s')",
-							currentTime, status, filename, currentUser, id,
+					.format("INSERT INTO History VALUES('%s', %d, '%s was %s by %s', '%s')",
+							currentTime, id, filename, status, currentUser,
 							path);
 			ConnectionDB.statement.executeUpdate(sql);
 		} catch (Exception e) {
@@ -190,12 +203,11 @@ public class RunningDocument {
 	public void getAllHistory() {
 		ConnectionDB.connect();
 		try {
-			String sql = String
-					.format("SELECT ID, Description, Time FROM History ORDER BY Time");
+			String sql = String.format("SELECT * FROM History ORDER BY Time");
 			ResultSet rs = ConnectionDB.statement.executeQuery(sql);
 			while (rs.next()) {
 				int id = rs.getInt("ID");
-				String descript = rs.getString("Description");
+				String descript = rs.getString("Event");
 				Timestamp ts = rs.getTimestamp("Time");
 
 				// Display values
