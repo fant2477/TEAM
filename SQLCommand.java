@@ -1,4 +1,6 @@
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,14 +9,11 @@ import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 public class SQLCommand {
 	public static void deleteAllRecord(String table_name) {
 		try {
-			// "jdbc:sqlserver://192.168.1.249;databaseName=STUDENT;user=sa;password=Team*2017";
 			ConnectionDB.connect();
 
-			// Delete record in table
 			String sql = String.format("DELETE FROM %s", table_name);
 			ConnectionDB.statement.executeUpdate(sql);
 
-			// Close connection
 			ConnectionDB.disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -42,17 +41,30 @@ public class SQLCommand {
 			e.printStackTrace();
 		}
 		return table;
+	}
 
-		/*
-		 * print result for( String[] row: table ){ for( String s: row ){
-		 * System.out.print( " " + s ); } System.out.println(); }
-		 */
+	public static boolean isTimeStampValid(String inputString) {
+		SimpleDateFormat format = new java.text.SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss.SSS");
+		try {
+			format.parse(inputString);
+			return true;
+		} catch (ParseException e) {
+			return false;
+		}
 	}
 
 	public static void tabletoString(String table_name) {
 		for (String[] row : SQLCommand.getArrayofTable(table_name)) {
 			for (String s : row) {
-				System.out.print(" " + s);
+				if (isTimeStampValid(s)) {
+					System.out.print(" "
+							+ s
+							+ new String(new char[23 - s.length()]).replace(
+									'\0', '0'));
+				} else {
+					System.out.print(" " + s);
+				}
 			}
 			System.out.println();
 		}

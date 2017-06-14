@@ -26,12 +26,14 @@ public class RunningDocument {
 
 	public static int getCurrentThaiYear() {
 		// return 2 digit of year in <th>
-		return (Integer.parseInt(new SimpleDateFormat("yyyy", Locale.getDefault()).format(
-				new Date(System.currentTimeMillis())).toString()) + 543) % 100;
+		return (Integer.parseInt(new SimpleDateFormat("yyyy", Locale
+				.getDefault()).format(new Date(System.currentTimeMillis()))
+				.toString()) + 543) % 100;
 	}
 
 	public static String getFullCurrentTime() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",
+				Locale.getDefault()).format(
 				new Date(System.currentTimeMillis())).toString();
 	}
 
@@ -82,12 +84,12 @@ public class RunningDocument {
 			ConnectionDB.connect();
 			try {
 				// Add Data of file to DataBase.
-				String sql = ("INSERT INTO DataFile VALUES(?,?,?,?)");
+				String sql = ("INSERT INTO DataFile VALUES(?, ?, ?, ?)");
 				pstmt = ConnectionDB.connect.prepareStatement(sql);
 				pstmt.setInt(1, currentID);
 				pstmt.setString(2, f.getName());
 				pstmt.setDouble(3, f.length());
-				pstmt.setBinaryStream(4, fis, f.length());
+				pstmt.setBinaryStream(4, fis);
 				pstmt.executeUpdate();
 				String currentTime = RunningDocument.getFullCurrentTime();
 				pstmt.close();
@@ -127,6 +129,9 @@ public class RunningDocument {
 				name = rs.getString("Filename");
 				path = rs.getString("Path");
 				rs.close();
+			} else {
+				throw new java.lang.Error(String.format(
+						"File ID:%d not found.", id));
 			}
 			// Delete that file.
 			sql = String.format("DELETE FROM Document WHERE ID = %d", id);
