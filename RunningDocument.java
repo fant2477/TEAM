@@ -15,10 +15,9 @@ public class RunningDocument {
 	String currentUser;
 
 	public RunningDocument(String currentUser) {
-		if (!AccountValidaiton.isUsenameTaken(currentUser)) {
-			System.err.println("This username doesn't exist.");
+		if (AccountValidaiton.validUserLogin(currentUser) == "OK") {
+			this.currentUser = currentUser;
 		}
-		this.currentUser = currentUser;
 	}
 
 	public String getCurrentUser() {
@@ -27,7 +26,7 @@ public class RunningDocument {
 
 	public static int getCurrentThaiYear() {
 		// return 2 digit of year in <th>
-		return (Integer.parseInt(new SimpleDateFormat("yyyy").format(
+		return (Integer.parseInt(new SimpleDateFormat("yyyy", Locale.getDefault()).format(
 				new Date(System.currentTimeMillis())).toString()) + 543) % 100;
 	}
 

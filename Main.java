@@ -1,5 +1,7 @@
 import java.util.*;
+import java.util.Date;
 import java.text.*;
+import java.util.TimeZone;
 
 import java.sql.*;
 import java.io.*;
@@ -7,28 +9,20 @@ import java.io.*;
 
 class Main {
 	
-	public static String humanReadableByteCount(long bytes) {
-	    int unit = 1024;
-	    if (bytes < unit) return bytes + " B";
-	    int exp = (int) (Math.log(bytes) / Math.log(unit));
-	    char pre = "KMGTPE".charAt(exp - 1);
-	    String s = String.valueOf(bytes / Math.pow(unit, exp));
-	    s = s.indexOf(".") < 0 ? s : s.replaceAll("0*$", "").replaceAll("\\.$", "");
-	    return String.format("%s %sB", s, pre);
-	}
-	
 	public static void main(String[] args) {
 		RunningDocument x = new RunningDocument("plaitiang");
 		// Account a = new Account();
 		// a.createNewAccount("Araya", "Siriadun", "username1", "1234", "1234");
 
 		// "C:\\Users\\plait\\Desktop\\Fintech.docx"
-
+		//SQLCommand.deleteAllRecord("DataFile");
+		
 		
 		SQLCommand.deleteAllRecord("History");
 		SQLCommand.deleteAllRecord("Document");
 		SQLCommand.deleteAllRecord("DataFile");
 		
+		/*
 		x.addFile("C:\\Users\\plait\\Desktop\\ch1.pdf");
 		x.addFile("C:\\Users\\plait\\Desktop\\Fintech.docx");
 		x.addFile("C:\\Users\\plait\\Desktop\\Fintech2.docx","This is detail");
@@ -37,14 +31,11 @@ class Main {
 		x.addFile("C:\\Users\\plait\\Desktop\\Fintech.docx","This is detail");
 		x.deleteFile(600003);
 		x.addFile("C:\\Users\\plait\\Desktop\\Fintech3.docx");
-		x.getFile(600004, "C:\\Users\\plait\\Downloads\\");
-		x.getAllHistory(); 
+		RunningDocument.getFile(600004, "C:\\Users\\plait\\Downloads\\");
+		SQLCommand.tabletoString("History");
+		*/
 		
-				
-		//DB db = new DB();
-
-		//db.insertPDF("C:\\Users\\plait\\Desktop\\dc.pdf");
-		//db.getPDFData("dc.pdf");
-
+		System.out.println(RunningDocument.getFullCurrentTime());
+		
 	}
 }

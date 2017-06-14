@@ -98,7 +98,7 @@ public class AccountValidaiton {
 	}
 
 	// Confirm user name in Login state
-	public String validUserLogin(String username) {
+	public static String validUserLogin(String username) {
 		if (!AccountValidaiton.isUsenameTaken(username)) {
 			return "Counld't find your account.";
 		}
@@ -107,7 +107,7 @@ public class AccountValidaiton {
 
 	public String validLogin(String username, String password) {
 		// Confirm to login.
-		if (this.validUserLogin(username) == "OK"
+		if (AccountValidaiton.validUserLogin(username) == "OK"
 				&& !Account.validLogin(username, password)) {
 			return "Wrong password. Try agian.";
 		} else {
