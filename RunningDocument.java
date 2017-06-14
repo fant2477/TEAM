@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class RunningDocument {
 	String currentUser;
@@ -31,7 +32,7 @@ public class RunningDocument {
 	}
 
 	public static String getFullCurrentTime() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(
 				new Date(System.currentTimeMillis())).toString();
 	}
 
