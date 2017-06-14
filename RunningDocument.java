@@ -26,12 +26,13 @@ public class RunningDocument {
 
 	public static int getCurrentThaiYear() {
 		// return 2 digit of year in <th>
-		return (Calendar.getInstance().get(Calendar.YEAR) + 543) % 100;
+		return (Integer.parseInt(new SimpleDateFormat("yyyy").format(
+				new Date(System.currentTimeMillis())).toString()) + 543) % 100;
 	}
 
 	public static String getFullCurrentTime() {
 		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(
-				new Date()).toString();
+				new Date(System.currentTimeMillis())).toString();
 	}
 
 	public static String toSize(long bytes) {
