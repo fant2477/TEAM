@@ -43,15 +43,16 @@ public class Account {
 			}
 			ConnectionDB.disconnect();
 		} else {
-			System.err.println(username + " is not in Database.");
+			System.err.println(username + " is not found.");
 		}
 	}
 
 	public static boolean validLogin(String username, String password) {
 		ConnectionDB.connect();
 		try {
-			String sql = "SELECT password " + "FROM Account "
-					+ String.format("WHERE username = '%s'", username);
+			String sql = String.format(
+					"SELECT password FROM Account WHERE username = '%s'",
+					username);
 			ResultSet rs = ConnectionDB.statement.executeQuery(sql);
 			if (rs.next()) {
 				if (rs.getString("password").equals(password)) {
@@ -62,10 +63,10 @@ public class Account {
 				}
 			}
 			rs.close();
+			ConnectionDB.disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		ConnectionDB.disconnect();
 		return false;
 	}
 
