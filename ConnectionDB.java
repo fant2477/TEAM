@@ -1,3 +1,5 @@
+package project_connectionDB;
+
 import java.sql.*;
 
 public class ConnectionDB {
