@@ -1,3 +1,5 @@
+package project_connectionDB;
+
 import java.sql.ResultSet;
 
 public class AccountValidaiton {
@@ -5,6 +7,11 @@ public class AccountValidaiton {
 	AccountManager acc = new AccountManager();
 
 	// Name and surname Text Box
+	public static boolean isValidName(String username) {
+		// return true if user name can use.
+		return AccountValidaiton.validName(username).equals("OK");
+	}
+
 	public static String validName(String name) {
 		// Valid of name and surname
 		if (name.isEmpty()) {
@@ -97,17 +104,28 @@ public class AccountValidaiton {
 		return password.equals(confirmpass);
 	}
 
+	public static boolean isValidLogin(String username,String password) {
+		// return true if password can use.
+		return AccountValidaiton.validLogin(username,password).equals("OK") && AccountValidaiton.validUserLogin(username).equals("OK");
+	}
+
 	// Confirm user name in Login state
 	public static String validUserLogin(String username) {
-		if (!AccountValidaiton.isUsenameTaken(username)) {
+		if (username.isEmpty()) {
+			return "You can't leave this empty.";
+		}
+		else if (!AccountValidaiton.isUsenameTaken(username)) {
 			return "Counld't find your account.";
 		}
 		return "OK";
 	}
 
-	public String validLogin(String username, String password) {
+	public static String validLogin(String username, String password) {
 		// Confirm to login.
-		if (AccountValidaiton.validUserLogin(username) == "OK"
+		if (password.isEmpty()) {
+			return "You can't leave this empty.";
+		}
+		else if (AccountValidaiton.validUserLogin(username) == "OK"
 				&& !AccountManager.validLogin(username, password)) {
 			return "Wrong password. Try agian.";
 		} else {
