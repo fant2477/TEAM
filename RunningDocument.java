@@ -14,15 +14,13 @@ import java.util.List;
 import java.util.Locale;
 
 public class RunningDocument {
-	String currentUser;
+	Account currentUser;
 
-	public RunningDocument(String currentUser) {
-		if (AccountValidaiton.validUserLogin(currentUser) == "OK") {
-			this.currentUser = currentUser;
-		}
+	public RunningDocument(Account currentUser) {
+		this.currentUser = currentUser;
 	}
 
-	public String getCurrentUser() {
+	public Account getCurrentUser() {
 		return currentUser;
 	}
 
@@ -84,7 +82,7 @@ public class RunningDocument {
 		File f = new File(FilePath);
 		if (f.exists()) {
 			return new Document(getLastID() + 1, f.getName(), null, f.length(),
-					currentUser, FilePath, detail);
+					currentUser.getUsername(), FilePath, detail);
 		}
 		System.err.println("File doesn't exits.");
 		return null;
@@ -168,7 +166,7 @@ public class RunningDocument {
 		ConnectionDB.disconnect();
 	}
 
-	public static void getFile(int id, String targetPath) {
+	public static void getDataFile(int id, String targetPath) {
 		byte[] fileBytes;
 		String query;
 		try {
@@ -184,12 +182,16 @@ public class RunningDocument {
 				rs.close();
 				targetFile.write(fileBytes);
 				targetFile.close();
+				if (!new File(targetPath + id + name).exists()) {
+					System.err.println("Download Fail ;(");
+				}
 			}
 			ConnectionDB.disconnect();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 	private void addLog(String status, String filename, int id, String path,
@@ -198,7 +200,7 @@ public class RunningDocument {
 		try {
 			String sql = String
 					.format("INSERT INTO History VALUES('%s', %d, '%s was %s by %s', '%s')",
-							currentTime, id, filename, status, currentUser,
+							currentTime, id, filename, status, currentUser.getUsername(),
 							path);
 			ConnectionDB.statement.executeUpdate(sql);
 		} catch (Exception e) {
@@ -208,7 +210,7 @@ public class RunningDocument {
 	}
 
 	// Unused
-	public static int getMaxLenFilename() {
+	private static int getMaxLenFilename() {
 		int maxLen = 0;
 		int currentLen;
 		ConnectionDB.connect();
@@ -228,23 +230,24 @@ public class RunningDocument {
 		ConnectionDB.disconnect();
 		return maxLen;
 	}
-
+	
+	
 	public void changePassword(String oldPass, String newPass) {
-		if (AccountManager.validLogin(currentUser, oldPass)
+		if (AccountManager.validLogin(currentUser.getUsername(), oldPass)
 				&& AccountValidaiton.isValidPass(newPass)) {
-			AccountManager.setPassword(currentUser, newPass);
+			AccountManager.setPassword(currentUser.getUsername(), newPass);
 		}
 	}
 
 	public void changeName(String newName) {
 		if (!newName.isEmpty()) {
-			AccountManager.setName(currentUser, newName);
+			AccountManager.setName(currentUser.getUsername(), newName);
 		}
 	}
 
 	public void changeSurname(String newName) {
 		if (!newName.isEmpty()) {
-			AccountManager.setSurname(currentUser, newName);
+			AccountManager.setSurname(currentUser.getUsername(), newName);
 		}
 	}
 

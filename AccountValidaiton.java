@@ -104,17 +104,17 @@ public class AccountValidaiton {
 		return password.equals(confirmpass);
 	}
 
-	public static boolean isValidLogin(String username,String password) {
+	public static boolean isValidLogin(String username, String password) {
 		// return true if password can use.
-		return AccountValidaiton.validLogin(username,password).equals("OK") && AccountValidaiton.validUserLogin(username).equals("OK");
+		return AccountValidaiton.validLogin(username, password).equals("OK")
+				&& AccountValidaiton.validUserLogin(username).equals("OK");
 	}
 
 	// Confirm user name in Login state
 	public static String validUserLogin(String username) {
 		if (username.isEmpty()) {
 			return "You can't leave this empty.";
-		}
-		else if (!AccountValidaiton.isUsenameTaken(username)) {
+		} else if (!AccountValidaiton.isUsenameTaken(username)) {
 			return "Counld't find your account.";
 		}
 		return "OK";
@@ -124,12 +124,12 @@ public class AccountValidaiton {
 		// Confirm to login.
 		if (password.isEmpty()) {
 			return "You can't leave this empty.";
-		}
-		else if (AccountValidaiton.validUserLogin(username) == "OK"
+		} else if (AccountValidaiton.validUserLogin(username) == "OK"
 				&& !AccountManager.validLogin(username, password)) {
 			return "Wrong password. Try agian.";
 		} else {
 			return "OK";
 		}
 	}
+
 }

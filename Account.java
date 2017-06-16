@@ -2,6 +2,7 @@ package project_connectionDB;
 
 import java.util.*;
 
+
 public class Account {
 	String name;
 	String surname;

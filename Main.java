@@ -11,7 +11,8 @@ import java.io.*;
 class Main {
 
 	public static void main(String[] args) {
-		RunningDocument x = new RunningDocument("plaitiang");
+		AccountManager a = new AccountManager();
+		RunningDocument x = new RunningDocument(a.getAccount("plaitiang"));
 		// Account a = new Account();
 		// a.createNewAccount("Araya", "Siriadun", "username1", "1234", "1234");
 
@@ -19,7 +20,8 @@ class Main {
 		
 		
 		// x.addFile("C:\\Users\\plait\\Desktop\\ch1.pdf");
-		x.addFile(x.createFile("C:\\Users\\plait\\Desktop\\ch1.pdf"));
+
+		RunningDocument.getDataFile(600031, "C:\\Users\\plait\\Desktop\\");
 		
 		
 	}

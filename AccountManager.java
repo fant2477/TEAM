@@ -4,18 +4,18 @@ import java.sql.*;
 
 public class AccountManager {
 
-	public void createNewAccount(String name, String surname, String username,
-			String password, String confirmpass) {
+	public Account createNewAccount(String name, String surname,
+			String username, String password, String confirmpass) {
 		if (AccountValidaiton.isValidUser(username)
 				&& AccountValidaiton.isValidPass(password)
 				&& AccountValidaiton.confirmPass(password, confirmpass)) {
-			this.insertAccount(name, surname, username, password);
-		} else {
-			System.err.println("Can't create new user.");
+			return new Account(name, surname, username, password);
 		}
+		System.err.println("Can't create new user.");
+		return null;
 	}
 
-	private void insertAccount(String name, String surname, String username,
+	public void addAccount(String name, String surname, String username,
 			String password) {
 		ConnectionDB.connect();
 		try {
@@ -29,6 +29,31 @@ public class AccountManager {
 			e.printStackTrace();
 		}
 		ConnectionDB.disconnect();
+	}
+
+	public Account getAccount(String username){
+		String name;
+		String surname;
+		String password;
+		ConnectionDB.connect();
+		try {
+			// get filename and path
+			String sql = String.format("SELECT * FROM Account WHERE username = '%s'",
+					username);
+			ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+			if (rs.next()) {
+				name = rs.getString("name");
+				surname = rs.getString("surname");
+				password = rs.getString("password");
+				rs.close();
+				return new Account(name, surname, username, password);
+			} 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ConnectionDB.disconnect();
+		throw new java.lang.Error(String.format(
+		"Account not found."));
 	}
 
 	public void deleteAccount(String username) {

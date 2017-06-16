@@ -7,6 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SQLCommand {
+	
+	public static void exxcute(String query) {
+		try {
+			ConnectionDB.connect();
+			ConnectionDB.statement.executeUpdate(query);
+			ConnectionDB.disconnect();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void deleteAllRecord(String table_name) {
 		try {
 			ConnectionDB.connect();
@@ -43,17 +54,6 @@ public class SQLCommand {
 		return table;
 	}
 
-	public static boolean isTimeStampValid(String inputString) {
-		SimpleDateFormat format = new java.text.SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss.SSS");
-		try {
-			format.parse(inputString);
-			return true;
-		} catch (ParseException e) {
-			return false;
-		}
-	}
-
 	public static void tabletoString(String table_name) {
 		for (String[] row : SQLCommand.getArrayofTable(table_name)) {
 			for (String s : row) {
@@ -63,12 +63,14 @@ public class SQLCommand {
 		}
 	}
 	
-	public static void tabletoString2(String table_name) {
-		for (String[] row : SQLCommand.getArrayofTable(table_name)) {
-			for (int i = 0;i < row.length; i++){
-				System.out.print(" " + row[i]);
-			}
-			System.out.println();
+	public static boolean isTimeStampValid(String inputString) {
+		SimpleDateFormat format = new java.text.SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss.SSS");
+		try {
+			format.parse(inputString);
+			return true;
+		} catch (ParseException e) {
+			return false;
 		}
 	}
 }
