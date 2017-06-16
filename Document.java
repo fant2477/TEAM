@@ -1,3 +1,5 @@
+package project_connectionDB;
+
 import java.util.Date;
 
 public class Document {

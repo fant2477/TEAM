@@ -1,10 +1,10 @@
+package project_connectionDB;
+
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 public class SQLCommand {
 	public static void deleteAllRecord(String table_name) {
