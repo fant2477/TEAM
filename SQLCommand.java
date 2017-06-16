@@ -57,14 +57,16 @@ public class SQLCommand {
 	public static void tabletoString(String table_name) {
 		for (String[] row : SQLCommand.getArrayofTable(table_name)) {
 			for (String s : row) {
-				if (isTimeStampValid(s)) {
-					System.out.print(" "
-							+ s
-							+ new String(new char[23 - s.length()]).replace(
-									'\0', '0'));
-				} else {
-					System.out.print(" " + s);
-				}
+				System.out.print(" " + s);
+			}
+			System.out.println();
+		}
+	}
+	
+	public static void tabletoString2(String table_name) {
+		for (String[] row : SQLCommand.getArrayofTable(table_name)) {
+			for (int i = 0;i < row.length; i++){
+				System.out.print(" " + row[i]);
 			}
 			System.out.println();
 		}

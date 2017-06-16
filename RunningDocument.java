@@ -26,15 +26,23 @@ public class RunningDocument {
 
 	public static int getCurrentThaiYear() {
 		// return 2 digit of year in <th>
-		return (Integer.parseInt(new SimpleDateFormat("yyyy", Locale
-				.getDefault()).format(new Date(System.currentTimeMillis()))
-				.toString()) + 543) % 100;
+		return (Integer.parseInt(new SimpleDateFormat("yyyy", Locale.UK)
+				.format(new Date(System.currentTimeMillis())).toString()) + 543) % 100;
 	}
 
-	public static String getFullCurrentTime() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",
-				Locale.getDefault()).format(
-				new Date(System.currentTimeMillis())).toString();
+	/*
+	 * public static SimpleDateFormat getFullCurrentTime() { return new
+	 * SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.UK) .format(new
+	 * Date(System.currentTimeMillis())); }
+	 */
+
+	public static Date getFullCurrentTime() {
+		return new Date(System.currentTimeMillis());
+	}
+
+	public static String currentTimetoString() {
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.UK)
+				.format(getFullCurrentTime());
 	}
 
 	public static String toSize(long bytes) {
@@ -65,55 +73,62 @@ public class RunningDocument {
 		}
 		return 0;
 	}
-
-	public void addFile(String FilePath) {
-		addFile(FilePath, "");
+	
+	public Document createFile(String FilePath) {
+		return this.createFile(FilePath, "");
 	}
 
-	public void addFile(String FilePath, String detail) {
-		PreparedStatement pstmt;
+	public Document createFile(String FilePath, String detail) {
 		File f = new File(FilePath);
+		if (f.exists()) {
+			return new Document(getLastID() + 1, f.getName(), null, f.length(),
+					currentUser, FilePath, detail);
+		}
+		System.err.println("File doesn't exits.");
+		return null;
+	}
+
+	public void addFile(Document file) {
+		PreparedStatement pstmt;
 		FileInputStream fis = null;
 		try {
-			fis = new FileInputStream(f);
+			fis = new FileInputStream(new File(file.getPath()));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
+			return;
 		}
-		if (f.exists()) {
-			int currentID = getLastID() + 1;
-			ConnectionDB.connect();
-			try {
-				// Add Data of file to DataBase.
-				String sql = ("INSERT INTO DataFile VALUES(?, ?, ?, ?)");
-				pstmt = ConnectionDB.connect.prepareStatement(sql);
-				pstmt.setInt(1, currentID);
-				pstmt.setString(2, f.getName());
-				pstmt.setDouble(3, f.length());
-				pstmt.setBinaryStream(4, fis);
-				pstmt.executeUpdate();
-				String currentTime = RunningDocument.getFullCurrentTime();
-				pstmt.close();
-				System.out.println(String.format("Added %s Correctly.",
-						f.getName()));
 
-				// Add file to Document
-				sql = String
-						.format("INSERT INTO Document VALUES(%d, '%s', '%s','%s', '%s', '%s', '%s')",
-								currentID, f.getName(), currentTime,
-								RunningDocument.toSize(f.length()),
-								this.currentUser, FilePath, detail);
-				ConnectionDB.statement.executeUpdate(sql);
+		ConnectionDB.connect();
+		try {
+			// Add Data of file to DataFile.
+			String sql = ("INSERT INTO DataFile VALUES(?, ?, ?, ?)");
+			pstmt = ConnectionDB.connect.prepareStatement(sql);
+			pstmt.setInt(1, file.getID());
+			pstmt.setString(2, file.getFilename());
+			pstmt.setDouble(3, file.getSize());
+			pstmt.setBinaryStream(4, fis);
+			pstmt.executeUpdate();
+			String currentTime = RunningDocument.currentTimetoString();
+			pstmt.close();
+			System.out.println(String.format("Added %s Correctly.",
+					file.getFilename()));
 
-				// Add log
-				this.addLog("added", f.getName(), currentID, FilePath,
-						currentTime);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			ConnectionDB.disconnect();
-		} else {
-			System.err.println("File doesn't exits.");
+			// Add file to Document
+			sql = String
+					.format("INSERT INTO Document VALUES(%d, '%s', '%s','%s', '%s', '%s', '%s')",
+							file.getID(), file.getFilename(), currentTime,
+							RunningDocument.toSize(file.getSize()),
+							this.currentUser, file.getPath(),
+							file.getDescription());
+			ConnectionDB.statement.executeUpdate(sql);
+
+			// Add log
+			this.addLog("added", file.getFilename(), file.getID(),
+					file.getPath(), currentTime);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		ConnectionDB.disconnect();
 	}
 
 	public void deleteFile(int id) {
@@ -135,7 +150,7 @@ public class RunningDocument {
 			}
 			// Delete that file.
 			sql = String.format("DELETE FROM Document WHERE ID = %d", id);
-			String currentTime = RunningDocument.getFullCurrentTime();
+			String currentTime = RunningDocument.currentTimetoString();
 			ConnectionDB.statement.executeUpdate(sql);
 			System.out.println(String.format("Deleted %s Correctly.", name));
 
@@ -157,7 +172,6 @@ public class RunningDocument {
 		try {
 			ConnectionDB.connect();
 			query = String.format("SELECT * FROM DataFile WHERE ID = %d", id);
-			// Statement state = ConnectionDB.connect.createStatement();
 			ResultSet rs = ConnectionDB.statement.executeQuery(query);
 			if (rs.next()) {
 				fileBytes = rs.getBytes("Data");
@@ -214,21 +228,21 @@ public class RunningDocument {
 	}
 
 	public void changePassword(String oldPass, String newPass) {
-		if (Account.validLogin(currentUser, oldPass)
+		if (AccountManager.validLogin(currentUser, oldPass)
 				&& AccountValidaiton.isValidPass(newPass)) {
-			Account.setPassword(currentUser, newPass);
+			AccountManager.setPassword(currentUser, newPass);
 		}
 	}
 
 	public void changeName(String newName) {
 		if (!newName.isEmpty()) {
-			Account.setName(currentUser, newName);
+			AccountManager.setName(currentUser, newName);
 		}
 	}
 
 	public void changeSurname(String newName) {
 		if (!newName.isEmpty()) {
-			Account.setSurname(currentUser, newName);
+			AccountManager.setSurname(currentUser, newName);
 		}
 	}
 

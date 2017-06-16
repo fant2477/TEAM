@@ -2,7 +2,7 @@ import java.sql.ResultSet;
 
 public class AccountValidaiton {
 
-	Account acc = new Account();
+	AccountManager acc = new AccountManager();
 
 	// Name and surname Text Box
 	public static String validName(String name) {
@@ -108,7 +108,7 @@ public class AccountValidaiton {
 	public String validLogin(String username, String password) {
 		// Confirm to login.
 		if (AccountValidaiton.validUserLogin(username) == "OK"
-				&& !Account.validLogin(username, password)) {
+				&& !AccountManager.validLogin(username, password)) {
 			return "Wrong password. Try agian.";
 		} else {
 			return "OK";
