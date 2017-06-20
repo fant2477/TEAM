@@ -1,3 +1,0 @@
-long date = System.currentTimeMillis();
-int offset = TimeZone.getDefault().getOffset(date);
-System.out.printf("%d + %d = %d%n", date, offset, date + offset);
