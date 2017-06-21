@@ -79,6 +79,30 @@ public class UserManager {
         return null;
     }
 
+    public User getUser(String username) {
+        ConnectionDB.connect();
+        try {
+            String sql = String.format("SELECT * FROM Account WHERE Username = '%s'", username);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                int User_ID = rs.getInt("User_ID");
+                String user = rs.getString("Username");
+                String pass = rs.getString("Password");
+                String nam = rs.getString("Name");
+                String surnam = rs.getString("Surname");
+                String bG = rs.getString("BusinessGroup");
+                Date date_created = rs.getDate("Date_created");
+                Date date_modified = rs.getDate("Date_modified");
+                rs.close();
+                return new User(User_ID, user, pass, nam, surnam, bG, date_created, date_modified);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ConnectionDB.disconnect();
+        return null;
+    }
+
     public void deleteUser(String username) {
         if (UserValidation.isUsernameTaken(username)) {
             ConnectionDB.connect();
@@ -109,5 +133,9 @@ public class UserManager {
         } else {
             System.err.println(id + " is not found.");
         }
+    }
+
+    public void updateUser(User user) {
+        //
     }
 }
