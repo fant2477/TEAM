@@ -20,6 +20,7 @@ public class UserManager {
                 Date date_created = rs.getDate("Date_created");
                 Date date_modified = rs.getDate("Date_modified");
                 rs.close();
+
                 return new User(User_ID, user, pass, nam, surnam, bG, date_created, date_modified);
             }
         } catch (Exception e) {

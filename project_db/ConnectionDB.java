@@ -5,10 +5,10 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 
 public class ConnectionDB {
-    static final String localhost = "192.168.1.249";
-    static final String DatabaseName = "STUDENT";
-    static final String Username = "sa";
-    static final String Password = "Team*2017";
+    private static final String localhost = "192.168.1.249";
+    private static final String DatabaseName = "STUDENT";
+    private static final String Username = "sa";
+    private static final String Password = "Team*2017";
     static Connection connect = null;
     static Statement statement = null;
 

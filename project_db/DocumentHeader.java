@@ -66,10 +66,6 @@ public class DocumentHeader {
         return Doc_header_ID;
     }
 
-    public void setDoc_header_ID(int doc_header_ID) {
-        Doc_header_ID = doc_header_ID;
-    }
-
     public int getUser_ID_created() {
         return User_ID_created;
     }

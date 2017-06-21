@@ -56,7 +56,7 @@ public class UserValidation {
             return "Please use between 3 and 50 characters.";
         }
 
-        pattern = "[a-zA-Z0-9\\._\\-].{3,30}";
+        pattern = "[a-zA-Z0-9\\._\\-].{3,50}";
         if (!username.matches(pattern)) {
             return "Please use only letters (a-z, A-Z), numbers and full stops.";
         }
@@ -93,9 +93,14 @@ public class UserValidation {
             return "You can't leave this empty.";
         }
 
-        String pattern = "(?).{4,50}";
+        String pattern = "(?).{4,}";
         if (!password.matches(pattern)) {
             return "Short passwords are easy to guess. Try one with at least 4 characters.";
+        }
+
+        pattern = "(?).{4,50}";
+        if (!password.matches(pattern)) {
+            return "Too long passwords. Try one with at less than 51 characters.";
         }
 
         return "OK";
@@ -132,7 +137,7 @@ public class UserValidation {
         if (username.isEmpty()) {
             return "You can't leave this empty.";
         } else if (!UserValidation.isUsernameTaken(username)) {
-            return "Counld't find your account.";
+            return "Couldn't find your account.";
         }
         return "OK";
     }

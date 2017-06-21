@@ -5,6 +5,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Log {
+
+    public static void addLog(String currentTime, String filename, String status, String user) {
+        ConnectionDB.connect();
+        try {
+            String sql =
+                    String.format(
+                            "INSERT INTO Event_log(Time, Event) VALUES('%s', '%s was %s by %s')",
+                            currentTime, filename, status, user);
+            ConnectionDB.statement.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ConnectionDB.disconnect();
+    }
+
     public static void addLog(
             String currentTime, String filename, String status, String user, int id) {
         ConnectionDB.connect();

@@ -1,6 +1,6 @@
 package project_db;
 
-import java.sql.*;
+import java.time.chrono.ThaiBuddhistDate;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,8 +12,8 @@ public class Main {
         UserManager x = new UserManager();
         User m = x.getUser(3);
         //m.setUsername("khonfuu");
-
+        System.out.println(ThaiBuddhistDate.now());
         //DocumentManager a = new DocumentManager(m);
-        DocumentHeader.tabletoString();
+
     }
 }
