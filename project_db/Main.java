@@ -4,8 +4,13 @@ public class Main {
     public static void main(String[] args) {
         UserManager x = new UserManager();
         //SQL.deleteAllRecord("Account");
-        User m = x.createNewUser("khonfuu", "12345678", "12345678", "Araya", "Siriadun", "ICT");
-        
-        
+        //SQL.deleteAllRecord("Document_header");
+        //SQL.deleteAllRecord("Document_detail");
+
+        User m = x.getUser(3);
+        DocumentManager a = new DocumentManager(m);
+        System.out.println(m.toString());
+
+
     }
 }

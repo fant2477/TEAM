@@ -24,25 +24,24 @@ public class UserValidation {
         return UserValidation.validName(name).equals("OK");
     }
 
-    public static boolean isUsenameTaken(String username) {
-		ConnectionDB.connect();
-		try {
-			String sql = String.format(
-					"SELECT Username FROM Account WHERE Username = '%s'",
-					username);
-			ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-			if (rs.next()) {
-				rs.close();
-				ConnectionDB.disconnect();
-				return true;
-			}
-			rs.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		ConnectionDB.disconnect();
-		return false;
-	}
+    public static boolean isUsernameTaken(String username) {
+        ConnectionDB.connect();
+        try {
+            String sql =
+                    String.format("SELECT Username FROM Account WHERE Username = '%s'", username);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                rs.close();
+                ConnectionDB.disconnect();
+                return true;
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ConnectionDB.disconnect();
+        return false;
+    }
 
     // Use in Text Box of username
     public static String validUsername(String username) {
@@ -62,7 +61,7 @@ public class UserValidation {
             return "Please use only letters (a-z, A-Z), numbers and full stops.";
         }
 
-        if (UserValidation.isUsenameTaken(username)) {
+        if (UserValidation.isUsernameTaken(username)) {
             return "That username is taken. Try another.";
         }
 
@@ -132,7 +131,7 @@ public class UserValidation {
     public static String validUsernameLogin(String username) {
         if (username.isEmpty()) {
             return "You can't leave this empty.";
-        } else if (!UserValidation.isUsenameTaken(username)) {
+        } else if (!UserValidation.isUsernameTaken(username)) {
             return "Counld't find your account.";
         }
         return "OK";
@@ -150,7 +149,8 @@ public class UserValidation {
     public static boolean validLogin(String username, String password) {
         ConnectionDB.connect();
         try {
-            String sql = String.format("SELECT Password FROM Account WHERE Username = '%s'", username);
+            String sql =
+                    String.format("SELECT Password FROM Account WHERE Username = '%s'", username);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 if (rs.getString("Password").equals(password)) {
@@ -159,6 +159,25 @@ public class UserValidation {
                     ConnectionDB.disconnect();
                     return true;
                 }
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ConnectionDB.disconnect();
+        return false;
+    }
+
+    public static boolean isIDTaken(int id) {
+        ConnectionDB.connect();
+        try {
+            String sql =
+                    String.format("SELECT User_ID FROM Account WHERE User_ID = %d", id);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                rs.close();
+                ConnectionDB.disconnect();
+                return true;
             }
             rs.close();
         } catch (Exception e) {
