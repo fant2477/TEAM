@@ -5,6 +5,47 @@ import java.util.Date;
 
 public class UserManager {
 
+    public static User getUser(int id) {
+        ConnectionDB.connect();
+        try {
+            String sql = String.format("SELECT * FROM Account WHERE User_ID = %d", id);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                int User_ID = rs.getInt("User_ID");
+                String user = rs.getString("Username");
+                String pass = rs.getString("Password");
+                String nam = rs.getString("Name");
+                String surnam = rs.getString("Surname");
+                String bG = rs.getString("BusinessGroup");
+                Date date_created = rs.getDate("Date_created");
+                Date date_modified = rs.getDate("Date_modified");
+                rs.close();
+                return new User(User_ID, user, pass, nam, surnam, bG, date_created, date_modified);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ConnectionDB.disconnect();
+        return null;
+    }
+
+    public static String getUsername(int id) {
+        ConnectionDB.connect();
+        try {
+            String sql = String.format("SELECT Username FROM Account WHERE User_ID = %d", id);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                String user = rs.getString("Username");
+                rs.close();
+                return user;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ConnectionDB.disconnect();
+        return null;
+    }
+
     public User createNewUser(
             String username,
             String password,
@@ -47,30 +88,6 @@ public class UserManager {
                 int User_ID = rs.getInt("User_ID");
                 rs.close();
                 return getUser(User_ID);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        ConnectionDB.disconnect();
-        return null;
-    }
-
-    public User getUser(int id) {
-        ConnectionDB.connect();
-        try {
-            String sql = String.format("SELECT * FROM Account WHERE User_ID = %d", id);
-            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-            if (rs.next()) {
-                int User_ID = rs.getInt("User_ID");
-                String user = rs.getString("Username");
-                String pass = rs.getString("Password");
-                String nam = rs.getString("Name");
-                String surnam = rs.getString("Surname");
-                String bG = rs.getString("BusinessGroup");
-                Date date_created = rs.getDate("Date_created");
-                Date date_modified = rs.getDate("Date_modified");
-                rs.close();
-                return new User(User_ID, user, pass, nam, surnam, bG, date_created, date_modified);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -135,7 +152,33 @@ public class UserManager {
         }
     }
 
-    public void updateUser(User user) {
+    public static void updateUser(User user) {
         //
+        ConnectionDB.connect();
+        try {
+            String s =
+                    "UPDATE Account "
+                            + "SET Username = '%s', "
+                            + "Password = '%s', "
+                            + "Name = '%s' , "
+                            + "Surname = '%s', "
+                            + "BusinessGroup = '%s', "
+                            + "Date_modified = '%s' "
+                            + "WHERE User_ID = %d";
+            String sql =
+                    String.format(
+                            s,
+                            user.getUsername(),
+                            user.getPassword(),
+                            user.getName(),
+                            user.getSurname(),
+                            user.getBusinessGroup(),
+                            Time.currentTimetoString());
+            ConnectionDB.statement.executeUpdate(sql);
+            System.out.println("User Data updated. :)");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ConnectionDB.disconnect();
     }
 }

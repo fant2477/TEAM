@@ -31,7 +31,7 @@ public class User {
         Date_modified = date_modified;
     }
 
-    int getUser_ID() {
+    public int getUser_ID() {
         return User_ID;
     }
 
@@ -39,7 +39,7 @@ public class User {
         User_ID = user_ID;
     }
 
-    String getUsername() {
+    public String getUsername() {
         return Username;
     }
 

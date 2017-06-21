@@ -9,11 +9,45 @@ import java.sql.ResultSet;
 import java.util.Date;
 
 public class DocumentManager {
-    User currentUser = null;
     static DocumentHeader currentHeader = null;
+    User currentUser = null;
 
     public DocumentManager(User currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public static DocumentDetail getFile(int id) {
+        ConnectionDB.connect();
+        try {
+            String sql = String.format("SELECT * FROM Document_detail WHERE Doc_ID = %d", id);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                int doc_ID = rs.getInt("Doc_ID");
+                int doc_header_ID = rs.getInt("Doc_header_ID");
+                String doc_name = rs.getString("Doc_name");
+                Date date_created = rs.getTimestamp("Date_created");
+                Date date_modified = rs.getTimestamp("Date_modified");
+                int user_ID_created = rs.getInt("User_ID_created");
+                int user_ID_modified = rs.getInt("User_ID_modified");
+                long size = rs.getLong("Size");
+                byte[] data_file = rs.getBytes("Data_file");
+                rs.close();
+                return new DocumentDetail(
+                        doc_ID,
+                        doc_header_ID,
+                        doc_name,
+                        date_created,
+                        date_modified,
+                        user_ID_created,
+                        user_ID_modified,
+                        size,
+                        data_file);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ConnectionDB.disconnect();
+        return null;
     }
 
     public User getCurrentUser() {
@@ -75,7 +109,7 @@ public class DocumentManager {
         return null;
     }
 
-    public DocumentHeader getHeader(int id) {
+    public static DocumentHeader getHeader(int id) {
         ConnectionDB.connect();
         try {
             String sql =
@@ -85,8 +119,8 @@ public class DocumentManager {
                 int Doc_header_ID = rs.getInt("Doc_header_ID");
                 int User_ID_created = rs.getInt("User_ID_created");
                 int User_ID_modified = rs.getInt("User_ID_modified");
-                Date Date_created = rs.getDate("Date_created");
-                Date Date_modified = rs.getDate("Date_modified");
+                Date Date_created = rs.getTimestamp("Date_created");
+                Date Date_modified = rs.getTimestamp("Date_modified");
                 rs.close();
                 return new DocumentHeader(
                         Doc_header_ID,
@@ -165,65 +199,32 @@ public class DocumentManager {
         return null;
     }
 
-    private DocumentDetail getFile(int id) {
-        ConnectionDB.connect();
+    public void downloadFile(int id, String targetPath) {
+        byte[] fileBytes;
+        String query;
         try {
-            String sql = String.format("SELECT * FROM Document_detail WHERE Doc_ID = %d", id);
-            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            ConnectionDB.connect();
+            query =
+                    String.format(
+                            "SELECT Doc_name, Data_file FROM Document_detail WHERE Doc_ID = %d",
+                            id);
+            ResultSet rs = ConnectionDB.statement.executeQuery(query);
             if (rs.next()) {
-                int doc_ID = rs.getInt("Doc_ID");
-                int doc_header_ID = rs.getInt("Doc_header_ID");
-                String doc_name = rs.getString("Doc_name");
-                Date date_created = rs.getDate("Date_created");
-                Date date_modified = rs.getDate("Date_modified");
-                int user_ID_created = rs.getInt("User_ID_created");
-                int user_ID_modified = rs.getInt("User_ID_modified");
-                long size = rs.getLong("Size");
-                byte[] data_file = rs.getBytes("Data_file");
+                String name = rs.getString("Doc_name");
+                fileBytes = rs.getBytes("Data_file");
+
+                OutputStream targetFile = new FileOutputStream(targetPath + id + name);
                 rs.close();
-                return new DocumentDetail(
-                        doc_ID,
-                        doc_header_ID,
-                        doc_name,
-                        date_created,
-                        date_modified,
-                        user_ID_created,
-                        user_ID_modified,
-                        size,
-                        data_file);
+                targetFile.write(fileBytes);
+                targetFile.close();
+                if (!new File(targetPath + id + name).exists()) {
+                    System.err.println("Download Fail ;(");
+                }
             }
+            ConnectionDB.disconnect();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
-        return null;
     }
-    
-    public void downloadFile(int id, String targetPath) {
-		byte[] fileBytes;
-		String query;
-		try {
-			ConnectionDB.connect();
-			query = String.format("SELECT Doc_name, Data_file FROM Document_detail WHERE Doc_ID = %d", id);
-			ResultSet rs = ConnectionDB.statement.executeQuery(query);
-			if (rs.next()) {
-				String name = rs.getString("Doc_name");
-				fileBytes = rs.getBytes("Data_file");
-
-				OutputStream targetFile = new FileOutputStream(targetPath + id
-						+ name);
-				rs.close();
-				targetFile.write(fileBytes);
-				targetFile.close();
-				if (!new File(targetPath + id + name).exists()) {
-					System.err.println("Download Fail ;(");
-				}
-			}
-			ConnectionDB.disconnect();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
 }

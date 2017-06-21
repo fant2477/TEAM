@@ -171,8 +171,7 @@ public class UserValidation {
     public static boolean isIDTaken(int id) {
         ConnectionDB.connect();
         try {
-            String sql =
-                    String.format("SELECT User_ID FROM Account WHERE User_ID = %d", id);
+            String sql = String.format("SELECT User_ID FROM Account WHERE User_ID = %d", id);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 rs.close();

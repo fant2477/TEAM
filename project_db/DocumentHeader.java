@@ -1,14 +1,17 @@
 package project_db;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class DocumentHeader {
-    int Doc_header_ID;
-    int User_ID_created;
-    int User_ID_modified;
-    Date Date_created;
-    Date Date_modified;
-    String Status;
+    private int Doc_header_ID;
+    private int User_ID_created;
+    private int User_ID_modified;
+    private Date Date_created;
+    private Date Date_modified;
+    private String Status;
 
     public DocumentHeader(
             int doc_header_ID,
@@ -21,6 +24,42 @@ public class DocumentHeader {
         User_ID_modified = user_ID_modified;
         Date_created = date_created;
         Date_modified = date_modified;
+    }
+
+    public static List<DocumentHeader> getArrayofTable() {
+        List<DocumentHeader> table = new ArrayList<>();
+        ConnectionDB.connect();
+        try {
+            String sql = "SELECT * FROM Document_header ORDER BY Date_created";
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            int nCol = rs.getMetaData().getColumnCount();
+            //table = new DocumentDetail[nCol];
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                DocumentHeader x = DocumentManager.getHeader(id);
+                table.add(x);
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return table;
+    }
+
+    public static void tabletoString() {
+        for (DocumentHeader record : DocumentHeader.getArrayofTable()) {
+            System.out.print(record.getDoc_header_ID());
+            System.out.print('\t');
+            System.out.print(UserManager.getUsername(record.getUser_ID_created()));
+            System.out.print('\t');
+            System.out.print(UserManager.getUsername(record.getUser_ID_modified()));
+            System.out.print('\t');
+            System.out.print(Time.datetoFullTime(record.getDate_created()));
+            System.out.print('\t');
+            System.out.print(Time.datetoFullTime(record.getDate_modified()));
+            System.out.print('\t');
+            System.out.println();
+        }
     }
 
     public int getDoc_header_ID() {
