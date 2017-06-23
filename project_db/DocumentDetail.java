@@ -2,7 +2,6 @@ package project_db;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -38,18 +37,41 @@ public class DocumentDetail {
         Data_file = data_file;
     }
 
-    public static List<DocumentDetail> getArrayofTable() {
+    public DocumentDetail(
+            int doc_ID,
+            int doc_header_ID,
+            String doc_name,
+            Date date_created,
+            Date date_modified,
+            int user_ID_created,
+            int user_ID_modified,
+            long size) {
+        Doc_ID = doc_ID;
+        Doc_header_ID = doc_header_ID;
+        Doc_name = doc_name;
+        Date_created = date_created;
+        Date_modified = date_modified;
+        User_ID_created = user_ID_created;
+        User_ID_modified = user_ID_modified;
+        Size = size;
+    }
+
+    public static List<DocumentDetail> toListofDocDetail() {
         List<DocumentDetail> table = new ArrayList<>();
-        ConnectionDB.connect();
         try {
-            String sql = "SELECT * FROM Document_detail ORDER BY Date_created";
+            String sql =
+                    "SELECT Doc_ID, "
+                            + "Doc_header_ID, "
+                            + "Doc_name, "
+                            + "Date_created, "
+                            + "Date_modified, "
+                            + "User_ID_created, "
+                            + "User_ID_modified, "
+                            + "Size "
+                            + "FROM Document_detail ORDER BY Date_created";
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-            int nCol = rs.getMetaData().getColumnCount();
-            //table = new DocumentDetail[nCol];
             while (rs.next()) {
-                int id = rs.getInt(1);
-                DocumentDetail x = DocumentManager.getFile(id);
-                table.add(x);
+                table.add(DocumentManager.getGenneralFile(rs.getInt(1)));
             }
             rs.close();
         } catch (Exception e) {
@@ -58,23 +80,72 @@ public class DocumentDetail {
         return table;
     }
 
-    public static void tabletoString() {
-        for (DocumentDetail record : getArrayofTable()) {
+    public static List<DocumentDetail> toListofDocDetail(int Doc_header_ID) {
+        List<DocumentDetail> table = new ArrayList<>();
+        try {
+            String sql =
+                    String.format(
+                            "SELECT Doc_ID, "
+                                    + "Doc_header_ID, "
+                                    + "Doc_name, "
+                                    + "Date_created, "
+                                    + "Date_modified, "
+                                    + "User_ID_created, "
+                                    + "User_ID_modified, "
+                                    + "Size "
+                                    + "FROM Document_detail ORDER BY Date_created WHERE Doc_header_ID = %d",
+                            Doc_header_ID);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            while (rs.next()) {
+                table.add(DocumentManager.getGenneralFile(rs.getInt(1)));
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return table;
+    }
+
+    public static void toStr() {
+        for (DocumentDetail record : toListofDocDetail()) {
             System.out.print(record.getDoc_ID());
             System.out.print('\t');
             System.out.print(record.Doc_header_ID);
             System.out.print('\t');
             System.out.print(record.getDoc_name());
             System.out.print('\t');
-            System.out.print(Time.datetoFullTime(record.getDate_created()));
+            System.out.print(Time.datetoReadableString(record.getDate_created()));
             System.out.print('\t');
-            System.out.print(Time.datetoFullTime(record.getDate_modified()));
+            System.out.print(Time.datetoReadableString(record.getDate_modified()));
             System.out.print('\t');
             System.out.print(UserManager.getUsername(record.getUser_ID_created()));
             System.out.print('\t');
             System.out.print(UserManager.getUsername(record.getUser_ID_modified()));
             System.out.print('\t');
             System.out.print(record.getSizetoString());
+            System.out.println();
+        }
+    }
+
+    public static void toTable() {
+        System.out.println(
+                "Doc_ID Doc_header_ID    "
+                        + "    Doc_name     "
+                        + "       Date_created    "
+                        + "       Date_modified "
+                        + "  User_ID_created  User_ID_modified  "
+                        + "     Size");
+        for (DocumentDetail record : toListofDocDetail()) {
+            System.out.format(
+                    "%6s %13s %15s %23s %23s %17s %17s %10s",
+                    record.getDoc_ID(),
+                    record.Doc_header_ID,
+                    record.getDoc_name(),
+                    Time.datetoReadableString(record.getDate_created()),
+                    Time.datetoReadableString(record.getDate_modified()),
+                    UserManager.getUsername(record.getUser_ID_created()),
+                    UserManager.getUsername(record.getUser_ID_modified()),
+                    record.getSizetoString());
             System.out.println();
         }
     }
@@ -160,30 +231,5 @@ public class DocumentDetail {
         int exp = (int) (Math.log(bytes) / Math.log(1024));
         char pre = "KMGTPE".charAt(exp - 1);
         return String.format("%.2f %sB", bytes / Math.pow(1024, exp), pre);
-    }
-
-    @Override
-    public String toString() {
-        return "DocumentDetail{"
-                + "Doc_ID="
-                + Doc_ID
-                + ", Doc_header_ID="
-                + Doc_header_ID
-                + ", Doc_name='"
-                + Doc_name
-                + '\''
-                + ", Date_created="
-                + Date_created
-                + ", Date_modified="
-                + Date_modified
-                + ", User_ID_created="
-                + User_ID_created
-                + ", User_ID_modified="
-                + User_ID_modified
-                + ", Size="
-                + Size
-                + ", Data_file="
-                + Arrays.toString(Data_file)
-                + '}';
     }
 }

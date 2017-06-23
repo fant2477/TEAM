@@ -26,18 +26,13 @@ public class DocumentHeader {
         Date_modified = date_modified;
     }
 
-    public static List<DocumentHeader> getArrayofTable() {
+    public static List<DocumentHeader> toListofDocHeader() {
         List<DocumentHeader> table = new ArrayList<>();
-        ConnectionDB.connect();
         try {
             String sql = "SELECT * FROM Document_header ORDER BY Date_created";
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-            int nCol = rs.getMetaData().getColumnCount();
-            //table = new DocumentDetail[nCol];
             while (rs.next()) {
-                int id = rs.getInt(1);
-                DocumentHeader x = DocumentManager.getHeader(id);
-                table.add(x);
+                table.add(DocumentManager.getHeader(rs.getInt(1)));
             }
             rs.close();
         } catch (Exception e) {
@@ -46,17 +41,17 @@ public class DocumentHeader {
         return table;
     }
 
-    public static void tabletoString() {
-        for (DocumentHeader record : DocumentHeader.getArrayofTable()) {
+    public static void toStr() {
+        for (DocumentHeader record : DocumentHeader.toListofDocHeader()) {
             System.out.print(record.getDoc_header_ID());
             System.out.print('\t');
             System.out.print(UserManager.getUsername(record.getUser_ID_created()));
             System.out.print('\t');
             System.out.print(UserManager.getUsername(record.getUser_ID_modified()));
             System.out.print('\t');
-            System.out.print(Time.datetoFullTime(record.getDate_created()));
+            System.out.print(Time.datetoReadableString(record.getDate_created()));
             System.out.print('\t');
-            System.out.print(Time.datetoFullTime(record.getDate_modified()));
+            System.out.print(Time.datetoReadableString(record.getDate_modified()));
             System.out.print('\t');
             System.out.println();
         }
@@ -68,10 +63,6 @@ public class DocumentHeader {
 
     public int getUser_ID_created() {
         return User_ID_created;
-    }
-
-    public void setUser_ID_created(int user_ID_created) {
-        User_ID_created = user_ID_created;
     }
 
     public int getUser_ID_modified() {
@@ -86,30 +77,11 @@ public class DocumentHeader {
         return Date_created;
     }
 
-    public void setDate_created(Date date_created) {
-        Date_created = date_created;
-    }
-
     public Date getDate_modified() {
         return Date_modified;
     }
 
     public void setDate_modified(Date date_modified) {
         Date_modified = date_modified;
-    }
-
-    @Override
-    public String toString() {
-        return "DocumentHeader [Doc_header_ID="
-                + Doc_header_ID
-                + ", User_ID_created="
-                + User_ID_created
-                + ", User_ID_modified="
-                + User_ID_modified
-                + ", Date_created="
-                + Date_created
-                + ", Date_modified="
-                + Date_modified
-                + "]";
     }
 }

@@ -7,7 +7,6 @@ import java.util.List;
 public class Log {
 
     public static void addLog(String currentTime, String filename, String status, String user) {
-        ConnectionDB.connect();
         try {
             String sql =
                     String.format(
@@ -17,12 +16,10 @@ public class Log {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
     }
 
     public static void addLog(
             String currentTime, String filename, String status, String user, int id) {
-        ConnectionDB.connect();
         try {
             String sql =
                     String.format(
@@ -32,24 +29,29 @@ public class Log {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
+    }
+
+    public static void sortedLog() {
+        try {
+            String sql =
+                    "SELECT * INTO NewLog FROM Event_log ORDER BY Time "
+                            + "DROP TABLE Event_log "
+                            + "EXEC sp_rename 'NewLog', 'Event_log'";
+            ConnectionDB.statement.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static List<String[]> getLog() {
         List<String[]> table = new ArrayList<>();
-        ConnectionDB.connect();
         try {
             String sql = "SELECT * FROM Event_log ORDER BY Time";
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-            //int nCol = rs.getMetaData().getColumnCount();
-            //table = new DocumentDetail[nCol];
             while (rs.next()) {
-                String[] row = new String[2];
-                row[0] = Time.datetoFullTime(rs.getTimestamp(1));
-                row[1] = rs.getString(2);
+                String[] row = {Time.datetoString(rs.getTimestamp(1)), rs.getString(2)};
                 table.add(row);
             }
-
             rs.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,11 +59,10 @@ public class Log {
         return table;
     }
 
-    public static void printString() {
+    public static void toStr() {
         for (String[] row : Log.getLog()) {
             for (String s : row) {
-                System.out.print(s);
-                System.out.print(' ');
+                System.out.printf("%s ", s);
             }
             System.out.println();
         }

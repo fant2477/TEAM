@@ -25,21 +25,18 @@ public class UserValidation {
     }
 
     public static boolean isUsernameTaken(String username) {
-        ConnectionDB.connect();
         try {
             String sql =
                     String.format("SELECT Username FROM Account WHERE Username = '%s'", username);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 rs.close();
-                ConnectionDB.disconnect();
                 return true;
             }
             rs.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
         return false;
     }
 
@@ -152,7 +149,6 @@ public class UserValidation {
 
     // use when click login
     public static boolean validLogin(String username, String password) {
-        ConnectionDB.connect();
         try {
             String sql =
                     String.format("SELECT Password FROM Account WHERE Username = '%s'", username);
@@ -161,7 +157,6 @@ public class UserValidation {
                 if (rs.getString("Password").equals(password)) {
                     System.out.println("Login correctly");
                     rs.close();
-                    ConnectionDB.disconnect();
                     return true;
                 }
             }
@@ -169,25 +164,21 @@ public class UserValidation {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
         return false;
     }
 
     public static boolean isIDTaken(int id) {
-        ConnectionDB.connect();
         try {
             String sql = String.format("SELECT User_ID FROM Account WHERE User_ID = %d", id);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 rs.close();
-                ConnectionDB.disconnect();
                 return true;
             }
             rs.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
         return false;
     }
 }

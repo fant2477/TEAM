@@ -1,39 +1,37 @@
 package project_db;
 
 import java.sql.ResultSet;
-import java.util.Date;
 
 public class UserManager {
 
-    public static User getUser(int id) {
-        ConnectionDB.connect();
+    public static User getUser(int User_ID) {
         try {
-            String sql = String.format("SELECT * FROM Account WHERE User_ID = %d", id);
+            String sql = String.format("SELECT * FROM Account WHERE User_ID = %d", User_ID);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
-                int User_ID = rs.getInt("User_ID");
-                String user = rs.getString("Username");
-                String pass = rs.getString("Password");
-                String nam = rs.getString("Name");
-                String surnam = rs.getString("Surname");
-                String bG = rs.getString("BusinessGroup");
-                Date date_created = rs.getDate("Date_created");
-                Date date_modified = rs.getDate("Date_modified");
+                User u =
+                        new User(
+                                rs.getInt("User_ID"),
+                                rs.getString("Username"),
+                                rs.getString("Password"),
+                                rs.getString("Name"),
+                                rs.getString("Surname"),
+                                rs.getString("BusinessGroup"),
+                                rs.getDate("Date_created"),
+                                rs.getDate("Date_modified"));
                 rs.close();
 
-                return new User(User_ID, user, pass, nam, surnam, bG, date_created, date_modified);
+                return u;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
         return null;
     }
 
-    public static String getUsername(int id) {
-        ConnectionDB.connect();
+    public static String getUsername(int User_ID) {
         try {
-            String sql = String.format("SELECT Username FROM Account WHERE User_ID = %d", id);
+            String sql = String.format("SELECT Username FROM Account WHERE User_ID = %d", User_ID);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 String user = rs.getString("Username");
@@ -43,7 +41,6 @@ public class UserManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
         return null;
     }
 
@@ -65,7 +62,6 @@ public class UserManager {
 
     private User insertNewUser(
             String username, String password, String name, String surname, String businessGroup) {
-        ConnectionDB.connect();
         try {
             String s =
                     "INSERT INTO Account "
@@ -77,12 +73,12 @@ public class UserManager {
                             + "Date_created, "
                             + "Date_modified) "
                             + "VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s')";
-            String e = Time.currentTimetoString();
-            String sql = String.format(s, username, password, name, surname, businessGroup, e, e);
+            String t = Time.currentTimetoString();
+            String sql = String.format(s, username, password, name, surname, businessGroup, t, t);
             ConnectionDB.statement.executeUpdate(sql);
             System.out.printf("Create new account: %s successfully.\n", username);
 
-            // Get ID from Table
+            // Get * from Table by ID
             sql = String.format("SELECT * FROM Account WHERE Username = '%s'", username);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
@@ -93,37 +89,35 @@ public class UserManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
         return null;
     }
 
     public User getUser(String username) {
-        ConnectionDB.connect();
         try {
             String sql = String.format("SELECT * FROM Account WHERE Username = '%s'", username);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
-                int User_ID = rs.getInt("User_ID");
-                String user = rs.getString("Username");
-                String pass = rs.getString("Password");
-                String nam = rs.getString("Name");
-                String surnam = rs.getString("Surname");
-                String bG = rs.getString("BusinessGroup");
-                Date date_created = rs.getDate("Date_created");
-                Date date_modified = rs.getDate("Date_modified");
+                User u =
+                        new User(
+                                rs.getInt("User_ID"),
+                                rs.getString("Username"),
+                                rs.getString("Password"),
+                                rs.getString("Name"),
+                                rs.getString("Surname"),
+                                rs.getString("BusinessGroup"),
+                                rs.getDate("Date_created"),
+                                rs.getDate("Date_modified"));
                 rs.close();
-                return new User(User_ID, user, pass, nam, surnam, bG, date_created, date_modified);
+                return u;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
         return null;
     }
 
     public void deleteUser(String username) {
         if (UserValidation.isUsernameTaken(username)) {
-            ConnectionDB.connect();
             try {
                 String sql = String.format("DELETE FROM Account WHERE Username = '%s'", username);
                 ConnectionDB.statement.executeUpdate(sql);
@@ -131,7 +125,6 @@ public class UserManager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            ConnectionDB.disconnect();
         } else {
             System.err.println(username + " is not found.");
         }
@@ -139,7 +132,6 @@ public class UserManager {
 
     public void deleteUser(int id) {
         if (UserValidation.isIDTaken(id)) {
-            ConnectionDB.connect();
             try {
                 String sql = String.format("DELETE FROM Account WHERE User_ID = %d", id);
                 ConnectionDB.statement.executeUpdate(sql);
@@ -147,15 +139,12 @@ public class UserManager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            ConnectionDB.disconnect();
         } else {
             System.err.println(id + " is not found.");
         }
     }
 
     public static void updateUser(User user) {
-        //
-        ConnectionDB.connect();
         try {
             String s =
                     "UPDATE Account "
@@ -180,6 +169,5 @@ public class UserManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
     }
 }

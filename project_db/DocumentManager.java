@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.file.Paths;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
@@ -17,45 +18,69 @@ public class DocumentManager {
     }
 
     public static DocumentDetail getFile(int id) {
-        ConnectionDB.connect();
+        DocumentDetail d = null;
         try {
             String sql = String.format("SELECT * FROM Document_detail WHERE Doc_ID = %d", id);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
-                int doc_ID = rs.getInt("Doc_ID");
-                int doc_header_ID = rs.getInt("Doc_header_ID");
-                String doc_name = rs.getString("Doc_name");
-                Date date_created = rs.getTimestamp("Date_created");
-                Date date_modified = rs.getTimestamp("Date_modified");
-                int user_ID_created = rs.getInt("User_ID_created");
-                int user_ID_modified = rs.getInt("User_ID_modified");
-                long size = rs.getLong("Size");
-                byte[] data_file = rs.getBytes("Data_file");
-                rs.close();
-
+                d =
+                        new DocumentDetail(
+                                rs.getInt("Doc_ID"),
+                                rs.getInt("Doc_header_ID"),
+                                rs.getString("Doc_name"),
+                                rs.getTimestamp("Date_created"),
+                                rs.getTimestamp("Date_modified"),
+                                rs.getInt("User_ID_created"),
+                                rs.getInt("User_ID_modified"),
+                                rs.getLong("Size"),
+                                rs.getBytes("Data_file"));
                 //Add Log
                 Log.addLog(
                         Time.currentTimetoString(),
-                        doc_name,
+                        rs.getString("Doc_name"),
                         "accessed",
                         getCurrentUser().getUsername());
-
-                return new DocumentDetail(
-                        doc_ID,
-                        doc_header_ID,
-                        doc_name,
-                        date_created,
-                        date_modified,
-                        user_ID_created,
-                        user_ID_modified,
-                        size,
-                        data_file);
+                rs.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
-        return null;
+        return d;
+    }
+
+    public static DocumentDetail getGenneralFile(int id) {
+        DocumentDetail d = null;
+        try {
+            String sql =
+                    String.format(
+                            "SELECT Doc_ID, "
+                                    + "Doc_header_ID, "
+                                    + "Doc_name, "
+                                    + "Date_created, "
+                                    + "Date_modified, "
+                                    + "User_ID_created, "
+                                    + "User_ID_modified, "
+                                    + "Size "
+                                    + "FROM Document_detail WHERE Doc_ID = %d",
+                            id);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                d =
+                        new DocumentDetail(
+                                rs.getInt("Doc_ID"),
+                                rs.getInt("Doc_header_ID"),
+                                rs.getString("Doc_name"),
+                                rs.getTimestamp("Date_created"),
+                                rs.getTimestamp("Date_modified"),
+                                rs.getInt("User_ID_created"),
+                                rs.getInt("User_ID_modified"),
+                                rs.getLong("Size"));
+                rs.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return d;
     }
 
     private static User getCurrentUser() {
@@ -70,80 +95,70 @@ public class DocumentManager {
         DocumentManager.currentHeader = currentHeader;
     }
 
-    private int getLastID() {
+    private int getLatestID() {
         int currentYear = Time.getCurrentBEYear();
-        int maxLastID;
-        ConnectionDB.connect();
+        int LatestID;
         try {
             String sql = "SELECT MAX(ID) FROM Event_log";
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
-                maxLastID = rs.getInt(1);
-                if (currentYear != maxLastID / 10000) {
-                    return currentYear * 10000;
+                LatestID = rs.getInt(1);
+                if (currentYear == LatestID / 10000) {
+                    return LatestID;
                 }
-                return maxLastID;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return -1;
+        return currentYear * 10000;
     }
 
     public DocumentHeader createHeader() {
-        ConnectionDB.connect();
         try {
             // Add file to DocumentHeader
-            String e = Time.currentTimetoString();
-            int currentID = getLastID() + 1;
+            String t = Time.currentTimetoString();
+            int currentID = getLatestID() + 1;
             String sql =
                     String.format(
                             "INSERT INTO Document_header VALUES(%d, %d, %d, '%s', '%s', '%s')",
                             currentID,
                             currentUser.getUser_ID(),
                             currentUser.getUser_ID(),
-                            e,
-                            e,
+                            t,
+                            t,
                             "");
             ConnectionDB.statement.executeUpdate(sql);
 
             // Add log
-            Log.addLog(e, "New Header", "added", currentUser.getUsername(), currentID);
+            Log.addLog(t, "New Header", "added", currentUser.getUsername(), currentID);
 
-            return getHeader(getLastID() + 1);
+            return getHeader(currentID);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
         return null;
     }
 
     public static DocumentHeader getHeader(int id) {
-        ConnectionDB.connect();
+        DocumentHeader h = null;
         try {
             String sql =
                     String.format("SELECT * FROM Document_header WHERE Doc_header_ID = %d", id);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
-                int Doc_header_ID = rs.getInt("Doc_header_ID");
-                int User_ID_created = rs.getInt("User_ID_created");
-                int User_ID_modified = rs.getInt("User_ID_modified");
-                Date Date_created = rs.getTimestamp("Date_created");
-                Date Date_modified = rs.getTimestamp("Date_modified");
+                h =
+                        new DocumentHeader(
+                                rs.getInt("Doc_header_ID"),
+                                rs.getInt("User_ID_created"),
+                                rs.getInt("User_ID_modified"),
+                                rs.getTimestamp("Date_created"),
+                                rs.getTimestamp("Date_modified"));
                 rs.close();
-
-                return new DocumentHeader(
-                        Doc_header_ID,
-                        User_ID_created,
-                        User_ID_modified,
-                        Date_created,
-                        Date_modified);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
-        return null;
+        return h;
     }
 
     public DocumentDetail createFile(String FilePath) {
@@ -157,11 +172,7 @@ public class DocumentManager {
 
     private DocumentDetail insetFile(File file) {
         PreparedStatement pstmt;
-
-        ConnectionDB.connect();
         try {
-            /* FileInputStream fis = new FileInputStream(file); */
-
             // Add Data of file to DataFile.
             String sql =
                     "INSERT INTO Document_detail "
@@ -176,17 +187,25 @@ public class DocumentManager {
                             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
             pstmt = ConnectionDB.connect.prepareStatement(sql);
             Date d = Time.getCurrentTime();
-            String e = Time.datetoFullTime(d);
+            String t = Time.datetoString(d);
             pstmt.setInt(1, getCurrentHeader().getDoc_header_ID());
             pstmt.setString(2, file.getName());
-            pstmt.setString(3, e);
-            pstmt.setString(4, e);
+            pstmt.setString(3, t);
+            pstmt.setString(4, t);
             pstmt.setInt(5, getCurrentUser().getUser_ID());
             pstmt.setInt(6, getCurrentUser().getUser_ID());
             pstmt.setLong(7, file.length());
+
+            // Add log
+            Log.addLog(Time.currentTimetoString(), file.getName(), "start uploading", getCurrentUser().getUsername());
+
             pstmt.setBinaryStream(8, new FileInputStream(file));
             pstmt.executeUpdate();
             pstmt.close();
+            // Add log
+            Log.addLog(Time.currentTimetoString(), file.getName(), "uploaded successfully", getCurrentUser().getUsername());
+
+
             System.out.println(String.format("Added %s Correctly.", file.getName()));
 
             // return DocDeatail
@@ -196,19 +215,19 @@ public class DocumentManager {
             if (rs.next()) {
                 id = rs.getInt(1);
             }
+
             rs.close();
 
             // Update Header
             this.updateHeaderModified(d);
 
             // Add log
-            Log.addLog(e, file.getName(), "Added", getCurrentUser().getUsername());
+            Log.addLog(t, file.getName(), "added", getCurrentUser().getUsername());
 
             return getFile(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
         return null;
     }
 
@@ -216,7 +235,6 @@ public class DocumentManager {
         byte[] fileBytes;
         String query;
         try {
-            ConnectionDB.connect();
             query =
                     String.format(
                             "SELECT Doc_name, Data_file FROM Document_detail WHERE Doc_ID = %d",
@@ -224,21 +242,23 @@ public class DocumentManager {
             ResultSet rs = ConnectionDB.statement.executeQuery(query);
             if (rs.next()) {
                 String name = rs.getString("Doc_name");
-                fileBytes = rs.getBytes("Data_file");
-
-                OutputStream targetFile = new FileOutputStream(targetPath + id + name);
-                rs.close();
-
                 //Add Log
+                System.out.println("start downloading");
                 Log.addLog(
                         Time.currentTimetoString(),
                         name,
-                        "start download",
+                        "start downloading",
                         DocumentManager.currentUser.getUsername());
+
+                fileBytes = rs.getBytes("Data_file");
+                rs.close();
+                // OutputStream targetFile = new FileOutputStream(targetPath + id + name);
+                String target = Paths.get(targetPath, id + name).toString();
+                OutputStream targetFile = new FileOutputStream(target);
 
                 targetFile.write(fileBytes);
                 targetFile.close();
-                if (!new File(targetPath + id + name).exists()) {
+                if (!new File(target).exists()) {
                     System.err.println("Download Fail ;(");
                     Log.addLog(
                             Time.currentTimetoString(),
@@ -246,6 +266,7 @@ public class DocumentManager {
                             "download failed",
                             DocumentManager.currentUser.getUsername());
                 } else {
+                    System.out.println("downloaded successfully");
                     Log.addLog(
                             Time.currentTimetoString(),
                             name,
@@ -253,34 +274,30 @@ public class DocumentManager {
                             DocumentManager.currentUser.getUsername());
                 }
             }
-            ConnectionDB.disconnect();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void updateHeaderModified(Date currentTime) {
+    private void updateHeaderModified(Date currentTime) {
         this.getCurrentHeader().setDate_modified(currentTime);
         this.getCurrentHeader().setUser_ID_modified(DocumentManager.getCurrentUser().getUser_ID());
-        ConnectionDB.connect();
         try {
             String s =
                     "UPDATE Document_header "
                             + "SET User_ID_modified = '%s', "
-                            + "Date_modified = '%s', "
+                            + "Date_modified = '%s' "
                             + "WHERE Doc_header_ID = %d";
             String sql =
                     String.format(
                             s,
                             DocumentManager.getCurrentUser().getUser_ID(),
-                            currentTime,
+                            Time.datetoString(currentTime),
                             this.getCurrentHeader().getDoc_header_ID());
             ConnectionDB.statement.executeUpdate(sql);
             System.out.println("Header Data was updated. :)");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
     }
 }
