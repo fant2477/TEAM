@@ -43,17 +43,18 @@ public class UserValidation {
     // Use in Text Box of username
     public static String validUsername(String username) {
         // You can use letter, numbers and full stops.
+        final int min = 3;
 
         if (username.isEmpty()) {
             return "You can't leave this empty.";
         }
 
-        String pattern = "(?).{3,50}";
+        String pattern = String.format("(?).{%d,50}", min);
         if (!username.matches(pattern)) {
-            return "Please use between 3 and 50 characters.";
+            return String.format("Please use between %d and 50 characters.", min);
         }
 
-        pattern = "[a-zA-Z0-9\\._\\-].{3,50}";
+        pattern = String.format("[a-zA-Z0-9\\._\\-].{%d,50}", min);
         if (!username.matches(pattern)) {
             return "Please use only letters (a-z, A-Z), numbers and full stops.";
         }
@@ -85,17 +86,17 @@ public class UserValidation {
 
     // use in Text Box of Password
     public static String validPassword(String password) {
-
+        final int min = 4;
         if (password.isEmpty()) {
             return "You can't leave this empty.";
         }
 
-        String pattern = "(?).{4,}";
+        String pattern = String.format("(?).{%d,}", min);
         if (!password.matches(pattern)) {
-            return "Short passwords are easy to guess. Try one with at least 4 characters.";
+            return String.format("Short passwords are easy to guess. Try one with at least %d characters.", min);
         }
 
-        pattern = "(?).{4,50}";
+        pattern = String.format("(?).{%d,50}", min);
         if (!password.matches(pattern)) {
             return "Too long passwords. Try one with at less than 51 characters.";
         }

@@ -16,6 +16,27 @@ public class DocumentDetail {
     private long Size;
     private byte[] Data_file;
 
+    DocumentDetail(
+            int doc_ID,
+            int doc_header_ID,
+            String doc_name,
+            Date date_created,
+            Date date_modified,
+            int user_ID_created,
+            int user_ID_modified,
+            long size) {
+        this(
+                doc_ID,
+                doc_header_ID,
+                doc_name,
+                date_created,
+                date_modified,
+                user_ID_created,
+                user_ID_modified,
+                size,
+                null);
+    }
+
     public DocumentDetail(
             int doc_ID,
             int doc_header_ID,
@@ -37,43 +58,18 @@ public class DocumentDetail {
         Data_file = data_file;
     }
 
-    public DocumentDetail(
-            int doc_ID,
-            int doc_header_ID,
-            String doc_name,
-            Date date_created,
-            Date date_modified,
-            int user_ID_created,
-            int user_ID_modified,
-            long size) {
-        Doc_ID = doc_ID;
-        Doc_header_ID = doc_header_ID;
-        Doc_name = doc_name;
-        Date_created = date_created;
-        Date_modified = date_modified;
-        User_ID_created = user_ID_created;
-        User_ID_modified = user_ID_modified;
-        Size = size;
-    }
-
     public static List<DocumentDetail> toListofDocDetail() {
         List<DocumentDetail> table = new ArrayList<>();
         try {
-            String sql =
-                    "SELECT Doc_ID, "
-                            + "Doc_header_ID, "
-                            + "Doc_name, "
-                            + "Date_created, "
-                            + "Date_modified, "
-                            + "User_ID_created, "
-                            + "User_ID_modified, "
-                            + "Size "
-                            + "FROM Document_detail ORDER BY Date_created";
+            String sql = "SELECT Doc_ID FROM Document_detail ORDER BY Doc_ID";
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            List<Integer> rowValues = new ArrayList();
             while (rs.next()) {
-                table.add(DocumentManager.getGenneralFile(rs.getInt(1)));
+                rowValues.add(rs.getInt(1));
             }
             rs.close();
+            for (int i : rowValues)
+                table.add(DocumentManager.getGenneralFile(i));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,21 +81,16 @@ public class DocumentDetail {
         try {
             String sql =
                     String.format(
-                            "SELECT Doc_ID, "
-                                    + "Doc_header_ID, "
-                                    + "Doc_name, "
-                                    + "Date_created, "
-                                    + "Date_modified, "
-                                    + "User_ID_created, "
-                                    + "User_ID_modified, "
-                                    + "Size "
-                                    + "FROM Document_detail ORDER BY Date_created WHERE Doc_header_ID = %d",
+                            "SELECT Doc_ID FROM Document_detail WHERE Doc_header_ID = %d ORDER BY Doc_ID",
                             Doc_header_ID);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            List<Integer> rowValues = new ArrayList();
             while (rs.next()) {
-                table.add(DocumentManager.getGenneralFile(rs.getInt(1)));
+                rowValues.add(rs.getInt(1));
             }
             rs.close();
+            for (int i : rowValues)
+                table.add(DocumentManager.getGenneralFile(i));
         } catch (Exception e) {
             e.printStackTrace();
         }
