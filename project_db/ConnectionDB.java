@@ -6,14 +6,14 @@ import java.sql.Statement;
 
 public class ConnectionDB {
 
-    static Connection connect = null;
-    static Statement statement = null;
+    public static Connection connect = null;
+    public static Statement statement = null;
 
     public static void connect() {
-        final String localhost = "192.168.1.249";
+        final String localhost = "DB_UAT01";
         final String DatabaseName = "STUDENT";
-        final String Username = "sa";
-        final String Password = "Team*2017";
+        final String Username = "pmssa";
+        final String Password = "pmssa1234";
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connect =
