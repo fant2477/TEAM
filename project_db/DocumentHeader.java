@@ -54,13 +54,12 @@ public class DocumentHeader {
         try {
             String sql = "SELECT Doc_header_ID FROM Document_header ORDER BY Date_created";
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-            List<Integer> rowValues = new ArrayList();
+            List<Integer> rowValues = new ArrayList<>();
             while (rs.next()) {
                 rowValues.add(rs.getInt(1));
             }
             rs.close();
-            for (int i : rowValues)
-                table.add(DocumentManager.getHeader(i));
+            for (int i : rowValues) table.add(DocumentManager.getHeader(i));
         } catch (Exception e) {
             e.printStackTrace();
         }

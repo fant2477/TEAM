@@ -22,11 +22,15 @@ class Time {
     }
 
     static String datetoString(Date d) {
-        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS").withZone(ZoneId.of("Asia/Bangkok")).format(d.toInstant());
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                .withZone(ZoneId.of("Asia/Bangkok"))
+                .format(d.toInstant());
         //return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(d);
     }
 
     static String datetoReadableString(Date d) {
-        return DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss").withZone(ZoneId.of("Asia/Bangkok")).format(d.toInstant());
+        return DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss")
+                .withZone(ZoneId.of("Asia/Bangkok"))
+                .format(d.toInstant());
     }
 }

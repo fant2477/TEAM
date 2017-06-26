@@ -93,7 +93,8 @@ public class UserValidation {
 
         String pattern = String.format("(?).{%d,}", min);
         if (!password.matches(pattern)) {
-            return String.format("Short passwords are easy to guess. Try one with at least %d characters.", min);
+            return String.format(
+                    "Short passwords are easy to guess. Try one with at least %d characters.", min);
         }
 
         pattern = String.format("(?).{%d,50}", min);

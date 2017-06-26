@@ -63,13 +63,12 @@ public class DocumentDetail {
         try {
             String sql = "SELECT Doc_ID FROM Document_detail ORDER BY Doc_ID";
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-            List<Integer> rowValues = new ArrayList();
+            List<Integer> rowValues = new ArrayList<>();
             while (rs.next()) {
                 rowValues.add(rs.getInt(1));
             }
             rs.close();
-            for (int i : rowValues)
-                table.add(DocumentManager.getGenneralFile(i));
+            for (int i : rowValues) table.add(DocumentManager.getGenneralFile(i));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,13 +83,12 @@ public class DocumentDetail {
                             "SELECT Doc_ID FROM Document_detail WHERE Doc_header_ID = %d ORDER BY Doc_ID",
                             Doc_header_ID);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-            List<Integer> rowValues = new ArrayList();
+            List<Integer> rowValues = new ArrayList<>();
             while (rs.next()) {
                 rowValues.add(rs.getInt(1));
             }
             rs.close();
-            for (int i : rowValues)
-                table.add(DocumentManager.getGenneralFile(i));
+            for (int i : rowValues) table.add(DocumentManager.getGenneralFile(i));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -220,7 +218,6 @@ public class DocumentDetail {
     private String toSize(long bytes) {
         if (bytes < 1024) return bytes + " B";
         int exp = (int) (Math.log(bytes) / Math.log(1024));
-        char pre = "KMGTPE".charAt(exp - 1);
-        return String.format("%.2f %sB", bytes / Math.pow(1024, exp), pre);
+        return String.format("%.2f %sB", bytes / Math.pow(1024, exp), "KMGTPE".charAt(exp - 1));
     }
 }
