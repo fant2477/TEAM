@@ -20,10 +20,10 @@ class Time {
     }
 
     static String datetoString(Date d) {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", new Locale("TH")).format(d);
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", new Locale("en", "TH")).format(d);
     }
 
     static String datetoReadableString(Date d) {
-        return new SimpleDateFormat("dd MMM yyyy HH:mm:ss", new Locale("TH")).format(d);
+        return new SimpleDateFormat("dd MMM yyyy HH:mm:ss", new Locale("en", "TH")).format(d);
     }
 }
