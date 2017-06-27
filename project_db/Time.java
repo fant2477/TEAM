@@ -1,20 +1,18 @@
 package project_db;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 class Time {
 
     static int getCurrentBEYear() {
         // get 2 digit of Buddhist Era
-        return java.time.chrono.ThaiBuddhistDate.now().get(java.time.temporal.ChronoField.YEAR)
-                % 100;
+        return Integer.parseInt(new SimpleDateFormat("yy", new Locale("th","TH")).format(new Date()));
     }
 
     static Date getCurrentTime() {
-        return new Date(Instant.now().toEpochMilli());
+        return new Date(System.currentTimeMillis());
     }
 
     static String currentTimetoString() {
@@ -22,15 +20,10 @@ class Time {
     }
 
     static String datetoString(Date d) {
-        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-                .withZone(ZoneId.of("Asia/Bangkok"))
-                .format(d.toInstant());
-        //return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(d);
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", new Locale("TH")).format(d);
     }
 
     static String datetoReadableString(Date d) {
-        return DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss")
-                .withZone(ZoneId.of("Asia/Bangkok"))
-                .format(d.toInstant());
+        return new SimpleDateFormat("dd MMM yyyy HH:mm:ss", new Locale("TH")).format(d);
     }
 }
