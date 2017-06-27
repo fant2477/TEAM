@@ -268,8 +268,8 @@ public class DocumentManager {
 
                 fileBytes = rs.getBytes("Data_file");
                 rs.close();
-                // OutputStream targetFile = new FileOutputStream(targetPath + id + name);
-                String target = Paths.get(targetPath, id + name).toString();
+                
+                String target = new File(targetPath, id + name).getPath();
                 OutputStream targetFile = new FileOutputStream(target);
 
                 targetFile.write(fileBytes);
