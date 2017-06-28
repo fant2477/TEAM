@@ -17,8 +17,8 @@ public class UserManager {
                                 rs.getString("Name"),
                                 rs.getString("Surname"),
                                 rs.getString("BusinessGroup"),
-                                rs.getDate("Date_created"),
-                                rs.getDate("Date_modified"));
+                                rs.getTimestamp("Date_created"),
+                                rs.getTimestamp("Date_modified"));
                 rs.close();
 
                 return u;
@@ -30,18 +30,43 @@ public class UserManager {
     }
 
     public static String getUsername(int User_ID) {
+        String user = null;
         try {
             String sql = String.format("SELECT Username FROM Account WHERE User_ID = %d", User_ID);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
-                String user = rs.getString("Username");
+                user = rs.getString("Username");
                 rs.close();
                 return user;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return user;
+    }
+
+    public static void updateUser(User user) {
+        try {
+            String sql =
+                    String.format(
+                            "UPDATE Account "
+                                    + "SET Username = '%s', "
+                                    + "Password = '%s', "
+                                    + "Name = '%s' , "
+                                    + "Surname = '%s', "
+                                    + "BusinessGroup = '%s', "
+                                    + "Date_modified = '%s' ",
+                            user.getUsername(),
+                            user.getPassword(),
+                            user.getName(),
+                            user.getSurname(),
+                            user.getBusinessGroup(),
+                            Time.currentTimetoString());
+            ConnectionDB.statement.executeUpdate(sql);
+            System.out.println("User Data updated. :)");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public User createNewUser(
@@ -63,18 +88,19 @@ public class UserManager {
     private User insertNewUser(
             String username, String password, String name, String surname, String businessGroup) {
         try {
-            String s =
-                    "INSERT INTO Account "
-                            + "(Username, "
-                            + "Password, "
-                            + "Name, "
-                            + "Surname, "
-                            + "BusinessGroup, "
-                            + "Date_created, "
-                            + "Date_modified) "
-                            + "VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s')";
             String t = Time.currentTimetoString();
-            String sql = String.format(s, username, password, name, surname, businessGroup, t, t);
+            String sql =
+                    String.format(
+                            "INSERT INTO Account "
+                                    + "(Username, "
+                                    + "Password, "
+                                    + "Name, "
+                                    + "Surname, "
+                                    + "BusinessGroup, "
+                                    + "Date_created, "
+                                    + "Date_modified) "
+                                    + "VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+                            username, password, name, surname, businessGroup, t, t);
             ConnectionDB.statement.executeUpdate(sql);
             System.out.printf("Create new account: %s successfully.\n", username);
 
@@ -105,8 +131,8 @@ public class UserManager {
                                 rs.getString("Name"),
                                 rs.getString("Surname"),
                                 rs.getString("BusinessGroup"),
-                                rs.getDate("Date_created"),
-                                rs.getDate("Date_modified"));
+                                rs.getTimestamp("Date_created"),
+                                rs.getTimestamp("Date_modified"));
                 rs.close();
                 return u;
             }
@@ -141,33 +167,6 @@ public class UserManager {
             }
         } else {
             System.err.println(id + " is not found.");
-        }
-    }
-
-    public static void updateUser(User user) {
-        try {
-            String s =
-                    "UPDATE Account "
-                            + "SET Username = '%s', "
-                            + "Password = '%s', "
-                            + "Name = '%s' , "
-                            + "Surname = '%s', "
-                            + "BusinessGroup = '%s', "
-                            + "Date_modified = '%s' "
-                            + "WHERE User_ID = %d";
-            String sql =
-                    String.format(
-                            s,
-                            user.getUsername(),
-                            user.getPassword(),
-                            user.getName(),
-                            user.getSurname(),
-                            user.getBusinessGroup(),
-                            Time.currentTimetoString());
-            ConnectionDB.statement.executeUpdate(sql);
-            System.out.println("User Data updated. :)");
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

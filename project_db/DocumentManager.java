@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.nio.file.Paths;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
@@ -34,13 +33,6 @@ public class DocumentManager {
                                 rs.getInt("User_ID_modified"),
                                 rs.getLong("Size"),
                                 rs.getBytes("Data_file"));
-                //Add Log
-                /*
-                Log.addLog(
-                        Time.currentTimetoString(),
-                        rs.getString("Doc_name"),
-                        "accessed",
-                        getCurrentUser().getUsername()); */
                 rs.close();
             }
         } catch (Exception e) {
@@ -121,11 +113,12 @@ public class DocumentManager {
     public DocumentHeader createHeader(String subject, String description) {
         try {
             // Add file to DocumentHeader
-            String t = Time.currentTimetoString();
             int currentID = getLatestID() + 1;
+            String t = Time.currentTimetoString();
             String sql =
                     String.format(
-                            "INSERT INTO Document_header VALUES(%d, '%s', %d, %d, '%s', '%s', '%s', '%s')",
+                            "INSERT INTO Document_header "
+                                    + "VALUES(%d, '%s', %d, %d, '%s', '%s', '%s', '%s')",
                             currentID,
                             subject,
                             currentUser.getUser_ID(),
@@ -268,25 +261,26 @@ public class DocumentManager {
 
                 fileBytes = rs.getBytes("Data_file");
                 rs.close();
-                
-                String target = new File(targetPath, id + name).getPath();
-                OutputStream targetFile = new FileOutputStream(target);
+
+                //String target = new File(targetPath, id + name).getPath();
+                File target = new File(targetPath, id + name);
+                OutputStream targetFile = new FileOutputStream(target.getPath());
 
                 targetFile.write(fileBytes);
                 targetFile.close();
-                if (!new File(target).exists()) {
-                    System.err.println("Download Fail ;(");
-                    Log.addLog(
-                            Time.currentTimetoString(),
-                            name,
-                            "download failed",
-                            DocumentManager.currentUser.getUsername());
-                } else {
+                if (target.exists()) {
                     System.out.println("downloaded successfully");
                     Log.addLog(
                             Time.currentTimetoString(),
                             name,
                             "downloaded successfully",
+                            DocumentManager.currentUser.getUsername());
+                } else {
+                    System.err.println("Download Fail ;(");
+                    Log.addLog(
+                            Time.currentTimetoString(),
+                            name,
+                            "download failed",
                             DocumentManager.currentUser.getUsername());
                 }
             }
@@ -299,14 +293,12 @@ public class DocumentManager {
         this.getCurrentHeader().setDate_modified(currentTime);
         this.getCurrentHeader().setUser_ID_modified(DocumentManager.getCurrentUser().getUser_ID());
         try {
-            String s =
-                    "UPDATE Document_header "
-                            + "SET User_ID_modified = '%s', "
-                            + "Date_modified = '%s' "
-                            + "WHERE Doc_header_ID = %d";
             String sql =
                     String.format(
-                            s,
+                            "UPDATE Document_header "
+                                    + "SET User_ID_modified = '%s', "
+                                    + "Date_modified = '%s' "
+                                    + "WHERE Doc_header_ID = %d",
                             DocumentManager.getCurrentUser().getUser_ID(),
                             Time.datetoString(currentTime),
                             this.getCurrentHeader().getDoc_header_ID());
