@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import project_db.User;
+
 /**
  * Servlet implementation class main_page
  */
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 public class main_page extends HttpServlet {
 	String change_page;
 	String from_page;
+	User current_user;
 
 	private static final long serialVersionUID = 1L;
 
@@ -33,8 +36,10 @@ public class main_page extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("in main_page get");
 
-
+		
 		response.setContentType("text/html");
+		current_user = (User) request.getSession().getAttribute("current_user");
+		System.out.println("main current_user: "+ current_user);
 
 		// go to fn same as sent fn (sent by post go to post )
 		RequestDispatcher dispatcher = request.getRequestDispatcher("main_ui.jsp");

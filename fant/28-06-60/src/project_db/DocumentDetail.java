@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public class DocumentDetail {
+
     private int Doc_ID;
     private int Doc_header_ID;
     private String Doc_name;
@@ -15,6 +16,27 @@ public class DocumentDetail {
     private int User_ID_modified;
     private long Size;
     private byte[] Data_file;
+
+    DocumentDetail(
+            int doc_ID,
+            int doc_header_ID,
+            String doc_name,
+            Date date_created,
+            Date date_modified,
+            int user_ID_created,
+            int user_ID_modified,
+            long size) {
+        this(
+                doc_ID,
+                doc_header_ID,
+                doc_name,
+                date_created,
+                date_modified,
+                user_ID_created,
+                user_ID_modified,
+                size,
+                null);
+    }
 
     public DocumentDetail(
             int doc_ID,
@@ -37,43 +59,19 @@ public class DocumentDetail {
         Data_file = data_file;
     }
 
-    public DocumentDetail(
-            int doc_ID,
-            int doc_header_ID,
-            String doc_name,
-            Date date_created,
-            Date date_modified,
-            int user_ID_created,
-            int user_ID_modified,
-            long size) {
-        Doc_ID = doc_ID;
-        Doc_header_ID = doc_header_ID;
-        Doc_name = doc_name;
-        Date_created = date_created;
-        Date_modified = date_modified;
-        User_ID_created = user_ID_created;
-        User_ID_modified = user_ID_modified;
-        Size = size;
-    }
-
     public static List<DocumentDetail> toListofDocDetail() {
         List<DocumentDetail> table = new ArrayList<DocumentDetail>();
         try {
-            String sql =
-                    "SELECT Doc_ID, "
-                            + "Doc_header_ID, "
-                            + "Doc_name, "
-                            + "Date_created, "
-                            + "Date_modified, "
-                            + "User_ID_created, "
-                            + "User_ID_modified, "
-                            + "Size "
-                            + "FROM Document_detail ORDER BY Date_created";
+            String sql = "SELECT Doc_ID FROM Document_detail ORDER BY Doc_ID";
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            List<Integer> rowValues = new ArrayList<Integer>();
             while (rs.next()) {
-                table.add(DocumentManager.getGenneralFile(rs.getInt(1)));
+                rowValues.add(rs.getInt(1));
             }
             rs.close();
+            for (int i : rowValues) {
+                table.add(DocumentManager.getGenneralFile(i));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,21 +83,18 @@ public class DocumentDetail {
         try {
             String sql =
                     String.format(
-                            "SELECT Doc_ID, "
-                                    + "Doc_header_ID, "
-                                    + "Doc_name, "
-                                    + "Date_created, "
-                                    + "Date_modified, "
-                                    + "User_ID_created, "
-                                    + "User_ID_modified, "
-                                    + "Size "
-                                    + "FROM Document_detail ORDER BY Date_created WHERE Doc_header_ID = %d",
+                            "SELECT Doc_ID FROM Document_detail "
+                                    + "WHERE Doc_header_ID = %d ORDER BY Doc_ID",
                             Doc_header_ID);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            List<Integer> rowValues = new ArrayList<Integer>();
             while (rs.next()) {
-                table.add(DocumentManager.getGenneralFile(rs.getInt(1)));
+                rowValues.add(rs.getInt(1));
             }
             rs.close();
+            for (int i : rowValues) {
+                table.add(DocumentManager.getGenneralFile(i));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -227,9 +222,10 @@ public class DocumentDetail {
     }
 
     private String toSize(long bytes) {
-        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024) {
+            return bytes + " B";
+        }
         int exp = (int) (Math.log(bytes) / Math.log(1024));
-        char pre = "KMGTPE".charAt(exp - 1);
-        return String.format("%.2f %sB", bytes / Math.pow(1024, exp), pre);
+        return String.format("%.2f %sB", bytes / Math.pow(1024, exp), "KMGTPE".charAt(exp - 1));
     }
 }

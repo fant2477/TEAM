@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Log {
 
-    public static void addLog(String currentTime, String filename, String status, String user) {
+    static void addLog(String currentTime, String filename, String status, String user) {
         try {
             String sql =
                     String.format(
@@ -18,8 +18,7 @@ public class Log {
         }
     }
 
-    public static void addLog(
-            String currentTime, String filename, String status, String user, int id) {
+    static void addLog(String currentTime, String filename, String status, String user, int id) {
         try {
             String sql =
                     String.format(

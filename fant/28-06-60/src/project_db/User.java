@@ -31,15 +31,11 @@ public class User {
         Date_modified = date_modified;
     }
 
-    int getUser_ID() {
+    public int getUser_ID() {
         return User_ID;
     }
 
-    public void setUser_ID(int user_ID) {
-        User_ID = user_ID;
-    }
-
-    String getUsername() {
+    public String getUsername() {
         return Username;
     }
 
@@ -81,10 +77,6 @@ public class User {
 
     public Date getDate_created() {
         return Date_created;
-    }
-
-    public void setDate_created(Date date_created) {
-        Date_created = date_created;
     }
 
     public Date getDate_modified() {

@@ -9,21 +9,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import project_db.ConnectionDB;
+import project_db.User;
+
 /**
  * Servlet implementation class UI_Manager
  */
 @WebServlet("/UI_Manager")
 public class UI_Manager extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	String current_user;
+	User current_user;
 	String current_page;
 	String change_page;
-	String from_page;
+	String from_page = null;
     /**
      * @see HttpServlet#HttpServlet()
      */
     public UI_Manager() {
-    	current_user = "fant";
+//    	current_user = "fant";
 		current_page = "login_page";
 		change_page = "login_page";
 
@@ -41,8 +44,12 @@ public class UI_Manager extends HttpServlet {
 
 		change_page = (String) request.getSession().getAttribute("change_page");
 		from_page = (String) request.getSession().getAttribute("from_page");
+		current_user = (User) request.getSession().getAttribute("current_user");
+		System.out.println("UI current_user: "+ current_user);
+		
+		
 		System.out.println("ui change_page2: "+change_page);
-
+		String sstate ="";
 		if(from_page=="login_page")
 		{
 		System.out.println("i get from_page: "+from_page);
@@ -50,7 +57,10 @@ public class UI_Manager extends HttpServlet {
 
 
 		if(change_page == null)
-		{change_page = "login_page"; }
+		{change_page = "login_page"; 
+		from_page = "firsttime";
+//		ConnectionDB.disconnect();
+		}
 
 
 		System.out.println("in ui get");
@@ -83,6 +93,7 @@ public class UI_Manager extends HttpServlet {
 			System.out.println("change = main");
 			current_page = "main_page";
 
+			request.getSession().setAttribute("current_user", current_user);
 			response.sendRedirect("main_page");
 		}
 
@@ -92,6 +103,7 @@ public class UI_Manager extends HttpServlet {
 			System.out.println("change = add_doc");
 			current_page = "add_doc_page";
 
+			request.getSession().setAttribute("current_user", current_user);
 			response.sendRedirect("add_doc_page");
 		}
 
@@ -101,6 +113,7 @@ public class UI_Manager extends HttpServlet {
 			System.out.println("change = delete_doc");
 			current_page = "delete_doc_page";
 
+			request.getSession().setAttribute("current_user", current_user);
 			response.sendRedirect("delete_doc_page");
 		}
 
@@ -109,6 +122,7 @@ public class UI_Manager extends HttpServlet {
 			System.out.println("change = history");
 			current_page = "history_page";
 
+			request.getSession().setAttribute("current_user", current_user);
 			response.sendRedirect("history_page");
 		}
 
@@ -117,6 +131,7 @@ public class UI_Manager extends HttpServlet {
 			System.out.println("change = detail");
 			current_page = "detail_page";
 
+			request.getSession().setAttribute("current_user", current_user);
 			response.sendRedirect("detail_page");
 		}
 
@@ -125,6 +140,7 @@ public class UI_Manager extends HttpServlet {
 			System.out.println("change = user_info");
 			current_page = "user_info_page";
 
+			request.getSession().setAttribute("current_user", current_user);
 			response.sendRedirect("user_info_page");
 		}
 
@@ -133,6 +149,7 @@ public class UI_Manager extends HttpServlet {
 			System.out.println("change = user_history");
 			current_page = "user_history_page";
 
+			request.getSession().setAttribute("current_user", current_user);
 			response.sendRedirect("user_history_page");
 		}
 	}

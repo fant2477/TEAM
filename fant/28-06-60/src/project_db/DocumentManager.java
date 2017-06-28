@@ -33,12 +33,6 @@ public class DocumentManager {
                                 rs.getInt("User_ID_modified"),
                                 rs.getLong("Size"),
                                 rs.getBytes("Data_file"));
-                //Add Log
-                Log.addLog(
-                        Time.currentTimetoString(),
-                        rs.getString("Doc_name"),
-                        "accessed",
-                        getCurrentUser().getUsername());
                 rs.close();
             }
         } catch (Exception e) {
@@ -112,24 +106,31 @@ public class DocumentManager {
         return currentYear * 10000;
     }
 
-    public DocumentHeader createHeader() {
+    public DocumentHeader createHeader(String subject) {
+        return createHeader(subject, null);
+    }
+
+    public DocumentHeader createHeader(String subject, String description) {
         try {
             // Add file to DocumentHeader
-            String t = Time.currentTimetoString();
             int currentID = getLatestID() + 1;
+            String t = Time.currentTimetoString();
             String sql =
                     String.format(
-                            "INSERT INTO Document_header VALUES(%d, %d, %d, '%s', '%s', '%s')",
+                            "INSERT INTO Document_header "
+                                    + "VALUES(%d, '%s', %d, %d, '%s', '%s', '%s', '%s')",
                             currentID,
+                            subject,
                             currentUser.getUser_ID(),
                             currentUser.getUser_ID(),
                             t,
                             t,
-                            "");
+                            description,
+                            null);
             ConnectionDB.statement.executeUpdate(sql);
 
             // Add log
-            Log.addLog(t, "New Header", "added", currentUser.getUsername(), currentID);
+            Log.addLog(t, "Header: " + subject, "added", currentUser.getUsername(), currentID);
 
             return getHeader(currentID);
         } catch (Exception e) {
@@ -148,10 +149,12 @@ public class DocumentManager {
                 h =
                         new DocumentHeader(
                                 rs.getInt("Doc_header_ID"),
+                                rs.getString("Doc_header_subject"),
                                 rs.getInt("User_ID_created"),
                                 rs.getInt("User_ID_modified"),
                                 rs.getTimestamp("Date_created"),
-                                rs.getTimestamp("Date_modified"));
+                                rs.getTimestamp("Date_modified"),
+                                rs.getString("Doc_header_description"));
                 rs.close();
             }
         } catch (Exception e) {
@@ -196,14 +199,21 @@ public class DocumentManager {
             pstmt.setLong(7, file.length());
 
             // Add log
-            Log.addLog(Time.currentTimetoString(), file.getName(), "start uploading", getCurrentUser().getUsername());
+            Log.addLog(
+                    Time.currentTimetoString(),
+                    file.getName(),
+                    "start uploading",
+                    getCurrentUser().getUsername());
 
             pstmt.setBinaryStream(8, new FileInputStream(file));
             pstmt.executeUpdate();
             pstmt.close();
             // Add log
-            Log.addLog(Time.currentTimetoString(), file.getName(), "uploaded successfully", getCurrentUser().getUsername());
-
+            Log.addLog(
+                    Time.currentTimetoString(),
+                    file.getName(),
+                    "uploaded successfully",
+                    getCurrentUser().getUsername());
 
             System.out.println(String.format("Added %s Correctly.", file.getName()));
 
@@ -221,7 +231,7 @@ public class DocumentManager {
             this.updateHeaderModified(d);
 
             // Add log
-            Log.addLog(t, file.getName(), "added", getCurrentUser().getUsername());
+            // Log.addLog(t, file.getName(), "added", getCurrentUser().getUsername());
 
             return getFile(id);
         } catch (Exception e) {
@@ -251,26 +261,26 @@ public class DocumentManager {
 
                 fileBytes = rs.getBytes("Data_file");
                 rs.close();
-                // OutputStream targetFile = new FileOutputStream(targetPath + id + name);
-                //String target = Paths.get(targetPath, id + name).toString();
-                String target = "10.101.101.10/";
-                OutputStream targetFile = new FileOutputStream(target);
+
+                //String target = new File(targetPath, id + name).getPath();
+                File target = new File(targetPath, id + name);
+                OutputStream targetFile = new FileOutputStream(target.getPath());
 
                 targetFile.write(fileBytes);
                 targetFile.close();
-                if (!new File(target).exists()) {
-                    System.err.println("Download Fail ;(");
-                    Log.addLog(
-                            Time.currentTimetoString(),
-                            name,
-                            "download failed",
-                            DocumentManager.currentUser.getUsername());
-                } else {
+                if (target.exists()) {
                     System.out.println("downloaded successfully");
                     Log.addLog(
                             Time.currentTimetoString(),
                             name,
                             "downloaded successfully",
+                            DocumentManager.currentUser.getUsername());
+                } else {
+                    System.err.println("Download Fail ;(");
+                    Log.addLog(
+                            Time.currentTimetoString(),
+                            name,
+                            "download failed",
                             DocumentManager.currentUser.getUsername());
                 }
             }
@@ -283,14 +293,12 @@ public class DocumentManager {
         this.getCurrentHeader().setDate_modified(currentTime);
         this.getCurrentHeader().setUser_ID_modified(DocumentManager.getCurrentUser().getUser_ID());
         try {
-            String s =
-                    "UPDATE Document_header "
-                            + "SET User_ID_modified = '%s', "
-                            + "Date_modified = '%s' "
-                            + "WHERE Doc_header_ID = %d";
             String sql =
                     String.format(
-                            s,
+                            "UPDATE Document_header "
+                                    + "SET User_ID_modified = '%s', "
+                                    + "Date_modified = '%s' "
+                                    + "WHERE Doc_header_ID = %d",
                             DocumentManager.getCurrentUser().getUser_ID(),
                             Time.datetoString(currentTime),
                             this.getCurrentHeader().getDoc_header_ID());

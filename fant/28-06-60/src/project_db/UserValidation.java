@@ -25,38 +25,36 @@ public class UserValidation {
     }
 
     public static boolean isUsernameTaken(String username) {
-        ConnectionDB.connect();
         try {
             String sql =
                     String.format("SELECT Username FROM Account WHERE Username = '%s'", username);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 rs.close();
-                ConnectionDB.disconnect();
                 return true;
             }
             rs.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
         return false;
     }
 
     // Use in Text Box of username
     public static String validUsername(String username) {
         // You can use letter, numbers and full stops.
+        final int min = 3;
 
         if (username.isEmpty()) {
             return "You can't leave this empty.";
         }
 
-        String pattern = "(?).{3,50}";
+        String pattern = String.format("(?).{%d,50}", min);
         if (!username.matches(pattern)) {
-            return "Please use between 3 and 50 characters.";
+            return String.format("Please use between %d and 50 characters.", min);
         }
 
-        pattern = "[a-zA-Z0-9\\._\\-].{3,30}";
+        pattern = String.format("[a-zA-Z0-9\\._\\-].{%d,50}", min);
         if (!username.matches(pattern)) {
             return "Please use only letters (a-z, A-Z), numbers and full stops.";
         }
@@ -73,46 +71,49 @@ public class UserValidation {
         return UserValidation.validUsername(username).equals("OK");
     }
 
-    public static String validBusinessGroup(String BusinessGroup) {
-        if (BusinessGroup.isEmpty()) {
-            return "You can't leave this empty.";
-        }
-
-        return "OK";
-    }
-
-    public static boolean isValidBusinessGroup(String BusinessGroup) {
-        // return true iff password is valid.
-        return UserValidation.validBusinessGroup(BusinessGroup).equals("OK");
-    }
 
     // use in Text Box of Password
     public static String validPassword(String password) {
-
+        final int min = 4;
         if (password.isEmpty()) {
             return "You can't leave this empty.";
         }
 
-        String pattern = "(?).{4,50}";
+        String pattern = String.format("(?).{%d,}", min);
         if (!password.matches(pattern)) {
-            return "Short passwords are easy to guess. Try one with at least 4 characters.";
+            return String.format(
+                    "Short passwords are easy to guess. Try one with at least %d characters.", min);
+        }
+
+        pattern = String.format("(?).{%d,50}", min);
+        if (!password.matches(pattern)) {
+            return "Too long passwords. Try one with at less than 51 characters.";
         }
 
         return "OK";
     }
+
+
 
     public static boolean isValidPass(String password) {
         // return true iff password is valid.
         return UserValidation.validPassword(password).equals("OK");
     }
 
-    // use in Text Box of confirm passowrd
+    public static String ValidConfirmpass(String password, String confirmpass) {
+      if(password.equals(confirmpass)==true)
+      {
+        return "";
+      }
+      return "Your password is't match!";
+    }
+    // use in Text Box of confirm password
     public static boolean isValidConfirmpass(String password, String confirmpass) {
-        // return true iff confirm password is correctly.
+        // return true if confirm password is correctly.
         return password.equals(confirmpass);
     }
 
-    public static boolean isValidAll(  // ----------------------------- check register ---------------------------------
+    public static boolean isValidAll(
             String username,
             String password,
             String confirmpass,
@@ -124,46 +125,42 @@ public class UserValidation {
                 && isValidPass(password)
                 && isValidConfirmpass(password, confirmpass);
     }
-    
- // ============================================= Login =============================================
-    
- // ----------------------------- check login ---------------------------------
-    public static boolean isValidLogin(String username , String password) {
-    	if(UserValidation.validUsernameLogin(username).equals("OK") && UserValidation.validPasswordLogin(username, password).equals("OK"))
-    		return true;
-    	return false;
-    }
-    
+    // ============================================= Login =============================================
+    // ----------------------------- check login ---------------------------------
+//   public static boolean isValidLogin(String username , String password) {
+//     if(UserValidation.validUsernameLogin(username).equals("OK") && UserValidation.validPasswordLogin(username, password).equals("OK"))
+//       return true;
+//     return false;
+//   }
+
     // use in Text box of username at Login
     public static String validUsernameLogin(String username) {
         if (username.isEmpty()) {
             return "You can't leave this empty.";
         } else if (!UserValidation.isUsernameTaken(username)) {
-            return "Counld't find your account.";
+            return "Couldn't find your account.";
         }
         return "OK";
     }
 
     // use in Text box of password
-    public static String validPasswordLogin(String username , String password) {
+    public static String validPasswordLogin(String username ,String password) {
         if (password.isEmpty()) {
             return "You can't leave this empty.";
-        
         }
         else if(UserValidation.validUsernameLogin(username)=="OK" && UserValidation.validLogin(username,password) == false){
         	return "Password won't match!";
-        	
+
         }
-        else if(UserValidation.validUsernameLogin(username)=="You can't leave this empty." ){
-        	return "";
-        	
-        }
-        return "OK";
+//        else if(UserValidation.validUsernameLogin(username)=="You can't leave this empty." ){
+//        	return "";
+//
+//        }
+        return "";
     }
 
     // use when click login
     public static boolean validLogin(String username, String password) {
-        ConnectionDB.connect();
         try {
             String sql =
                     String.format("SELECT Password FROM Account WHERE Username = '%s'", username);
@@ -172,7 +169,6 @@ public class UserValidation {
                 if (rs.getString("Password").equals(password)) {
                     System.out.println("Login correctly");
                     rs.close();
-                    ConnectionDB.disconnect();
                     return true;
                 }
             }
@@ -180,26 +176,21 @@ public class UserValidation {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
         return false;
     }
 
     public static boolean isIDTaken(int id) {
-        ConnectionDB.connect();
         try {
-            String sql =
-                    String.format("SELECT User_ID FROM Account WHERE User_ID = %d", id);
+            String sql = String.format("SELECT User_ID FROM Account WHERE User_ID = %d", id);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 rs.close();
-                ConnectionDB.disconnect();
                 return true;
             }
             rs.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionDB.disconnect();
         return false;
     }
 }

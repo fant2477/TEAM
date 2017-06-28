@@ -9,6 +9,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import project_db.ConnectionDB;
+import project_db.DocumentManager;
+import project_db.User;
+import project_db.UserManager;
+import project_db.UserValidation;
+
 /**
  * Servlet implementation class login_page
  */
@@ -16,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class login_page extends HttpServlet {
 	String change_page,from_page;
+	User current_user;
 	static String bt;
 	private static final long serialVersionUID = 1L;
        
@@ -48,6 +55,7 @@ public class login_page extends HttpServlet {
 		System.out.println("in login_page post");
 		
 		response.setContentType("text/html");
+		ConnectionDB.connect();
 		
 		//get parameter from ui
 		String username = request.getParameter("username");
@@ -64,7 +72,7 @@ public class login_page extends HttpServlet {
 			System.out.println("no bt was press");
 			change_page = "login_page";
 			from_page = "login_page";
-			
+			ConnectionDB.disconnect();
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			
@@ -75,22 +83,50 @@ public class login_page extends HttpServlet {
 		} else if (bt.equals("Login")) {
 		    //Login button was pressed
 			System.out.println("login bt was press");
-			change_page = "main_page";
-			from_page = "login_page";
 			
+			UserValidation user_va = new UserValidation();
+			UserManager user = new UserManager();
 			
-			
-			request.getSession().setAttribute("change_page", change_page);
-			request.getSession().setAttribute("from_page", from_page);
-			
-			System.out.println("log change_page: "+ change_page);
-			//go to get fn
-			response.sendRedirect("UI_Manager");
+			if(user_va.validLogin(username,password)==true)
+			{
+				
+				current_user = user.getUser(username);
+//				DocumentManager doc = new DocumentManager(current_user);
+				change_page = "main_page";
+				from_page = "login_page";
+				request.getSession().setAttribute("change_page", change_page);
+				request.getSession().setAttribute("from_page", from_page);
+				request.getSession().setAttribute("current_user", current_user);
+				System.out.println("login set current_user: "+ current_user);
+				
+				System.out.println("log change_page: "+ change_page);
+				//go to get fn
+				response.sendRedirect("UI_Manager");
+			}
+			else{
+				String username_check = user_va.validUsernameLogin(username);
+				String password_check = user_va.validPasswordLogin(username,password);
+				
+
+				request.setAttribute("username_check",username_check);
+				request.setAttribute("password_check",password_check);
+
+				
+				request.setAttribute("username",username);
+				request.setAttribute("password",password);
+
+
+
+				//go to get fn
+//				response.sendRedirect("register_ui.jsp");
+				request.getRequestDispatcher("login_ui.jsp").forward(request, response);
+				System.out.println("go to login.jsp again");}
+			ConnectionDB.disconnect();
 			
 		} else if (bt.equals("Register")) {
 		    //Register button was pressed
 			System.out.println("register bt was press");
-			
+			ConnectionDB.disconnect();
 			change_page = "register_page";
 			from_page = "login_page";
 			
@@ -101,7 +137,7 @@ public class login_page extends HttpServlet {
 			response.sendRedirect("UI_Manager");
 		} else {
 		    //someone has altered the HTML and sent a different value!
-			
+			ConnectionDB.disconnect();
 			System.out.println("? bt was press");
 			change_page = "login_page";
 			from_page = "login_page";
