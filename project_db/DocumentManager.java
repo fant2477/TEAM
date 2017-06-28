@@ -41,7 +41,7 @@ public class DocumentManager {
         return d;
     }
 
-    public static DocumentDetail getGenneralFile(int id) {
+    public static DocumentDetail getGeneralFile(int id) {
         DocumentDetail d = null;
         try {
             String sql =

@@ -70,7 +70,7 @@ public class DocumentDetail {
             }
             rs.close();
             for (int i : rowValues) {
-                table.add(DocumentManager.getGenneralFile(i));
+                table.add(DocumentManager.getGeneralFile(i));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,7 +93,7 @@ public class DocumentDetail {
             }
             rs.close();
             for (int i : rowValues) {
-                table.add(DocumentManager.getGenneralFile(i));
+                table.add(DocumentManager.getGeneralFile(i));
             }
         } catch (Exception e) {
             e.printStackTrace();
