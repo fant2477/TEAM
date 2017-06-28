@@ -8,7 +8,8 @@ class Time {
 
     static int getCurrentBEYear() {
         // get 2 digit of Buddhist Era
-        return Integer.parseInt(new SimpleDateFormat("yy", new Locale("th","TH")).format(new Date()));
+        return Integer.parseInt(
+                new SimpleDateFormat("yy", new Locale("th", "TH")).format(new Date()));
     }
 
     static Date getCurrentTime() {

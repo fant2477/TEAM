@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public class DocumentDetail {
+
     private int Doc_ID;
     private int Doc_header_ID;
     private String Doc_name;
@@ -68,7 +69,9 @@ public class DocumentDetail {
                 rowValues.add(rs.getInt(1));
             }
             rs.close();
-            for (int i : rowValues) table.add(DocumentManager.getGenneralFile(i));
+            for (int i : rowValues) {
+                table.add(DocumentManager.getGenneralFile(i));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,7 +83,8 @@ public class DocumentDetail {
         try {
             String sql =
                     String.format(
-                            "SELECT Doc_ID FROM Document_detail WHERE Doc_header_ID = %d ORDER BY Doc_ID",
+                            "SELECT Doc_ID FROM Document_detail "
+                                    + "WHERE Doc_header_ID = %d ORDER BY Doc_ID",
                             Doc_header_ID);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             List<Integer> rowValues = new ArrayList<>();
@@ -88,7 +92,9 @@ public class DocumentDetail {
                 rowValues.add(rs.getInt(1));
             }
             rs.close();
-            for (int i : rowValues) table.add(DocumentManager.getGenneralFile(i));
+            for (int i : rowValues) {
+                table.add(DocumentManager.getGenneralFile(i));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -216,7 +222,9 @@ public class DocumentDetail {
     }
 
     private String toSize(long bytes) {
-        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024) {
+            return bytes + " B";
+        }
         int exp = (int) (Math.log(bytes) / Math.log(1024));
         return String.format("%.2f %sB", bytes / Math.pow(1024, exp), "KMGTPE".charAt(exp - 1));
     }
