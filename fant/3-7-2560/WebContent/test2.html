@@ -1,0 +1,79 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+<!-- ############################################## form change page + function ############################################### -->
+
+<form id="frm_test" method="post" action="Run_java">
+
+<!-- ############################################## input ####################################################### -->
+
+<!-- name: textbox -->
+<h1>Name : <input type="text" id="firstname" name="firstname" title ="please enter your firstname" size="30" /></h1>
+<h1>LastName : <input type="text" id="lastname" name="lastname" title ="please enter your lastname" size="30" /></h1>
+<h1>Tel : <input type="text" id="tel" name="tel" title ="please enter your Tel-number" size="30"/></h1>
+<h1>Email : <input type="text" id="email" name="email" title ="please enter your E-mail" size="30" /></h1>
+
+
+<!-- Gender: radio button -->
+<br><input type="radio" name="gender" value="male" id="male" checked/>Male
+<input type="radio" name="gender" value="female" id ="female" />Female<br/>
+
+
+<!-- Job Category: combobox-->
+<br><select name="jobCat" id="combobox">
+    <option value="tech">Technology</option>
+    <option value="admin">Administration</option>
+    <option value="biology">Biology</option>
+    <option value="science">Science</option>
+</select><br/>
+
+
+<!--adress: textarea -->
+<textarea rows="5" cols="30" name="adress" id="adress " title ="please enter your address"></textarea>
+
+
+
+
+
+<!-- ############################################## button ############################################################ -->
+
+<!--  input type="submit" id="submit" /-->
+<input type="button" onclick="changeAction()" value="Submit" id = "submit"  />
+</form>
+
+<!-- ############################################## check fill in blank ####################################################### -->
+
+<script type="text/javascript">
+
+function changeAction () {
+	if( document.getElementById('adress').value.length == 0  || document.getElementById('firstname').value.length == 0 || document.getElementById('lastname').value.length == 0 || document.getElementById('tel').value.length == 0 || document.getElementById('lastname').value.length == 0 || document.getElementById('email').value.length == 0)
+	{
+		alert("please fill in the blank");
+  		document.getElementById('frm_test').action = "test2.jsp";
+		document.getElementById('frm_test').method = "post";
+		//document.getElementById('submit').click();
+		
+	}
+	else{
+		//alert("I'm fill all");
+		document.getElementById("frm_test").action= "Run_java";
+		document.getElementById("frm_test").method = "post";
+		document.getElementById("submit").type = "submit";
+		return document.getElementById("submit").click();
+		}
+	
+}
+</script>
+
+
+
+
+</body>
+</html>
