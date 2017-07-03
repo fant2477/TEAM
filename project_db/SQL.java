@@ -22,15 +22,14 @@ public class SQL {
     }
 
     public static String search(String[] ColumnName, String textline) {
-        //List<String> ans = new ArrayList<>();
-        List<String> x = new ArrayList<>();
-        for (String key : textline.split("\\s+")) {
-            List<String> ans = new ArrayList<>();
+        List<String> condition = new ArrayList<>();
+        for (String keyword : textline.split("\\s+")) {
+            List<String> each = new ArrayList<>();
             for (String column : ColumnName) {
-                ans.add("(UPPER(" + column + ") LIKE UPPER('%" + key + "%'))");
+                each.add("(UPPER(" + column + ") LIKE UPPER('%" + keyword + "%'))");
             }
-            x.add("(" + String.join(" OR ", ans) + ")");
+            condition.add("(" + String.join(" OR ", each) + ")");
         }
-        return String.join(" AND ", x);
+        return String.join(" AND ", condition);
     }
 }

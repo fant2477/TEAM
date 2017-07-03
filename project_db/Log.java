@@ -6,24 +6,24 @@ import java.util.List;
 
 public class Log {
 
-    static void addLog(String currentTime, String filename, String status, String user) {
+    static void addLog(String currentTime, String eventDetail) {
         try {
             String sql =
                     String.format(
-                            "INSERT INTO Event_log(Time, Event) VALUES('%s', '%s was %s by %s')",
-                            currentTime, filename, status, user);
+                            "INSERT INTO Event_log(Time, Event) VALUES('%s', '%s')",
+                            currentTime, eventDetail);
             ConnectionDB.statement.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    static void addLog(String currentTime, String filename, String status, String user, int id) {
+    static void addLog(String currentTime, String eventDetail, int id) {
         try {
             String sql =
                     String.format(
-                            "INSERT INTO Event_log VALUES('%s', '%s was %s by %s', %d)",
-                            currentTime, filename, status, user, id);
+                            "INSERT INTO Event_log VALUES('%s', '%s', %d)",
+                            currentTime, eventDetail, id);
             ConnectionDB.statement.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();

@@ -32,11 +32,11 @@ public class ConnectionDB {
 
     public static void disconnect() {
         try {
-            if (connect != null) {
-                connect.close();
-            }
             if (statement != null) {
                 statement.close();
+            }
+            if (connect != null) {
+                connect.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
