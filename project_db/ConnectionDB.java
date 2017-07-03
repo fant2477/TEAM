@@ -12,8 +12,8 @@ public class ConnectionDB {
     public static void connect() {
         final String localhost = "DB_UAT01";
         final String DatabaseName = "STUDENT";
-        final String Username = "pmssa";
-        final String Password = "pmssa1234";
+        final String Username = "student";
+        final String Password = "student";
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connect =

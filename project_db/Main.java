@@ -2,7 +2,6 @@ package project_db;
 
 import java.io.*;
 import java.lang.*;
-import java.time.*;
 import java.util.*;
 
 public class Main {
@@ -17,9 +16,9 @@ public class Main {
         User m = x.getUser("khonfuu");
 
         DocumentManager a = new DocumentManager(m);
-        a.setCurrentHeader(a.getHeader(600004));
+        a.setCurrentHeader(a.getHeader(600006));
 
-        System.out.println(Long.MAX_VALUE);
+        Log.toStr("917 start");
 
         Log.sortedLog();
         ConnectionDB.disconnect();

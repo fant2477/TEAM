@@ -139,6 +139,72 @@ public class DocumentManager {
         return null;
     }
 
+    public String getSubject(int Doc_header_ID) {
+        String name = "";
+        try {
+            String sql =
+                    String.format(
+                            "SELECT Doc_header_subject FROM Document_header WHERE Doc_header_ID = %d",
+                            Doc_header_ID);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                name = rs.getString("Doc_header_subject");
+                rs.close();
+                return name;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return name;
+    }
+
+    public void deleteHeader(int Doc_header_ID) {
+        String name = getSubject(Doc_header_ID);
+        try {
+            String t = Time.currentTimetoString();
+            String sql =
+                    String.format(
+                            "DELETE FROM Document_header WHERE Doc_header_ID = %d", Doc_header_ID);
+            ConnectionDB.statement.executeUpdate(sql);
+            sql =
+                    String.format(
+                            "DELETE FROM Document_detail WHERE Doc_header_ID = %d", Doc_header_ID);
+            ConnectionDB.statement.executeUpdate(sql);
+            Log.addLog(t, name, "deleted", getCurrentUser().getUsername());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getFilename(int Doc_ID) {
+        String name = "";
+        try {
+            String sql =
+                    String.format("SELECT Doc_name FROM Document_detail WHERE Doc_ID = %d", Doc_ID);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                name = rs.getString("Doc_name");
+                rs.close();
+                return name;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return name;
+    }
+
+    public void deleteFile(int Doc_ID) {
+        try {
+            String name = getFilename(Doc_ID);
+            String t = Time.currentTimetoString();
+            String sql = String.format("DELETE FROM Document_detail WHERE Doc_ID = %d", Doc_ID);
+            ConnectionDB.statement.executeUpdate(sql);
+            Log.addLog(t, name, "deleted", getCurrentUser().getUsername());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static DocumentHeader getHeader(int id) {
         DocumentHeader h = null;
         try {
@@ -217,7 +283,7 @@ public class DocumentManager {
 
             System.out.println(String.format("Added %s Correctly.", file.getName()));
 
-            // return DocDeatail
+            // return DocDetail
             sql = "SELECT MAX(Doc_ID) FROM Document_detail";
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             int id = 0;

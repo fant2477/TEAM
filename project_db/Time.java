@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-class Time {
+public class Time {
 
     static int getCurrentBEYear() {
         // get 2 digit of Buddhist Era

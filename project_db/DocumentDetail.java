@@ -1,9 +1,6 @@
 package project_db;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class DocumentDetail {
 
@@ -59,50 +56,8 @@ public class DocumentDetail {
         Data_file = data_file;
     }
 
-    public static List<DocumentDetail> toListofDocDetail() {
-        List<DocumentDetail> table = new ArrayList<>();
-        try {
-            String sql = "SELECT Doc_ID FROM Document_detail ORDER BY Doc_ID";
-            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-            List<Integer> rowValues = new ArrayList<>();
-            while (rs.next()) {
-                rowValues.add(rs.getInt(1));
-            }
-            rs.close();
-            for (int i : rowValues) {
-                table.add(DocumentManager.getGeneralFile(i));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return table;
-    }
-
-    public static List<DocumentDetail> toListofDocDetail(int Doc_header_ID) {
-        List<DocumentDetail> table = new ArrayList<>();
-        try {
-            String sql =
-                    String.format(
-                            "SELECT Doc_ID FROM Document_detail "
-                                    + "WHERE Doc_header_ID = %d ORDER BY Doc_ID",
-                            Doc_header_ID);
-            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-            List<Integer> rowValues = new ArrayList<>();
-            while (rs.next()) {
-                rowValues.add(rs.getInt(1));
-            }
-            rs.close();
-            for (int i : rowValues) {
-                table.add(DocumentManager.getGeneralFile(i));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return table;
-    }
-
     public static void toStr() {
-        for (DocumentDetail record : toListofDocDetail()) {
+        for (DocumentDetail record : View.toListofDocDetail()) {
             System.out.print(record.getDoc_ID());
             System.out.print('\t');
             System.out.print(record.Doc_header_ID);
@@ -130,7 +85,30 @@ public class DocumentDetail {
                         + "       Date_modified "
                         + "  User_ID_created  User_ID_modified  "
                         + "     Size");
-        for (DocumentDetail record : toListofDocDetail()) {
+        for (DocumentDetail record : View.toListofDocDetail()) {
+            System.out.format(
+                    "%6s %13s %15s %23s %23s %17s %17s %10s",
+                    record.getDoc_ID(),
+                    record.Doc_header_ID,
+                    record.getDoc_name(),
+                    Time.datetoReadableString(record.getDate_created()),
+                    Time.datetoReadableString(record.getDate_modified()),
+                    UserManager.getUsername(record.getUser_ID_created()),
+                    UserManager.getUsername(record.getUser_ID_modified()),
+                    record.getSizetoString());
+            System.out.println();
+        }
+    }
+
+    public static void toTable(String keyword) {
+        System.out.println(
+                "Doc_ID Doc_header_ID    "
+                        + "    Doc_name     "
+                        + "       Date_created    "
+                        + "       Date_modified "
+                        + "  User_ID_created  User_ID_modified  "
+                        + "     Size");
+        for (DocumentDetail record : View.toListofDocDetail(keyword)) {
             System.out.format(
                     "%6s %13s %15s %23s %23s %17s %17s %10s",
                     record.getDoc_ID(),

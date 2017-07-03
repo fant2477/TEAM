@@ -48,8 +48,26 @@ public class Log {
             String sql = "SELECT * FROM Event_log ORDER BY Time";
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
-                String[] row = {Time.datetoString(rs.getTimestamp(1)), rs.getString(2)};
-                table.add(row);
+                table.add(new String[] {Time.datetoString(rs.getTimestamp(1)), rs.getString(2)});
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return table;
+    }
+
+    public static List<String[]> getLog(String textline) {
+        List<String[]> table = new ArrayList<>();
+        try {
+            String sql =
+                    "SELECT * FROM Event_log "
+                            + "WHERE "
+                            + SQL.search(new String[] {"CONVERT(VARCHAR(MAX), Event)"}, textline)
+                            + " ORDER BY Time";
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            while (rs.next()) {
+                table.add(new String[] {Time.datetoString(rs.getTimestamp(1)), rs.getString(2)});
             }
             rs.close();
         } catch (Exception e) {
@@ -60,6 +78,15 @@ public class Log {
 
     public static void toStr() {
         for (String[] row : Log.getLog()) {
+            for (String s : row) {
+                System.out.printf("%s ", s);
+            }
+            System.out.println();
+        }
+    }
+
+    public static void toStr(String textline) {
+        for (String[] row : Log.getLog(textline)) {
             for (String s : row) {
                 System.out.printf("%s ", s);
             }

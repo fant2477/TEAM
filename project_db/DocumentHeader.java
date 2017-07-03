@@ -1,9 +1,6 @@
 package project_db;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class DocumentHeader {
     private int Doc_header_ID;
@@ -49,25 +46,27 @@ public class DocumentHeader {
         Doc_header_description = doc_header_description;
     }
 
-    public static List<DocumentHeader> toListofDocHeader() {
-        List<DocumentHeader> table = new ArrayList<>();
-        try {
-            String sql = "SELECT Doc_header_ID FROM Document_header ORDER BY Date_created";
-            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-            List<Integer> rowValues = new ArrayList<>();
-            while (rs.next()) {
-                rowValues.add(rs.getInt(1));
-            }
-            rs.close();
-            for (int i : rowValues) table.add(DocumentManager.getHeader(i));
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static void toStr() {
+        for (DocumentHeader record : View.toListofDocHeader()) {
+            System.out.print(record.getDoc_header_ID());
+            System.out.print('\t');
+            System.out.print(record.getDoc_header_subject());
+            System.out.print('\t');
+            System.out.print(UserManager.getUsername(record.getUser_ID_created()));
+            System.out.print('\t');
+            System.out.print(UserManager.getUsername(record.getUser_ID_modified()));
+            System.out.print('\t');
+            System.out.print(Time.datetoReadableString(record.getDate_created()));
+            System.out.print('\t');
+            System.out.print(Time.datetoReadableString(record.getDate_modified()));
+            System.out.print('\t');
+            System.out.print(record.getDoc_header_description());
+            System.out.println();
         }
-        return table;
     }
 
-    public static void toStr() {
-        for (DocumentHeader record : DocumentHeader.toListofDocHeader()) {
+    public static void toStr(String textline) {
+        for (DocumentHeader record : View.toListofDocHeader(textline)) {
             System.out.print(record.getDoc_header_ID());
             System.out.print('\t');
             System.out.print(record.getDoc_header_subject());
