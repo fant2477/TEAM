@@ -1,6 +1,7 @@
 package project_db;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SQL {
@@ -31,5 +32,10 @@ public class SQL {
             condition.add("(" + String.join(" OR ", each) + ")");
         }
         return String.join(" AND ", condition);
+    }
+
+    public static void advancedSearch(
+            String keyword, String noneword, String language, Date start, Date end, String format) {
+        //
     }
 }

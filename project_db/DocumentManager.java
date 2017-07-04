@@ -278,7 +278,9 @@ public class DocumentManager {
             // Add log
             Log.addLog(
                     Time.currentTimetoString(),
-                    file.getName() + "was uploaded successfully by" + getCurrentUser().getUsername());
+                    file.getName()
+                            + "was uploaded successfully by"
+                            + getCurrentUser().getUsername());
 
             System.out.println(String.format("Added %s Correctly.", file.getName()));
 
@@ -305,19 +307,22 @@ public class DocumentManager {
     public void downloadFile(int id, String targetPath) {
         byte[] fileBytes;
         String query;
+        ResultSet rs = null;
         try {
             query =
                     String.format(
                             "SELECT Doc_name, Data_file FROM Document_detail WHERE Doc_ID = %d",
                             id);
-            ResultSet rs = ConnectionDB.statement.executeQuery(query);
+            Log.addLog(
+                    Time.currentTimetoString(),
+                    getFilename(id)
+                            + " start downloading by "
+                            + DocumentManager.currentUser.getUsername());
+            rs = ConnectionDB.statement.executeQuery(query);
             if (rs.next()) {
-                String name = rs.getString("Doc_name");
                 //Add Log
+                String name = rs.getString("Doc_name");
                 System.out.println("start downloading");
-                Log.addLog(
-                        Time.currentTimetoString(),
-                        name + "start downloading by" + DocumentManager.currentUser.getUsername());
 
                 fileBytes = rs.getBytes("Data_file");
                 rs.close();
@@ -332,13 +337,15 @@ public class DocumentManager {
                     Log.addLog(
                             Time.currentTimetoString(),
                             name
-                                    + "downloaded successfully by"
+                                    + " downloaded successfully by "
                                     + DocumentManager.currentUser.getUsername());
                 } else {
                     System.err.println("Download Fail ;(");
                     Log.addLog(
                             Time.currentTimetoString(),
-                            name + "download failed by" + DocumentManager.currentUser.getUsername());
+                            name
+                                    + " download failed by "
+                                    + DocumentManager.currentUser.getUsername());
                 }
             }
         } catch (Exception e) {
