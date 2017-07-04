@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Time {
+    public static final String currentTime = "CURRENT_TIMESTAMP";
 
     static int getCurrentBEYear() {
         // get 2 digit of Buddhist Era

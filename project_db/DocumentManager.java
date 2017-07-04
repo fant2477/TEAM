@@ -111,35 +111,36 @@ public class DocumentManager {
     }
 
     public DocumentHeader createHeader(String subject, String description) {
+        int currentID = getLatestID() + 1;
         try {
             // Add file to DocumentHeader
-            int currentID = getLatestID() + 1;
-            String t = Time.currentTimetoString();
+            //String currentTime = Time.currentTimetoString();
             String sql =
                     String.format(
                             "INSERT INTO Document_header "
-                                    + "VALUES(%d, '%s', %d, %d, '%s', '%s', '%s', '%s')",
+                                    + "VALUES(%d, '%s', %d, %d, %s, %s, '%s', '%s')",
                             currentID,
                             subject,
                             currentUser.getUser_ID(),
                             currentUser.getUser_ID(),
-                            t,
-                            t,
+                            Time.currentTime,
+                            Time.currentTime,
                             description,
                             null);
             ConnectionDB.statement.executeUpdate(sql);
 
             // Add log
             Log.addLog(
-                    t,
-                    currentID + ": " + subject + "was added by" + currentUser.getUsername(),
+                    String.format(
+                            "(SELECT Date_created FROM Document_header WHERE Doc_header_ID = %d)",
+                            currentID),
+                    currentID + ": " + subject + " was added by " + currentUser.getUsername(),
                     currentID);
 
-            return getHeader(currentID);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return getHeader(currentID);
     }
 
     public String getSubject(int Doc_header_ID) {
@@ -173,7 +174,7 @@ public class DocumentManager {
                     String.format(
                             "DELETE FROM Document_detail WHERE Doc_header_ID = %d", Doc_header_ID);
             ConnectionDB.statement.executeUpdate(sql);
-            Log.addLog(t, name + "was deleted by" + getCurrentUser().getUsername());
+            Log.addLog(t, name + " was deleted by " + getCurrentUser().getUsername());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -202,7 +203,7 @@ public class DocumentManager {
             String t = Time.currentTimetoString();
             String sql = String.format("DELETE FROM Document_detail WHERE Doc_ID = %d", Doc_ID);
             ConnectionDB.statement.executeUpdate(sql);
-            Log.addLog(t, name + "was deleted by" + getCurrentUser().getUsername());
+            Log.addLog(t, name + " was deleted by " + getCurrentUser().getUsername());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -257,8 +258,7 @@ public class DocumentManager {
                             + "Data_file) "
                             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
             pstmt = ConnectionDB.connect.prepareStatement(sql);
-            Date d = Time.getCurrentTime();
-            String t = Time.datetoString(d);
+            String t = Time.currentTimetoString();
             pstmt.setInt(1, getCurrentHeader().getDoc_header_ID());
             pstmt.setString(2, file.getName());
             pstmt.setString(3, t);
@@ -268,18 +268,21 @@ public class DocumentManager {
             pstmt.setLong(7, file.length());
 
             // Add log
+            System.out.println(file.getName() + "start uploading.");
             Log.addLog(
                     Time.currentTimetoString(),
-                    file.getName() + "was start uploading by" + getCurrentUser().getUsername());
+                    file.getName() + " was start uploading by " + getCurrentUser().getUsername());
 
             pstmt.setBinaryStream(8, new FileInputStream(file));
+
             pstmt.executeUpdate();
+            Date uploaded = Time.getCurrentTime();
             pstmt.close();
             // Add log
             Log.addLog(
-                    Time.currentTimetoString(),
+                    Time.datetoString(uploaded),
                     file.getName()
-                            + "was uploaded successfully by"
+                            + " was uploaded successfully by "
                             + getCurrentUser().getUsername());
 
             System.out.println(String.format("Added %s Correctly.", file.getName()));
@@ -294,62 +297,74 @@ public class DocumentManager {
 
             rs.close();
 
+            sql =
+                    String.format(
+                            "UPDATE Document_detail "
+                                    + "SET Date_created = '%s', "
+                                    + "Date_modified = '%s' "
+                                    + "WHERE Doc_ID = %d",
+                            Time.datetoString(uploaded), Time.datetoString(uploaded), id);
+            ConnectionDB.statement.executeUpdate(sql);
+
             // Update Header
-            this.updateHeaderModified(d);
+            this.updateHeaderModified(uploaded);
 
             return getFile(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.addLog(
+                Time.currentTimetoString(),
+                file.getName() + " was upload failed by " + getCurrentUser().getUsername());
         return null;
     }
 
     public void downloadFile(int id, String targetPath) {
         byte[] fileBytes;
-        String query;
-        ResultSet rs = null;
+        File target = null;
+        String filename = "";
+        String downloaded = "";
         try {
-            query =
+            String sql =
                     String.format(
                             "SELECT Doc_name, Data_file FROM Document_detail WHERE Doc_ID = %d",
                             id);
+            System.out.println("start downloading");
             Log.addLog(
                     Time.currentTimetoString(),
                     getFilename(id)
                             + " start downloading by "
                             + DocumentManager.currentUser.getUsername());
-            rs = ConnectionDB.statement.executeQuery(query);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
-                //Add Log
-                String name = rs.getString("Doc_name");
-                System.out.println("start downloading");
-
+                filename = rs.getString("Doc_name");
                 fileBytes = rs.getBytes("Data_file");
-                rs.close();
 
-                File target = new File(targetPath, id + name);
+                target = new File(targetPath, id + filename);
                 OutputStream targetFile = new FileOutputStream(target.getPath());
-
                 targetFile.write(fileBytes);
+                downloaded = Time.currentTimetoString();
+                rs.close();
                 targetFile.close();
-                if (target.exists()) {
-                    System.out.println("downloaded successfully");
-                    Log.addLog(
-                            Time.currentTimetoString(),
-                            name
-                                    + " downloaded successfully by "
-                                    + DocumentManager.currentUser.getUsername());
-                } else {
-                    System.err.println("Download Fail ;(");
-                    Log.addLog(
-                            Time.currentTimetoString(),
-                            name
-                                    + " download failed by "
-                                    + DocumentManager.currentUser.getUsername());
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (target.exists()) {
+                System.out.println("downloaded successfully");
+                Log.addLog(
+                        downloaded,
+                        filename
+                                + " downloaded successfully by "
+                                + DocumentManager.currentUser.getUsername());
+            } else {
+                System.err.println("Download Fail ;(");
+                Log.addLog(
+                        downloaded,
+                        filename
+                                + " download failed by "
+                                + DocumentManager.currentUser.getUsername());
+            }
         }
     }
 

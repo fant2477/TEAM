@@ -10,7 +10,7 @@ public class Log {
         try {
             String sql =
                     String.format(
-                            "INSERT INTO Event_log(Time, Event) VALUES('%s', '%s')",
+                            "INSERT INTO Event_log(Time, Event) VALUES(%s, '%s')",
                             currentTime, eventDetail);
             ConnectionDB.statement.executeUpdate(sql);
         } catch (Exception e) {
@@ -22,7 +22,7 @@ public class Log {
         try {
             String sql =
                     String.format(
-                            "INSERT INTO Event_log VALUES('%s', '%s', %d)",
+                            "INSERT INTO Event_log VALUES(%s, '%s', %d)",
                             currentTime, eventDetail, id);
             ConnectionDB.statement.executeUpdate(sql);
         } catch (Exception e) {
