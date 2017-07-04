@@ -1,0 +1,253 @@
+@CHARSET "UTF-8";
+
+
+/*.btn-link{
+  border:none;
+  outline:none;
+  background:none;
+  cursor:pointer;
+  color:#0000EE;
+  padding:0;
+  text-decoration:underline;
+  font-family:inherit;
+  font-size:inherit;
+}*/
+
+
+
+
+.btn-link
+  {
+      /*background-color: transparent;*/
+      background-color: 	transparent;
+      /*padding: auto;*/
+      border-width: 0;
+      cursor: none;
+      /*text-decoration: underline;*/
+      float: right;
+      margin-left: 15px;
+      margin-right: 15px;
+      margin-top: 12px;
+  }
+
+  #User_info
+  {
+    /*height: 30px;
+    width: 30px;*/
+    /*padding-bottom: 10px;
+    margin-bottom: 5px;*/
+    font-size:26px;
+
+  }
+
+
+#addfile
+    {
+      width: 100px;
+      background-color: rgb(78, 78, 64);
+      color: rgb(0, 0, 0);
+
+      border-color : rgb(0, 0, 0);
+      border-width : 1px;
+      border-style : outset;
+
+      margin-left: 480px;
+      margin-right: auto;
+    }
+
+
+h1
+{
+  padding-left: 200px;
+  font-family: "GeosansLight";
+}
+
+
+.container
+    {
+       background-color: rgb(214, 214, 194);
+       border-color : rgb(204, 204, 179);
+       border-width : 3px;
+       border-style : outset;
+       border-radius: 10px;
+       font-size: 30px;
+       width: 55%; /*itself*/
+
+       padding-top: 70px;
+  		 padding-left: 140px;
+  		 padding-right: 40px;
+  		 padding-bottom: 45px;
+       margin-bottom: 70px;
+    }
+
+
+
+    p
+    	{
+    		color : rgb(61, 61, 92);
+    		font-family: "GeosansLight";
+    	}
+
+input#subject
+	{
+		font-size:22px;
+	}
+
+input#tag
+	{
+		font-size:22px;
+    width: 380px;
+	}
+
+textarea#descriptions
+	{
+		font-size:22px;
+    border-width : 1px;
+    border-style : none;
+    margin-bottom: 20px;
+	}
+
+  /*input#save
+    {
+      width: 100px;
+      background-color: rgb(78, 78, 64);
+      color: rgb(0, 0, 0);
+
+      border-color : rgb(0, 0, 0);
+      border-width : 1px;
+      border-style : outset;
+
+      margin-left: 480px;
+      margin-right: auto;
+    }*/
+
+.link_detail
+	{
+      background-color: 	transparent;
+      border-width: 0;
+      float: right;
+      margin-left: 15px;
+      margin-right: 15px;
+      /*margin-top: 12px;*/
+
+	}
+
+
+.setbt
+{
+  /*width: 100px;*/
+  background-color: rgb(78, 78, 64);
+  color: rgb(0, 0, 0);
+
+  border-color : rgb(0, 0, 0);
+  border-width : 1px;
+  border-style : outset;
+
+  /*margin-left: 350px;*/
+  margin-top: 30px;
+  margin-right: 10;
+  float:right;
+}
+/*
+input#file
+	{
+    width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+
+}*/
+
+   /*style 5 */
+  .inputfile {
+  	width: 0.1px;
+  	height: 0.1px;
+  	opacity: 0;
+  	overflow: hidden;
+  	position: absolute;
+  	z-index: -1;
+  }
+
+  .inputfile-5 + label {
+      color: #d3394c;
+  }
+
+  .inputfile-5:focus + label,
+  .inputfile-5.has-focus + label,
+  .inputfile-5 + label:hover {
+      color: #722040;
+  }
+/*file logo*/
+  .inputfile-5 + label figure {
+      width: 80px;
+      height: 100px;
+      background-color: #d3394c;
+      display: block;
+      position: relative;
+      padding: 30px;
+      margin: 0 auto 10px;
+      /*margin-left: 200px;*/
+
+  }
+
+  .inputfile-5:focus + label figure,
+  .inputfile-5.has-focus + label figure,
+  .inputfile-5 + label:hover figure {
+      background-color: #722040;
+  }
+
+  .inputfile-5 + label figure::before,
+  .inputfile-5 + label figure::after {
+      width: 0;
+      height: 0;
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+  }
+
+  .inputfile-5 + label figure::before {
+      border-top: 20px solid #dfc8ca;
+      border-left: 20px solid transparent;
+
+
+  }
+
+  .inputfile-5 + label figure::after {
+      border-bottom: 20px solid #722040;
+      border-right: 20px solid transparent;
+
+  }
+
+  .inputfile-5:focus + label figure::after,
+  .inputfile-5.has-focus + label figure::after,
+  .inputfile-5 + label:hover figure::after {
+      border-bottom-color: #d3394c;
+  }
+/*inside logo*/
+  .inputfile-5 + label svg {
+      width: 110%;
+      height: 110%;
+      fill: #f1e5e6;
+  }
+
+
+
+  #small
+  {
+  		font-family: "GeosansLight";
+  		font-size:18px;
+      padding-left: 15px;
+  }
+
+  li
+  {
+  		font-size:18px;
+  }
+
+
+  h4
+  {
+  		font-size:20px;
+  }
