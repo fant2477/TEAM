@@ -6,7 +6,9 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class DocumentManager {
     private static User currentUser = null;
@@ -134,9 +136,10 @@ public class DocumentManager {
                     String.format(
                             "(SELECT Date_created FROM Document_header WHERE Doc_header_ID = %d)",
                             currentID),
-                    currentID + ": " + subject + " was added by " + currentUser.getUsername(),
+                    String.format(
+                            "%d: %s was added by %s",
+                            currentID, subject, currentUser.getUsername()),
                     currentID);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -154,7 +157,6 @@ public class DocumentManager {
             if (rs.next()) {
                 name = rs.getString("Doc_header_subject");
                 rs.close();
-                return name;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,16 +167,16 @@ public class DocumentManager {
     public void deleteHeader(int Doc_header_ID) {
         String name = getSubject(Doc_header_ID);
         try {
-            String t = Time.currentTimetoString();
+            deleteFileFromHeader(Doc_header_ID);
             String sql =
                     String.format(
                             "DELETE FROM Document_header WHERE Doc_header_ID = %d", Doc_header_ID);
             ConnectionDB.statement.executeUpdate(sql);
-            sql =
+            Log.addLog(
+                    Time.currentTime,
                     String.format(
-                            "DELETE FROM Document_detail WHERE Doc_header_ID = %d", Doc_header_ID);
-            ConnectionDB.statement.executeUpdate(sql);
-            Log.addLog(t, name + " was deleted by " + getCurrentUser().getUsername());
+                            "%d: %s was deleted by %s",
+                            Doc_header_ID, name, getCurrentUser().getUsername()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -200,20 +202,47 @@ public class DocumentManager {
     public void deleteFile(int Doc_ID) {
         try {
             String name = getFilename(Doc_ID);
-            String t = Time.currentTimetoString();
             String sql = String.format("DELETE FROM Document_detail WHERE Doc_ID = %d", Doc_ID);
             ConnectionDB.statement.executeUpdate(sql);
-            Log.addLog(t, name + " was deleted by " + getCurrentUser().getUsername());
+            Date deleted = Time.getCurrentTime();
+            Log.addLog(
+                    Time.datetoString(deleted),
+                    String.format(
+                            "%d: %s was deleted by %s",
+                            Doc_ID, name, getCurrentUser().getUsername()));
+            this.updateHeaderModified(deleted);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static DocumentHeader getHeader(int id) {
+    private void deleteFileFromHeader(int Doc_header_ID) {
+        List<Integer> DocID = new ArrayList<>();
+        try {
+            String sql =
+                    String.format(
+                            "SELECT Doc_ID FROM Document_detail WHERE Doc_header_ID = %d",
+                            Doc_header_ID);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            while (rs.next()) {
+                DocID.add(rs.getInt("Doc_ID"));
+            }
+            rs.close();
+            for (int id : DocID) {
+                deleteFile(id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static DocumentHeader getHeader(int Doc_header_ID) {
         DocumentHeader h = null;
         try {
             String sql =
-                    String.format("SELECT * FROM Document_header WHERE Doc_header_ID = %d", id);
+                    String.format(
+                            "SELECT * FROM Document_header WHERE Doc_header_ID = %d",
+                            Doc_header_ID);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 h =
@@ -247,43 +276,38 @@ public class DocumentManager {
         try {
             // Add Data of file to DataFile.
             String sql =
-                    "INSERT INTO Document_detail "
-                            + "(Doc_header_ID, "
-                            + "Doc_name, "
-                            + "Date_created, "
-                            + "Date_modified, "
-                            + "User_ID_created, "
-                            + "User_ID_modified, "
-                            + "Size, "
-                            + "Data_file) "
-                            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+                    String.format(
+                            "INSERT INTO Document_detail "
+                                    + "(Doc_header_ID, "
+                                    + "Doc_name, "
+                                    + "Date_created, "
+                                    + "Date_modified, "
+                                    + "User_ID_created, "
+                                    + "User_ID_modified, "
+                                    + "Size, "
+                                    + "Data_file) "
+                                    + "VALUES(?, ?, %s, %s, ?, ?, ?, ?)",
+                            Time.currentTime, Time.currentTime);
             pstmt = ConnectionDB.connect.prepareStatement(sql);
-            String t = Time.currentTimetoString();
             pstmt.setInt(1, getCurrentHeader().getDoc_header_ID());
             pstmt.setString(2, file.getName());
-            pstmt.setString(3, t);
-            pstmt.setString(4, t);
-            pstmt.setInt(5, getCurrentUser().getUser_ID());
-            pstmt.setInt(6, getCurrentUser().getUser_ID());
-            pstmt.setLong(7, file.length());
+            pstmt.setInt(3, getCurrentUser().getUser_ID());
+            pstmt.setInt(4, getCurrentUser().getUser_ID());
+            pstmt.setLong(5, file.length());
 
             // Add log
-            System.out.println(file.getName() + "start uploading.");
-            Log.addLog(
-                    Time.currentTimetoString(),
-                    file.getName() + " was start uploading by " + getCurrentUser().getUsername());
+            System.out.println(file.getName() + " start uploading.");
 
-            pstmt.setBinaryStream(8, new FileInputStream(file));
+            Log.addLog(
+                    Time.currentTime,
+                    String.format(
+                            "%s start uploading by %s",
+                            file.getName(), getCurrentUser().getUsername()));
+
+            pstmt.setBinaryStream(6, new FileInputStream(file));
 
             pstmt.executeUpdate();
-            Date uploaded = Time.getCurrentTime();
             pstmt.close();
-            // Add log
-            Log.addLog(
-                    Time.datetoString(uploaded),
-                    file.getName()
-                            + " was uploaded successfully by "
-                            + getCurrentUser().getUsername());
 
             System.out.println(String.format("Added %s Correctly.", file.getName()));
 
@@ -294,17 +318,23 @@ public class DocumentManager {
             if (rs.next()) {
                 id = rs.getInt(1);
             }
-
             rs.close();
 
-            sql =
+            sql = String.format("SELECT Date_created FROM Document_detail WHERE Doc_ID = %d", id);
+            rs = ConnectionDB.statement.executeQuery(sql);
+            Date uploaded = null;
+            if (rs.next()) {
+                uploaded = rs.getTimestamp(1);
+            }
+            rs.close();
+
+            // Add log
+            Log.addLog(
                     String.format(
-                            "UPDATE Document_detail "
-                                    + "SET Date_created = '%s', "
-                                    + "Date_modified = '%s' "
-                                    + "WHERE Doc_ID = %d",
-                            Time.datetoString(uploaded), Time.datetoString(uploaded), id);
-            ConnectionDB.statement.executeUpdate(sql);
+                            "(SELECT Date_created FROM Document_detail WHERE Doc_ID = %d)", id),
+                    String.format(
+                            "%d: %s was uploaded successfully by %s",
+                            id, file.getName(), getCurrentUser().getUsername()));
 
             // Update Header
             this.updateHeaderModified(uploaded);
@@ -313,9 +343,13 @@ public class DocumentManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         Log.addLog(
                 Time.currentTimetoString(),
-                file.getName() + " was upload failed by " + getCurrentUser().getUsername());
+                String.format(
+                        "%s was upload failed by %s",
+                        file.getName(), getCurrentUser().getUsername()));
+
         return null;
     }
 
@@ -330,11 +364,13 @@ public class DocumentManager {
                             "SELECT Doc_name, Data_file FROM Document_detail WHERE Doc_ID = %d",
                             id);
             System.out.println("start downloading");
+
             Log.addLog(
                     Time.currentTimetoString(),
-                    getFilename(id)
-                            + " start downloading by "
-                            + DocumentManager.currentUser.getUsername());
+                    String.format(
+                            "%d: %s start downloading by %s",
+                            id, getFilename(id), DocumentManager.currentUser.getUsername()));
+
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 filename = rs.getString("Doc_name");

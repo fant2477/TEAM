@@ -7,6 +7,9 @@ import java.util.List;
 public class Log {
 
     static void addLog(String currentTime, String eventDetail) {
+        if (!currentTime.equals(Time.currentTime)) {
+            currentTime = "'" + currentTime + "'";
+        }
         try {
             String sql =
                     String.format(
@@ -19,6 +22,9 @@ public class Log {
     }
 
     static void addLog(String currentTime, String eventDetail, int id) {
+        if (!currentTime.equals(Time.currentTime)) {
+            currentTime = "'" + currentTime + "'";
+        }
         try {
             String sql =
                     String.format(

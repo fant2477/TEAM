@@ -1,8 +1,9 @@
 package project_db;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 public class SQL {
     public static void exxcute(String query) {
@@ -29,13 +30,18 @@ public class SQL {
             for (String column : ColumnName) {
                 each.add("(UPPER(" + column + ") LIKE UPPER('%" + keyword + "%'))");
             }
-            condition.add("(" + String.join(" OR ", each) + ")");
+            condition.add("(" + SQL.join(" OR ", each) + ")");
         }
-        return String.join(" AND ", condition);
+        return SQL.join(" AND ", condition);
     }
 
-    public static void advancedSearch(
-            String keyword, String noneword, String language, Date start, Date end, String format) {
-        //
+    public static String join(CharSequence delimiter, Iterable<? extends CharSequence> elements) {
+        Objects.requireNonNull(delimiter);
+        Objects.requireNonNull(elements);
+        StringJoiner joiner = new StringJoiner(delimiter);
+        for (CharSequence cs : elements) {
+            joiner.add(cs);
+        }
+        return joiner.toString();
     }
 }
