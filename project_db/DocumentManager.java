@@ -288,7 +288,7 @@ public class DocumentManager {
                                     + "Data_file) "
                                     + "VALUES(?, ?, %s, %s, ?, ?, ?, ?)",
                             Time.currentTime, Time.currentTime);
-            pstmt = ConnectionDB.connect.prepareStatement(sql);
+            pstmt = ConnectionDB.connect.prepareStatement(sql, new String[] {"Doc_ID"});
             pstmt.setInt(1, getCurrentHeader().getDoc_header_ID());
             pstmt.setString(2, file.getName());
             pstmt.setInt(3, getCurrentUser().getUser_ID());
@@ -305,20 +305,23 @@ public class DocumentManager {
                             file.getName(), getCurrentUser().getUsername()));
 
             pstmt.setBinaryStream(6, new FileInputStream(file));
-
             pstmt.executeUpdate();
-            pstmt.close();
-
-            System.out.println(String.format("Added %s Correctly.", file.getName()));
-
-            // return DocDetail
-            sql = "SELECT MAX(Doc_ID) FROM Document_detail";
-            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            ResultSet rs = pstmt.getGeneratedKeys();
             int id = 0;
             if (rs.next()) {
                 id = rs.getInt(1);
             }
             rs.close();
+            pstmt.close();
+
+            System.out.println(String.format("Added %s Correctly.", file.getName()));
+            // Add log successfully
+            Log.addLog(
+                    String.format(
+                            "(SELECT Date_created FROM Document_detail WHERE Doc_ID = %d)", id),
+                    String.format(
+                            "%d: %s was uploaded successfully by %s",
+                            id, file.getName(), getCurrentUser().getUsername()));
 
             sql = String.format("SELECT Date_created FROM Document_detail WHERE Doc_ID = %d", id);
             rs = ConnectionDB.statement.executeQuery(sql);
@@ -327,15 +330,6 @@ public class DocumentManager {
                 uploaded = rs.getTimestamp(1);
             }
             rs.close();
-
-            // Add log
-            Log.addLog(
-                    String.format(
-                            "(SELECT Date_created FROM Document_detail WHERE Doc_ID = %d)", id),
-                    String.format(
-                            "%d: %s was uploaded successfully by %s",
-                            id, file.getName(), getCurrentUser().getUsername()));
-
             // Update Header
             this.updateHeaderModified(uploaded);
 
@@ -349,7 +343,6 @@ public class DocumentManager {
                 String.format(
                         "%s was upload failed by %s",
                         file.getName(), getCurrentUser().getUsername()));
-
         return null;
     }
 
