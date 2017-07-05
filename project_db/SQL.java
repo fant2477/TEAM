@@ -35,13 +35,13 @@ public class SQL {
         return SQL.join(" AND ", condition);
     }
 
-    public static String join(CharSequence delimiter, Iterable<? extends CharSequence> elements) {
-        Objects.requireNonNull(delimiter);
-        Objects.requireNonNull(elements);
-        StringJoiner joiner = new StringJoiner(delimiter);
-        for (CharSequence cs : elements) {
-            joiner.add(cs);
+    public static String join(String delimiter, List<String> elements) {
+        String delim = "";
+        StringBuilder sb = new StringBuilder();
+        for (String i : elements) {
+            sb.append(delim).append(i);
+            delim = delimiter;
         }
-        return joiner.toString();
+        return sb.toString();
     }
 }
