@@ -56,13 +56,15 @@ public class UserManager {
                                     + "Name = '%s' , "
                                     + "Surname = '%s', "
                                     + "BusinessGroup = '%s', "
-                                    + "Date_modified = '%s' ",
+                                    + "Date_modified = '%s' "
+                                    + "WHERE User_ID = %d",
                             user.getUsername(),
                             user.getPassword(),
                             user.getName(),
                             user.getSurname(),
                             user.getBusinessGroup(),
-                            t);
+                            t,
+                            user.getUser_ID());
             ConnectionDB.statement.executeUpdate(sql);
             Log.addLog(t, "Information of " + user.getUsername() + "was updated");
             System.out.println("User Data updated. :)");
