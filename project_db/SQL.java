@@ -2,8 +2,6 @@ package project_db;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.StringJoiner;
 
 public class SQL {
     public static void exxcute(String query) {

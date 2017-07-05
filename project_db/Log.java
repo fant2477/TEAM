@@ -7,8 +7,10 @@ import java.util.List;
 public class Log {
 
     static void addLog(String currentTime, String eventDetail) {
-        if (!currentTime.equals(Time.currentTime)) {
+        try {
+            new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(currentTime);
             currentTime = "'" + currentTime + "'";
+        } catch (Exception e) {
         }
         try {
             String sql =
@@ -22,8 +24,10 @@ public class Log {
     }
 
     static void addLog(String currentTime, String eventDetail, int id) {
-        if (!currentTime.equals(Time.currentTime)) {
+        try {
+            new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(currentTime);
             currentTime = "'" + currentTime + "'";
+        } catch (Exception e) {
         }
         try {
             String sql =
