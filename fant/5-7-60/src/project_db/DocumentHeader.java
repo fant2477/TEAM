@@ -1,9 +1,6 @@
 package project_db;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class DocumentHeader {
     private int Doc_header_ID;
@@ -49,43 +46,44 @@ public class DocumentHeader {
         Doc_header_description = doc_header_description;
     }
 
-    public static List<DocumentHeader> toListofDocHeader() {
-        List<DocumentHeader> table = new ArrayList<DocumentHeader>();
-        try {
-            String sql = "SELECT Doc_header_ID FROM Document_header ORDER BY Date_created";
-            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-            List<Integer> rowValues = new ArrayList<Integer>();
-            while (rs.next()) {
-                rowValues.add(rs.getInt(1));
-            }
-            rs.close();
-            for (int i : rowValues) table.add(DocumentManager.getHeader(i));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return table;
-    }
-
     public static void toStr() {
-        for (DocumentHeader record : DocumentHeader.toListofDocHeader()) {
+        for (DocumentHeader record : View.toListofDocHeader()) {
             System.out.print(record.getDoc_header_ID());
-            System.out.print("\t:\t");
+            System.out.print('\t');
             System.out.print(record.getDoc_header_subject());
-            System.out.print("\t:\t");
+            System.out.print('\t');
             System.out.print(UserManager.getUsername(record.getUser_ID_created()));
-            System.out.print("\t:\t");
+            System.out.print('\t');
             System.out.print(UserManager.getUsername(record.getUser_ID_modified()));
-            System.out.print("\t:\t");
+            System.out.print('\t');
             System.out.print(Time.datetoReadableString(record.getDate_created()));
-            System.out.print("\t:\t");
+            System.out.print('\t');
             System.out.print(Time.datetoReadableString(record.getDate_modified()));
-            System.out.print("\t:\t");
+            System.out.print('\t');
             System.out.print(record.getDoc_header_description());
             System.out.println();
         }
     }
 
-    
+    public static void toStr(String textline) {
+        for (DocumentHeader record : View.toListofDocHeader(textline)) {
+            System.out.print(record.getDoc_header_ID());
+            System.out.print('\t');
+            System.out.print(record.getDoc_header_subject());
+            System.out.print('\t');
+            System.out.print(UserManager.getUsername(record.getUser_ID_created()));
+            System.out.print('\t');
+            System.out.print(UserManager.getUsername(record.getUser_ID_modified()));
+            System.out.print('\t');
+            System.out.print(Time.datetoReadableString(record.getDate_created()));
+            System.out.print('\t');
+            System.out.print(Time.datetoReadableString(record.getDate_modified()));
+            System.out.print('\t');
+            System.out.print(record.getDoc_header_description());
+            System.out.println();
+        }
+    }
+
     public int getDoc_header_ID() {
         return Doc_header_ID;
     }
@@ -93,11 +91,7 @@ public class DocumentHeader {
     public int getUser_ID_created() {
         return User_ID_created;
     }
-    
-//    public String getUser_name_created() {
-//        return UserManager.getUsername(this.getUser_ID_created());
-//    }
-    
+
     public int getUser_ID_modified() {
         return User_ID_modified;
     }

@@ -16,6 +16,7 @@ import project_db.DocumentManager;
 import project_db.Log;
 import project_db.User;
 import project_db.UserManager;
+import project_db.View;
 
 /**
  * Servlet implementation class main_page
@@ -49,7 +50,7 @@ public class main_page extends HttpServlet {
 		System.out.println("main current_user: "+ current_user);
 		
 		
-		List<DocumentHeader> doclist = DocumentHeader.toListofDocHeader();
+		List<DocumentHeader> doclist = View.toListofDocHeader();
 		
 		// go to fn same as sent fn (sent by post go to post )
 		request.getSession().setAttribute("doclist", doclist);

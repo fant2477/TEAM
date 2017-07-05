@@ -16,6 +16,7 @@ import project_db.DocumentDetail;
 import project_db.DocumentHeader;
 import project_db.DocumentManager;
 import project_db.User;
+import project_db.View;
 
 /**
  * Servlet implementation class header_page
@@ -52,7 +53,7 @@ public class header_page extends HttpServlet {
 		System.out.println("header_page head_id: "+ head_id);
 
 
-		List<DocumentDetail> doclist = DocumentDetail.toListofDocDetail(head_id);
+		List<DocumentDetail> doclist = View.toListofDocDetail(head_id);
 
 		request.getSession().setAttribute("doclist", doclist);
 
@@ -70,7 +71,12 @@ public class header_page extends HttpServlet {
 
 		response.setContentType("text/html");
 		ConnectionDB.connect();
+		
 
+		DocumentManager doc = new DocumentManager(current_user);
+
+		doc.setCurrentHeader(doc.getHeader(head_id));
+		
 
 		String filee =request.getParameter("file-6[]");
 
@@ -88,7 +94,6 @@ public class header_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 			
 			
 		} else if (bt.equals("Main Page")) {
@@ -103,7 +108,6 @@ public class header_page extends HttpServlet {
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 			
 
 		} else if (bt.equals("Add Page")) {
@@ -118,7 +122,6 @@ public class header_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 		} else if (bt.equals("Delete Page")) {
 		    //Register button was pressed
@@ -132,7 +135,6 @@ public class header_page extends HttpServlet {
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 		} else if (bt.equals("History Page")) {
 		    //Register button was pressed
@@ -146,7 +148,6 @@ public class header_page extends HttpServlet {
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 
 		} else if (bt.equals("User_info")) {
@@ -161,7 +162,6 @@ public class header_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 
 		} else if (bt.equals("Log Out")) {
@@ -176,7 +176,6 @@ public class header_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 		} else if (bt.equals("search_bt")) {
 			//Login button was pressed
@@ -192,15 +191,11 @@ public class header_page extends HttpServlet {
 //			response.sendRedirect("register_ui.jsp");
 			request.getRequestDispatcher("main_ui.jsp").forward(request, response);
 			System.out.println("go to main.jsp again");
-			ConnectionDB.disconnect();
 
 
 		} else if (bt.equals("Add files")) {
 			//Login button was pressed
 			System.out.println("Add files was press");
-			DocumentManager doc = new DocumentManager(current_user);
-
-			doc.setCurrentHeader(doc.getHeader(head_id));
 
 			doc.createFile(filee);
 
@@ -212,12 +207,26 @@ public class header_page extends HttpServlet {
 			out.println("location='header_page';");
 			out.println("</script>");
 
-
-
 			System.out.println("go to header_ui.jsp again");
-			ConnectionDB.disconnect();
+			
+			
+		} else if (bt.equals("Delete Document")) {
+			//Login button was pressed
+			System.out.println("Delete Document was press");
 
+			int head_del = head_id;
+			
+			doc.deleteHeader(head_id);
 
+			PrintWriter out = response.getWriter();
+
+			out.println("<script type=\"text/javascript\">");
+			out.println("alert('your Document was successfully delete. \\n\\nFrom Document code: " +head_del+ ".') " );
+			out.println("location='main_page';");
+			out.println("</script>");
+
+			System.out.println("go to main_ui.jsp");
+			
 
 		} else {
 		    //someone has altered the HTML and sent a different value!
@@ -233,9 +242,9 @@ public class header_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
+			
 		}
-
+		ConnectionDB.disconnect();
 
 	}
 

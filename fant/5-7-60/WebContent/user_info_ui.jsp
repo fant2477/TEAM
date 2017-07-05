@@ -129,8 +129,9 @@
                           <p>Password  :     <input type = "password" id = "password" name = "password" class="form-inline form-control" title = "please fill your password" size = "37.7" value = "${password}"><small id = "small">${password_check}</small></p>
                           </div>
                           <div class = "form-group">
-                          <p>Confirm Password  :     <input type = "password" id = "confirm_password" name = "confirm_password" class="form-inline form-control" title = "please enter your password again" size = "25" value = "${password}"><small id = "small">${confirm_password}</small></p>
-                          </div>
+                          <p>Business group  :     ${business_group} </p></div>
+                          
+                          
                           </br></br>
 
                           <!-- ################################# Register button ###################################### $("#form_id").valid();-->

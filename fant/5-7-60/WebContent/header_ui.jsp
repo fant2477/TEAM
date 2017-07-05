@@ -165,7 +165,7 @@
 
 
         <input type="submit" class="btn btn-default btn-lg bt form-group" name = "bt"  value="Add files" id = "addfile" />
-        <input type="submit" class="btn btn-default btn-lg bt form-group" name = "bt"  value="Delete Document" id = "delete_doc" />
+        <input type="submit" class="btn btn-default btn-lg bt form-group" name = "bt"  value="Delete Document" id = "delete_doc" /></br>
 
 
 <!-- ===============start of script for file button=============== -->
@@ -192,7 +192,7 @@
            });
        </script>
 <!-- ===============end of script for file button=============== -->
-
+</br>
 <%-- ========================start of paging======================== --%>
                   <nav  aria-label="Page navigation">
                       <div class="text-center">

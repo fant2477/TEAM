@@ -177,16 +177,15 @@ public class add_doc_page extends HttpServlet {
 			System.out.println("header_id : "+header_id);
 //
 			PrintWriter out = response.getWriter();
+			
 			out.println("<script type=\"text/javascript\">");
-//			out.println("alert('your file was successfully created. \\n\\nDocument id is "+header_id+".')");
-			out.println("alert('your file was successfully created. \\n\\nfile is "+filee+". \\n\\nYour document id is"+header_id+".' " );
-			out.println("location='add_doc_ui.jsp';");
+			out.println("alert('your file was successfully created.\\n\\nYour Document id is "+header_id+".')");
+			out.println("location='add_doc_page';");
 			out.println("</script>");
 
 
 //			request.getRequestDispatcher("add_doc_ui.jsp").forward(request, response);
 			System.out.println("go to add_doc_ui.jsp again");
-			ConnectionDB.disconnect();
 
 			//request.getRequestDispatcher("add_doc_ui.jsp").forward(request, response);
 
@@ -205,6 +204,7 @@ public class add_doc_page extends HttpServlet {
 			//go to get fn
 			response.sendRedirect("UI_Manager");
 		}
+		ConnectionDB.disconnect();
 
 	}
 
