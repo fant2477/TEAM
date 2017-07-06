@@ -1,6 +1,7 @@
 package projects;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -58,7 +59,7 @@ public class detail_page extends HttpServlet {
 		
 		
 		
-		DocumentDetail detail = doc.getGenneralFile(Integer.valueOf(doc_id));
+		DocumentDetail detail = doc.getGeneralFile(Integer.valueOf(doc_id));
 		
 		head_id = detail.getDoc_header_ID();
 		
@@ -75,14 +76,13 @@ public class detail_page extends HttpServlet {
 		
 		request.getSession().setAttribute("head_name", head_name);  ///////////////////
 		request.getSession().setAttribute("head_id", head_id);
-		request.getSession().setAttribute("add_date", Time.datetoReadableString(detail.getDate_created()));
+		request.getSession().setAttribute("add_date", (Time.datetoReadableString(detail.getDate_created())).toString() );
 		request.getSession().setAttribute("add_by", UserManager.getUsername(detail.getUser_ID_created()));
-		request.getSession().setAttribute("last_edit", Time.datetoReadableString(detail.getDate_modified()));
+		request.getSession().setAttribute("last_edit",(Time.datetoReadableString(detail.getDate_modified())).toString() );
 		request.getSession().setAttribute("last_edit_by", UserManager.getUsername(detail.getUser_ID_modified()));
 		request.getSession().setAttribute("descriptions", descriptions);  ///////////////////
 		
         System.out.println("head_id: "+head_id);
-        
         
         
 		
@@ -104,7 +104,7 @@ public class detail_page extends HttpServlet {
 		response.setContentType("text/html");
 		ConnectionDB.connect();
 		DocumentManager doc = new DocumentManager(current_user);
-		DocumentDetail detail = doc.getGenneralFile(Integer.valueOf(doc_id));
+		DocumentDetail detail = doc.getGeneralFile(Integer.valueOf(doc_id));
 		DocumentHeader header = doc.getHeader(head_id);
 		
 		
@@ -137,7 +137,6 @@ public class detail_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 		} else if (bt.equals("Main Page")) {
 			//Register button was pressed
@@ -151,7 +150,6 @@ public class detail_page extends HttpServlet {
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 
 		} else if (bt.equals("Add Page")) {
@@ -166,7 +164,6 @@ public class detail_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 		} else if (bt.equals("Delete Page")) {
 		    //Register button was pressed
@@ -180,7 +177,6 @@ public class detail_page extends HttpServlet {
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 		} else if (bt.equals("History Page")) {
 		    //Register button was pressed
@@ -194,7 +190,6 @@ public class detail_page extends HttpServlet {
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 
 		} else if (bt.equals("User_info")) {
@@ -209,7 +204,6 @@ public class detail_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 
 		} else if (bt.equals("Log Out")) {
@@ -224,7 +218,6 @@ public class detail_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 			
 			
@@ -265,7 +258,6 @@ public class detail_page extends HttpServlet {
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 			
 			
 		} else if (bt.equals("Save")) {
@@ -280,22 +272,41 @@ public class detail_page extends HttpServlet {
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 
 		} else if (bt.equals("Delete")) {
 		    //Register button was pressed
 			System.out.println("Delete bt was press");
 
-			change_page = "detail_page";
-			from_page = "detail_page";
+			
+			doc.deleteFile(Integer.valueOf(doc_id));
+			
+			
+			
 
-			request.getSession().setAttribute("change_page", change_page);
-			request.getSession().setAttribute("from_page", from_page);
+			PrintWriter out = response.getWriter();
 
-			System.out.println("change_page: "+ change_page);
-			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
+			out.println("<script type=\"text/javascript\">");
+			out.println("alert('your file"+detail.getDoc_name()+" was successfully delete from Document ID : "+ head_id +".') " );
+			out.println("location='header_page';");
+			out.println("</script>");
+
+
+
+
+			
+//			String head_str = String.valueOf(head_id);
+//			
+//			
+//			change_page = "header_page";
+//			from_page = "detail_page";
+//
+//			request.getSession().setAttribute("change_page", change_page);
+//			request.getSession().setAttribute("from_page", from_page);
+//			request.getSession().setAttribute("head_id", head_str);
+//
+//			System.out.println("change_page: "+ change_page);
+//			response.sendRedirect("UI_Manager");
 
 
 		} else if (bt.equals("Download")) {
@@ -310,7 +321,6 @@ public class detail_page extends HttpServlet {
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 		} else {
 		    //someone has altered the HTML and sent a different value!
@@ -325,9 +335,15 @@ public class detail_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 		}
 
+
+		String head_str = String.valueOf(head_id);
+		
+		
+		request.getSession().setAttribute("head_id", head_str);
+
+		ConnectionDB.disconnect();
 	}
 
 }
