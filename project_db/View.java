@@ -141,7 +141,7 @@ public class View {
         return String.format(
                 "SELECT * FROM (SELECT Row_Number() OVER (ORDER BY (SELECT NULL))"
                         + "AS RowIndex, %s"
-                        + ") AS Sub WHERE Sub.RowIndex >= %d AND Sub.RowIndex <= %d ",
+                        + ") AS Sub WHERE Sub.RowIndex BETWEEN %d AND %d ",
                 sql, pageNo, pageMax);
     }
 
