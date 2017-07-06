@@ -44,6 +44,7 @@ public class add_doc_page extends HttpServlet {
 		response.setContentType("text/html");
 		ConnectionDB.connect();
 		current_user = (User) request.getSession().getAttribute("current_user");
+		request.getSession(false).invalidate();
 
 		// go to fn same as sent fn (sent by post go to post )
 		RequestDispatcher dispatcher = request.getRequestDispatcher("add_doc_ui.jsp");
@@ -79,6 +80,7 @@ public class add_doc_page extends HttpServlet {
 
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
+			request.getSession().setAttribute("current_user", current_user);
 
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
@@ -94,6 +96,7 @@ public class add_doc_page extends HttpServlet {
 
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
+			request.getSession().setAttribute("current_user", current_user);
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
@@ -107,6 +110,7 @@ public class add_doc_page extends HttpServlet {
 
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
+			request.getSession().setAttribute("current_user", current_user);
 
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
@@ -120,6 +124,7 @@ public class add_doc_page extends HttpServlet {
 
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
+			request.getSession().setAttribute("current_user", current_user);
 
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
@@ -134,6 +139,7 @@ public class add_doc_page extends HttpServlet {
 
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
+			request.getSession().setAttribute("current_user", current_user);
 
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
@@ -148,6 +154,7 @@ public class add_doc_page extends HttpServlet {
 
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
+			request.getSession().setAttribute("current_user", current_user);
 
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
@@ -175,6 +182,7 @@ public class add_doc_page extends HttpServlet {
 
 			int header_id = doc_head.getDoc_header_ID();
 			System.out.println("header_id : "+header_id);
+			request.getSession().setAttribute("current_user", current_user);
 //
 			PrintWriter out = response.getWriter();
 			
@@ -199,6 +207,7 @@ public class add_doc_page extends HttpServlet {
 
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
+			request.getSession().setAttribute("current_user", current_user);
 
 			System.out.println("change_page: "+ change_page);
 			//go to get fn

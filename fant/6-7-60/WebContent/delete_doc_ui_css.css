@@ -58,7 +58,7 @@ h1
        width: 55%; /*itself*/
 
        padding-top: 100px;
-  		 padding-left: 130px;
+  		 padding-left: 100px;
   		 padding-right: auto;
   		 padding-bottom: 90px;
        margin-top: 50px;
@@ -105,6 +105,7 @@ input#delete_bt
       margin-left: 480px;
       margin-right: auto;
     }
+
 
 
 

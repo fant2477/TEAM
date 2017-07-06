@@ -151,37 +151,5 @@ public class login_page extends HttpServlet {
 		}
 		
 		
-
-		/*String firstname = request.getParameter("firstname");// ("inside this") get by name
-		String lastname = request.getParameter("lastname");
-		
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		String confirm_password = request.getParameter("confirm_password");
-		
-		
-		request.setAttribute("firstname", firstname);
-		request.setAttribute("lastname", lastname);
-		request.setAttribute("username", username);
-		request.setAttribute("password", password);
-		request.setAttribute("confirm_password", confirm_password);*/
-		
-		/*change_page = "register_page";
-		from_page = "login_page";
-		request.getSession().setAttribute("change_page", change_page);
-		request.getSession().setAttribute("from_page", from_page);
-		
-		System.out.println("log change_page: "+ change_page);
-		
-		response.sendRedirect("UI_Manager");*/
-		
-		//RequestDispatcher dispatcher = request.getRequestDispatcher("UI_Manager");       go to fn same as sent fn (sent by post go to post )
-		//dispatcher.forward(request, response);
-		
 	}
-	
-	
-	public void login_check(String username, String password)
-	{}
-
 }

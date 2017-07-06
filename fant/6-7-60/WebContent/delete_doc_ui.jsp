@@ -93,11 +93,22 @@
       <div class="form-inline">
 
 <!-- <%-- ========================search group======================== --%> -->
-            <div class="input-group">
-                <input type="text" id="search_input" class="form-control" placeholder="Delete file..." aria-label="Delete file..." name= "doc_name" value = "${doc_id }">
+            <div class="input-group" >
+                <input type="text" id="search_input" class="form-control" placeholder="Delete file..." aria-label="Delete file..." name= "search_input" value = "${search_input}">
                 <div class="input-group-btn">
                   <!-- Buttons -->
                     <button id="search_info" class="btn btn-default" type="button"><i class="glyphicon glyphicon-info-sign" style="font-size:20px" onclick="alert('Please enter only Filename or Document ID.');"></i></button>
+
+
+                    <div class = "form-group">
+                  <!-- id: combobox-->
+
+                  <p><select id="id_group" name = "id_group" style="font-size:18.5px;"class="form-control">
+                      <option value="doc_code">Document Id</option>
+                      <option value="file_id">File Id</option>
+
+                  </select></p></div>
+
                     <input type="submit" class="btn btn-default btn-lg bt" name = "bt"  value="Delete" id = "delete_bt"  />
 
                 </div>
