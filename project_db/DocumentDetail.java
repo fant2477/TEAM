@@ -56,51 +56,33 @@ public class DocumentDetail {
         Data_file = data_file;
     }
 
-    public static void toStr() {
-        for (DocumentDetail record : View.toListofDocDetail()) {
-            System.out.print(record.getDoc_ID());
-            System.out.print('\t');
-            System.out.print(record.Doc_header_ID);
-            System.out.print('\t');
-            System.out.print(record.getDoc_name());
-            System.out.print('\t');
-            System.out.print(Time.datetoReadableString(record.getDate_created()));
-            System.out.print('\t');
-            System.out.print(Time.datetoReadableString(record.getDate_modified()));
-            System.out.print('\t');
-            System.out.print(UserManager.getUsername(record.getUser_ID_created()));
-            System.out.print('\t');
-            System.out.print(UserManager.getUsername(record.getUser_ID_modified()));
-            System.out.print('\t');
-            System.out.print(record.getSizetoString());
-            System.out.println();
-        }
-    }
-
-    public static void toTable() {
+    public static void toTable(
+        int pageNo, int pageMax, String searchLine, String order) {
         System.out.println(
-                "Doc_ID Doc_header_ID    "
-                        + "    Doc_name     "
-                        + "       Date_created    "
-                        + "       Date_modified "
-                        + "  User_ID_created  User_ID_modified  "
-                        + "     Size");
-        for (DocumentDetail record : View.toListofDocDetail()) {
+            "Doc_ID Doc_header_ID    "
+                + "    Doc_name     "
+                + "       Date_created    "
+                + "       Date_modified "
+                + "  User_ID_created  User_ID_modified  "
+                + "     Size");
+        for (DocumentDetail record :
+            View.toListofDocDetail(pageNo, pageMax, searchLine, order)) {
             System.out.format(
-                    "%6s %13s %15s %23s %23s %17s %17s %10s",
-                    record.getDoc_ID(),
-                    record.Doc_header_ID,
-                    record.getDoc_name(),
-                    Time.datetoReadableString(record.getDate_created()),
-                    Time.datetoReadableString(record.getDate_modified()),
-                    UserManager.getUsername(record.getUser_ID_created()),
-                    UserManager.getUsername(record.getUser_ID_modified()),
-                    record.getSizetoString());
+                "%6s %13s %15s %23s %23s %17s %17s %10s",
+                record.getDoc_ID(),
+                record.Doc_header_ID,
+                record.getDoc_name(),
+                Time.datetoReadableString(record.getDate_created()),
+                Time.datetoReadableString(record.getDate_modified()),
+                UserManager.getUsername(record.getUser_ID_created()),
+                UserManager.getUsername(record.getUser_ID_modified()),
+                record.getSizetoString());
             System.out.println();
         }
     }
 
-    public static void toTable(String keyword) {
+    public static void toTable(
+            int pageNo, int pageMax, int Doc_header_ID, String searchLine, String order) {
         System.out.println(
                 "Doc_ID Doc_header_ID    "
                         + "    Doc_name     "
@@ -108,7 +90,8 @@ public class DocumentDetail {
                         + "       Date_modified "
                         + "  User_ID_created  User_ID_modified  "
                         + "     Size");
-        for (DocumentDetail record : View.toListofDocDetail(keyword)) {
+        for (DocumentDetail record :
+                View.toListofDocDetail(pageNo, pageMax, Doc_header_ID, searchLine, order)) {
             System.out.format(
                     "%6s %13s %15s %23s %23s %17s %17s %10s",
                     record.getDoc_ID(),

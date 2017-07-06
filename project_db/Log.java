@@ -9,7 +9,7 @@ public class Log {
     static void addLog(String currentTime, String eventDetail) {
         try {
             new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(currentTime);
-            currentTime = "'" + currentTime + "'";
+            currentTime = String.format("'%s'", currentTime);
         } catch (Exception e) {
         }
         try {
@@ -26,7 +26,7 @@ public class Log {
     static void addLog(String currentTime, String eventDetail, int id) {
         try {
             new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(currentTime);
-            currentTime = "'" + currentTime + "'";
+            currentTime = String.format("'%s'", currentTime);
         } catch (Exception e) {
         }
         try {

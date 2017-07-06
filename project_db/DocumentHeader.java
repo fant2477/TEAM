@@ -46,27 +46,8 @@ public class DocumentHeader {
         Doc_header_description = doc_header_description;
     }
 
-    public static void toStr() {
-        for (DocumentHeader record : View.toListofDocHeader()) {
-            System.out.print(record.getDoc_header_ID());
-            System.out.print('\t');
-            System.out.print(record.getDoc_header_subject());
-            System.out.print('\t');
-            System.out.print(UserManager.getUsername(record.getUser_ID_created()));
-            System.out.print('\t');
-            System.out.print(UserManager.getUsername(record.getUser_ID_modified()));
-            System.out.print('\t');
-            System.out.print(Time.datetoReadableString(record.getDate_created()));
-            System.out.print('\t');
-            System.out.print(Time.datetoReadableString(record.getDate_modified()));
-            System.out.print('\t');
-            System.out.print(record.getDoc_header_description());
-            System.out.println();
-        }
-    }
-
-    public static void toStr(String textline) {
-        for (DocumentHeader record : View.toListofDocHeader(textline)) {
+    public static void toStr(int pageNo, int maxPage, String searchLine, String order) {
+        for (DocumentHeader record : View.toListofDocHeader(pageNo, maxPage, searchLine, order)) {
             System.out.print(record.getDoc_header_ID());
             System.out.print('\t');
             System.out.print(record.getDoc_header_subject());

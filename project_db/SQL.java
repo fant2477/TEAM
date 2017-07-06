@@ -21,9 +21,9 @@ public class SQL {
         }
     }
 
-    public static String search(String[] ColumnName, String textline) {
+    public static String search(String[] ColumnName, String searchLine) {
         List<String> condition = new ArrayList<>();
-        for (String keyword : textline.split("\\s+")) {
+        for (String keyword : searchLine.split("\\s+")) {
             List<String> each = new ArrayList<>();
             for (String column : ColumnName) {
                 each.add("(UPPER(" + column + ") LIKE UPPER('%" + keyword + "%'))");
