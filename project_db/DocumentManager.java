@@ -241,7 +241,7 @@ public class DocumentManager {
     }
 
     private void deleteFileFromHeader(int Doc_header_ID) {
-        List<Integer> DocID = new ArrayList<>();
+        List<Integer> DocID = new ArrayList<Integer>();
         try {
             String sql =
                     String.format(

@@ -57,7 +57,7 @@ public class Log {
     }
 
     public static List<String[]> getLog(int pageNo, int pageMax, String searchLine, String order) {
-        List<String[]> table = new ArrayList<>();
+        List<String[]> table = new ArrayList<String[]>();
         try {
             String sql =
                     View.paging(
@@ -71,7 +71,7 @@ public class Log {
                             + String.format("ORDER BY %s", order);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
-                table.add(new String[] {Time.datetoString(rs.getTimestamp(1)), rs.getString(2)});
+                table.add(new String[] {Time.datetoString(rs.getTimestamp("Time")), rs.getString("Event")});
             }
             rs.close();
         } catch (Exception e) {

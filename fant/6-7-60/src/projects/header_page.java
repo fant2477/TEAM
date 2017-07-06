@@ -56,7 +56,7 @@ public class header_page extends HttpServlet {
 		System.out.println("header_page head_id: "+ head_id);
 
 
-		List<DocumentDetail> doclist = View.toListofDocDetail(head_id);
+		List<DocumentDetail> doclist = View.toListofDocDetail(1,1000,Integer.valueOf(head_id));
 
 		request.getSession().setAttribute("doclist", doclist);
 
@@ -191,17 +191,21 @@ public class header_page extends HttpServlet {
 			//Login button was pressed
 			System.out.println("search_bt was press");
 
+			
+			String search_input = request.getParameter("search_input");
+			
+			if(search_input!= null)
+			{
+			List<DocumentDetail> doclist = View.toListofDocDetail(1,1000,search_input,"Doc_header_ID");
 
-//			List<String[]> lg = Log.getLog();
-//
-//			request.getSession().setAttribute("lg", lg);
+			request.getSession().setAttribute("doclist", doclist);
 
 
 			//go to get fn
 //			response.sendRedirect("register_ui.jsp");
-			request.getRequestDispatcher("main_ui.jsp").forward(request, response);
+			request.getRequestDispatcher("header_ui.jsp").forward(request, response);
 			System.out.println("go to main.jsp again");
-
+			}
 
 		} else if (bt.equals("Add files")) {
 			//Login button was pressed

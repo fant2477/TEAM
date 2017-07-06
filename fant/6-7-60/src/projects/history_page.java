@@ -48,7 +48,7 @@ public class history_page extends HttpServlet {
 		
 		
 		
-		List<String[]> lg = Log.getLog();
+		List<String[]> lg = Log.getLog(1,100);
 		
 		request.getSession().setAttribute("lg", lg);
 		

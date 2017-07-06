@@ -86,7 +86,7 @@ public class UserManager {
             String surname,
             String businessGroup) {
         if (UserValidation.isValidAll(
-                username, password, confirmpass, name, surname, businessGroup)) {
+                username, password, confirmpass, name, surname)) {
             return insertNewUser(username, password, name, surname, businessGroup);
         } else {
             System.err.println("Can't create new user.");

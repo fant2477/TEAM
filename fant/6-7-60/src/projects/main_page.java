@@ -52,7 +52,7 @@ public class main_page extends HttpServlet {
 		System.out.println("main current_user: "+ current_user);
 		
 		
-		List<DocumentHeader> doclist = View.toListofDocHeader();
+		List<DocumentHeader> doclist = View.toListofDocHeader(1,1000);
 		
 		// go to fn same as sent fn (sent by post go to post )
 		request.getSession().setAttribute("doclist", doclist);
@@ -87,7 +87,6 @@ public class main_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 		} else if (bt.equals("Add Page")) {
 		    //Login button was pressed
@@ -102,7 +101,6 @@ public class main_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 		} else if (bt.equals("Delete Page")) {
 		    //Register button was pressed
@@ -117,7 +115,6 @@ public class main_page extends HttpServlet {
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 		} else if (bt.equals("History Page")) {
 		    //Register button was pressed
@@ -132,7 +129,6 @@ public class main_page extends HttpServlet {
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 			
 			
 		} else if (bt.equals("User_info")) {
@@ -148,7 +144,6 @@ public class main_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 
 
 		} else if (bt.equals("Log Out")) {
@@ -164,7 +159,6 @@ public class main_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 			
 		} else if (bt.equals("search_bt")) {
 			//Login button was pressed
@@ -175,12 +169,19 @@ public class main_page extends HttpServlet {
 //			
 //			request.getSession().setAttribute("lg", lg);
 			
+			String search_input = request.getParameter("search_input");
 			
-			//go to get fn
-//			response.sendRedirect("register_ui.jsp");
-			request.getRequestDispatcher("main_ui.jsp").forward(request, response);
-			System.out.println("go to main.jsp again");
-			ConnectionDB.disconnect();
+			if(search_input!= null)
+			{
+				List<DocumentHeader> doclist = View.toListofDocHeader(1,1000,search_input,"Doc_header_ID");
+				request.setAttribute("doclist",doclist);
+				
+				//go to get fn
+//				response.sendRedirect("register_ui.jsp");
+				request.getRequestDispatcher("main_ui.jsp").forward(request, response);
+				System.out.println("go to main.jsp again");
+			}
+
 			
 			
 
@@ -199,9 +200,9 @@ public class main_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			ConnectionDB.disconnect();
 		}
 
+		ConnectionDB.disconnect();
 	}
 
 }

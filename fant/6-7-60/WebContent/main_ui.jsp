@@ -108,7 +108,7 @@
 
 <%-- ========================search group======================== --%>
                   <div class="input-group">
-                      <input type="text" id="search_input" class="form-control" placeholder="Search for..." aria-label="Search for...">
+                      <input type="text" id="search_input" name="search_input" class="form-control" placeholder="Search for..." aria-label="Search for...">
                       <div class="input-group-btn">
                         <!-- Buttons -->
                           <button id="search_info" class="btn btn-default" type="button"><i class="glyphicon glyphicon-info-sign" style="font-size:20px" onclick="alert('Please enter only Filename or Document ID.');"></i></button>

@@ -199,7 +199,31 @@ public class DocumentManager {
         return name;
     }
 
+    private boolean isFileExists(int Doc_ID) {
+        try {
+            String sql = String
+                .format("SELECT Doc_ID FROM Document_detail WHERE Doc_ID = %d", Doc_ID);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                rs.close();
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public void deleteFile(int Doc_ID) {
+        if (isFileExists(Doc_ID)) {
+            deleteRecordFile(Doc_ID);
+        } else {
+            System.err.println("File doesn't exist.");
+        }
+    }
+
+
+    public void deleteRecordFile(int Doc_ID) {
         try {
             String name = getFilename(Doc_ID);
             String sql = String.format("DELETE FROM Document_detail WHERE Doc_ID = %d", Doc_ID);
@@ -229,7 +253,7 @@ public class DocumentManager {
             }
             rs.close();
             for (int id : DocID) {
-                deleteFile(id);
+                deleteRecordFile(id);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -368,7 +392,6 @@ public class DocumentManager {
             if (rs.next()) {
                 filename = rs.getString("Doc_name");
                 fileBytes = rs.getBytes("Data_file");
-
                 target = new File(targetPath, id + filename);
                 OutputStream targetFile = new FileOutputStream(target.getPath());
                 targetFile.write(fileBytes);

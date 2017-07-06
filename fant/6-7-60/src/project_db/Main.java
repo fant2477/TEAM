@@ -18,7 +18,7 @@ public class Main {
         DocumentManager a = new DocumentManager(m);
         a.setCurrentHeader(a.getHeader(600006));
 
-        Log.toStr("917 start");
+        //Log.toStr("917 start");
 
         Log.sortedLog();
         ConnectionDB.disconnect();

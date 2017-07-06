@@ -45,10 +45,8 @@ public class UserManager {
         return user;
     }
 
-
     public static void updateUser(User user) {
         try {
-            String t = Time.currentTimetoString();
             String sql =
                     String.format(
                             "UPDATE Account "
@@ -57,17 +55,23 @@ public class UserManager {
                                     + "Name = '%s' , "
                                     + "Surname = '%s', "
                                     + "BusinessGroup = '%s', "
-                                    + "Date_modified = '%s' "
+                                    + "Date_modified = %s "
                                     + "WHERE User_ID = %d",
                             user.getUsername(),
                             user.getPassword(),
                             user.getName(),
                             user.getSurname(),
                             user.getBusinessGroup(),
-                            t,
+                            Time.currentTime,
                             user.getUser_ID());
             ConnectionDB.statement.executeUpdate(sql);
-            Log.addLog(t, "Information of " + user.getUsername() + "was updated");
+            Log.addLog(
+                    String.format(
+                            "(SELECT Date_modified FROM Account WHERE User_ID = %d)",
+                            user.getUser_ID()),
+                    String.format(
+                            "Information of %d: %s was updated",
+                            user.getUser_ID(), user.getUsername()));
             System.out.println("User Data updated. :)");
         } catch (Exception e) {
             e.printStackTrace();

@@ -16,7 +16,7 @@ public class View {
 
     public static List<DocumentDetail> toListofDocDetail(
             int pageNo, int pageMax, String searchLine, String order) {
-        List<DocumentDetail> table = new ArrayList<>();
+        List<DocumentDetail> table = new ArrayList<DocumentDetail>();
         try {
             String sql =
                     paging(
@@ -60,7 +60,7 @@ public class View {
 
     public static List<DocumentDetail> toListofDocDetail(
             int pageNo, int pageMax, int Doc_header_ID, String searchLine, String order) {
-        List<DocumentDetail> table = new ArrayList<>();
+        List<DocumentDetail> table = new ArrayList<DocumentDetail>();
         try {
             String sql =
                     paging(
@@ -102,7 +102,7 @@ public class View {
 
     public static List<DocumentHeader> toListofDocHeader(
             int pageNo, int pageMax, String searchLine, String order) {
-        List<DocumentHeader> table = new ArrayList<>();
+        List<DocumentHeader> table = new ArrayList<DocumentHeader>();
         try {
             String sql =
                     paging(
@@ -146,9 +146,9 @@ public class View {
     }
 
     public static String search(String[] ColumnName, String searchLine) {
-        List<String> condition = new ArrayList<>();
+        List<String> condition = new ArrayList<String>();
         for (String keyword : searchLine.split("\\s+")) {
-            List<String> each = new ArrayList<>();
+            List<String> each = new ArrayList<String>();
             for (String column : ColumnName) {
                 each.add("(UPPER(" + column + ") LIKE UPPER('%" + keyword + "%'))");
             }
