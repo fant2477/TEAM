@@ -43,7 +43,7 @@ public class user_info_page extends HttpServlet {
 		response.setContentType("text/html");
 		ConnectionDB.connect();
 		current_user = (User) request.getSession().getAttribute("current_user");
-
+		request.getSession(false).invalidate();
 		
 		
 		System.out.println("current_user: "+current_user);
@@ -112,6 +112,7 @@ public class user_info_page extends HttpServlet {
 
 					request.getSession().setAttribute("change_page", change_page);
 					request.getSession().setAttribute("from_page", from_page);
+					request.getSession().setAttribute("current_user", current_user);
 
 					System.out.println("change_page: "+ change_page);
 					//go to get fn
@@ -126,6 +127,7 @@ public class user_info_page extends HttpServlet {
 	
 					request.getSession().setAttribute("change_page", change_page);
 					request.getSession().setAttribute("from_page", from_page);
+					request.getSession().setAttribute("current_user", current_user);
 	
 					System.out.println("change_page: "+ change_page);
 					response.sendRedirect("UI_Manager");
@@ -139,6 +141,7 @@ public class user_info_page extends HttpServlet {
 
 					request.getSession().setAttribute("change_page", change_page);
 					request.getSession().setAttribute("from_page", from_page);
+					request.getSession().setAttribute("current_user", current_user);
 
 					System.out.println("change_page: "+ change_page);
 					//go to get fn
@@ -153,6 +156,7 @@ public class user_info_page extends HttpServlet {
 
 					request.getSession().setAttribute("change_page", change_page);
 					request.getSession().setAttribute("from_page", from_page);
+					request.getSession().setAttribute("current_user", current_user);
 
 					System.out.println("change_page: "+ change_page);
 					response.sendRedirect("UI_Manager");
@@ -166,6 +170,7 @@ public class user_info_page extends HttpServlet {
 
 					request.getSession().setAttribute("change_page", change_page);
 					request.getSession().setAttribute("from_page", from_page);
+					request.getSession().setAttribute("current_user", current_user);
 
 					System.out.println("change_page: "+ change_page);
 					response.sendRedirect("UI_Manager");
@@ -179,6 +184,7 @@ public class user_info_page extends HttpServlet {
 
 					request.getSession().setAttribute("change_page", change_page);
 					request.getSession().setAttribute("from_page", from_page);
+					request.getSession().setAttribute("current_user", current_user);
 
 					System.out.println("change_page: "+ change_page);
 					//go to get fn
@@ -193,6 +199,7 @@ public class user_info_page extends HttpServlet {
 
 					request.getSession().setAttribute("change_page", change_page);
 					request.getSession().setAttribute("from_page", from_page);
+					request.getSession().setAttribute("current_user", current_user);
 
 					System.out.println("change_page: "+ change_page);
 					//go to get fn
@@ -224,6 +231,7 @@ public class user_info_page extends HttpServlet {
 						current_user.setPassword(password);
 						
 						UserManager.updateUser(current_user);
+						request.getSession().setAttribute("current_user", current_user);
 						
 						
 						
@@ -276,6 +284,7 @@ public class user_info_page extends HttpServlet {
 
 					request.getSession().setAttribute("change_page", change_page);
 					request.getSession().setAttribute("from_page", from_page);
+					request.getSession().setAttribute("current_user", current_user);
 
 					System.out.println("change_page: "+ change_page);
 					//go to get fn

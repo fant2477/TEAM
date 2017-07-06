@@ -42,6 +42,8 @@ public class history_page extends HttpServlet {
 
 		response.setContentType("text/html");
 		current_user = (User) request.getSession().getAttribute("current_user");
+		request.getSession(false).invalidate();
+		
 		ConnectionDB.connect();
 		
 		
@@ -77,12 +79,6 @@ public class history_page extends HttpServlet {
 			change_page = "history_page";
 			from_page = "history_page";
 
-			request.getSession().setAttribute("change_page", change_page);
-			request.getSession().setAttribute("from_page", from_page);
-
-			System.out.println("change_page: "+ change_page);
-			//go to get fn
-			response.sendRedirect("UI_Manager");
 
 
 		} else if (bt.equals("Main Page")) {
@@ -92,11 +88,6 @@ public class history_page extends HttpServlet {
 			change_page = "main_page";
 			from_page = "history_page";
 
-			request.getSession().setAttribute("change_page", change_page);
-			request.getSession().setAttribute("from_page", from_page);
-
-			System.out.println("change_page: "+ change_page);
-			response.sendRedirect("UI_Manager");
 
 		} else if (bt.equals("Add Page")) {
 				//Register button was pressed
@@ -105,11 +96,6 @@ public class history_page extends HttpServlet {
 			change_page = "add_doc_page";
 			from_page = "history_page";
 
-			request.getSession().setAttribute("change_page", change_page);
-			request.getSession().setAttribute("from_page", from_page);
-
-			System.out.println("change_page: "+ change_page);
-			response.sendRedirect("UI_Manager");
 
 		} else if (bt.equals("Delete Page")) {
 				//Register button was pressed
@@ -118,11 +104,6 @@ public class history_page extends HttpServlet {
 			change_page = "delete_doc_page";
 			from_page = "history_page";
 
-			request.getSession().setAttribute("change_page", change_page);
-			request.getSession().setAttribute("from_page", from_page);
-
-			System.out.println("change_page: "+ change_page);
-			response.sendRedirect("UI_Manager");
 			
 			
 		} else if (bt.equals("User_info")) {
@@ -131,12 +112,6 @@ public class history_page extends HttpServlet {
 			change_page = "user_info_page";
 			from_page = "history_page";
 	
-			request.getSession().setAttribute("change_page", change_page);
-			request.getSession().setAttribute("from_page", from_page);
-	
-			System.out.println("change_page: "+ change_page);
-			//go to get fn
-			response.sendRedirect("UI_Manager");
 			
 
 		} else if (bt.equals("Log Out")) {
@@ -144,13 +119,6 @@ public class history_page extends HttpServlet {
 			System.out.println("logout was press");
 			change_page = "login_page";
 			from_page = "history_page";
-	
-			request.getSession().setAttribute("change_page", change_page);
-			request.getSession().setAttribute("from_page", from_page);
-	
-			System.out.println("change_page: "+ change_page);
-			//go to get fn
-			response.sendRedirect("UI_Manager");
 
 		} else {
 		    //someone has altered the HTML and sent a different value!
@@ -159,13 +127,15 @@ public class history_page extends HttpServlet {
 			change_page = "history_page";
 			from_page = "history_page";
 
-			request.getSession().setAttribute("change_page", change_page);
-			request.getSession().setAttribute("from_page", from_page);
-
-			System.out.println("change_page: "+ change_page);
-			//go to get fn
-			response.sendRedirect("UI_Manager");
+			
 		}
+		request.getSession().setAttribute("change_page", change_page);
+		request.getSession().setAttribute("from_page", from_page);
+		request.getSession().setAttribute("current_user", current_user);
+
+		System.out.println("change_page: "+ change_page);
+		//go to get fn
+		response.sendRedirect("UI_Manager");
 
 	}
 

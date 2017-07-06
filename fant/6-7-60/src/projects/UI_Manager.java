@@ -51,7 +51,8 @@ public class UI_Manager extends HttpServlet {
 		head_id = (String) request.getSession().getAttribute("head_id");
 		doc_id = (String) request.getSession().getAttribute("doc_id");
 		System.out.println("UI current_user: "+ current_user);
-
+		request.getSession(false).invalidate();
+		
 		System.out.println("ui change_page2: "+change_page);
 		String sstate ="";
 		if(from_page=="login_page")

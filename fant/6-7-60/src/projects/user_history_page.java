@@ -38,6 +38,7 @@ public class user_history_page extends HttpServlet {
 
 		response.setContentType("text/html");
 		current_user = (User) request.getSession().getAttribute("current_user");
+		request.getSession(false).invalidate();
 
 		// go to fn same as sent fn (sent by post go to post )
 		RequestDispatcher dispatcher = request.getRequestDispatcher("user_history_ui.jsp");
@@ -63,6 +64,7 @@ public class user_history_page extends HttpServlet {
 
 							request.getSession().setAttribute("change_page", change_page);
 							request.getSession().setAttribute("from_page", from_page);
+							request.getSession().setAttribute("current_user", current_user);
 
 							System.out.println("change_page: "+ change_page);
 							//go to get fn
@@ -78,6 +80,7 @@ public class user_history_page extends HttpServlet {
 	
 							request.getSession().setAttribute("change_page", change_page);
 							request.getSession().setAttribute("from_page", from_page);
+							request.getSession().setAttribute("current_user", current_user);
 	
 							System.out.println("change_page: "+ change_page);
 							response.sendRedirect("UI_Manager");
@@ -91,6 +94,7 @@ public class user_history_page extends HttpServlet {
 
 							request.getSession().setAttribute("change_page", change_page);
 							request.getSession().setAttribute("from_page", from_page);
+							request.getSession().setAttribute("current_user", current_user);
 
 							System.out.println("change_page: "+ change_page);
 							//go to get fn
@@ -105,6 +109,7 @@ public class user_history_page extends HttpServlet {
 
 							request.getSession().setAttribute("change_page", change_page);
 							request.getSession().setAttribute("from_page", from_page);
+							request.getSession().setAttribute("current_user", current_user);
 
 							System.out.println("change_page: "+ change_page);
 							response.sendRedirect("UI_Manager");
@@ -118,6 +123,7 @@ public class user_history_page extends HttpServlet {
 
 							request.getSession().setAttribute("change_page", change_page);
 							request.getSession().setAttribute("from_page", from_page);
+							request.getSession().setAttribute("current_user", current_user);
 
 							System.out.println("change_page: "+ change_page);
 							response.sendRedirect("UI_Manager");
@@ -131,6 +137,7 @@ public class user_history_page extends HttpServlet {
 
 							request.getSession().setAttribute("change_page", change_page);
 							request.getSession().setAttribute("from_page", from_page);
+							request.getSession().setAttribute("current_user", current_user);
 
 							System.out.println("change_page: "+ change_page);
 							//go to get fn
@@ -145,6 +152,7 @@ public class user_history_page extends HttpServlet {
 					
 							request.getSession().setAttribute("change_page", change_page);
 							request.getSession().setAttribute("from_page", from_page);
+							request.getSession().setAttribute("current_user", current_user);
 					
 							System.out.println("change_page: "+ change_page);
 							//go to get fn
@@ -160,6 +168,7 @@ public class user_history_page extends HttpServlet {
 
 							request.getSession().setAttribute("change_page", change_page);
 							request.getSession().setAttribute("from_page", from_page);
+							request.getSession().setAttribute("current_user", current_user);
 
 							System.out.println("change_page: "+ change_page);
 							//go to get fn
