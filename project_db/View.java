@@ -3,12 +3,11 @@ package project_db;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class View {
 
-    public static int getPossibleMaxPage(List<?> table,int pageMax) {
-        return (int) Math.ceil(table.size()/(double) pageMax);
+    public static int getPossibleMaxPage(List<?> table, int pageMax) {
+        return (int) Math.ceil(table.size() / (double) pageMax);
     }
 
     public static List<DocumentDetail> toListofDocDetail(int pageNo, int pageMax) {
@@ -20,19 +19,20 @@ public class View {
         List<DocumentDetail> table = new ArrayList<>();
         try {
             String sql =
-                    String.format(
-                            "SELECT * FROM (SELECT Row_Number() OVER (ORDER BY Doc_ID)"
-                                    + "AS RowIndex, Doc_ID, Doc_header_ID, Doc_name, Date_created, "
-                                    + "Date_modified, User_ID_created, User_ID_modified, Size "
-                                    + "FROM Document_detail WHERE %s "
-                                    + ") AS Sub WHERE Sub.RowIndex >= %d AND Sub.RowIndex <= %d"
-                                    + "ORDER BY %s",
-                            SQL.search(
-                                    new String[] {"Doc_ID", "Doc_header_ID", "Doc_name"},
-                                    searchLine),
-                            (pageMax * pageNo) - pageMax + 1,
-                            (pageMax * pageNo),
-                            order);
+                    paging(
+                                    (pageMax * pageNo) - pageMax + 1,
+                                    (pageMax * pageNo),
+                                    String.format(
+                                            "Doc_ID, Doc_header_ID, Doc_name, Date_created, "
+                                                    + "Date_modified, User_ID_created, "
+                                                    + "User_ID_modified, Size "
+                                                    + "FROM Document_detail WHERE %s ",
+                                            search(
+                                                    new String[] {
+                                                        "Doc_ID", "Doc_header_ID", "Doc_name"
+                                                    },
+                                                    searchLine)))
+                            + String.format("ORDER BY %s", order);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
                 table.add(
@@ -63,21 +63,19 @@ public class View {
         List<DocumentDetail> table = new ArrayList<>();
         try {
             String sql =
-                    String.format(
-                            "SELECT * FROM (SELECT Row_Number() OVER (ORDER BY Doc_ID)"
-                                    + "AS RowIndex, Doc_ID, Doc_header_ID, Doc_name, Date_created, "
-                                    + "Date_modified, User_ID_created, User_ID_modified, Size "
-                                    + "FROM Document_detail WHERE %s "
-                                    + "AND Doc_header_ID = %d"
-                                    + ") AS Sub WHERE Sub.RowIndex >= %d AND Sub.RowIndex <= %d"
-                                    + "ORDER BY %s",
-                            SQL.search(
-                                    new String[] {"Doc_ID", "Doc_header_ID", "Doc_name"},
-                                    searchLine),
-                            Doc_header_ID,
-                            (pageMax * pageNo) - pageMax + 1,
-                            (pageMax * pageNo),
-                            order);
+                    paging(
+                                    (pageMax * pageNo) - pageMax + 1,
+                                    (pageMax * pageNo),
+                                    String.format(
+                                            "* FROM Document_detail WHERE %s AND "
+                                                    + "Doc_header_ID = %d",
+                                            search(
+                                                    new String[] {
+                                                        "Doc_ID", "Doc_header_ID", "Doc_name"
+                                                    },
+                                                    searchLine),
+                                            Doc_header_ID))
+                            + String.format("ORDER BY %s", order);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
                 table.add(
@@ -107,21 +105,19 @@ public class View {
         List<DocumentHeader> table = new ArrayList<>();
         try {
             String sql =
-                    String.format(
-                            "SELECT * FROM (SELECT Row_Number() OVER (ORDER BY Doc_header_ID)"
-                                    + "AS RowIndex, * FROM Document_header WHERE %s) "
-                                    + "AS Sub WHERE Sub.RowIndex >= %d AND Sub.RowIndex <= %d"
-                                    + "ORDER BY %s",
-                            SQL.search(
-                                    new String[] {
-                                        "Doc_header_ID",
-                                        "Doc_header_subject",
-                                        "Doc_header_description"
-                                    },
-                                    searchLine),
-                            (pageMax * pageNo) - pageMax + 1,
-                            (pageMax * pageNo),
-                            order);
+                    paging(
+                                    (pageMax * pageNo) - pageMax + 1,
+                                    (pageMax * pageNo),
+                                    String.format(
+                                            "* FROM Document_header WHERE %s ",
+                                            search(
+                                                    new String[] {
+                                                        "Doc_header_ID",
+                                                        "Doc_header_subject",
+                                                        "CONVERT(VARCHAR(MAX), Doc_header_description)"
+                                                    },
+                                                    searchLine)))
+                            + String.format("ORDER BY %s", order);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
                 table.add(
@@ -139,5 +135,25 @@ public class View {
             e.printStackTrace();
         }
         return table;
+    }
+
+    public static String paging(int pageNo, int pageMax, String sql) {
+        return String.format(
+                "SELECT * FROM (SELECT Row_Number() OVER (ORDER BY (SELECT NULL))"
+                        + "AS RowIndex, %s"
+                        + ") AS Sub WHERE Sub.RowIndex >= %d AND Sub.RowIndex <= %d ",
+                sql, pageNo, pageMax);
+    }
+
+    public static String search(String[] ColumnName, String searchLine) {
+        List<String> condition = new ArrayList<>();
+        for (String keyword : searchLine.split("\\s+")) {
+            List<String> each = new ArrayList<>();
+            for (String column : ColumnName) {
+                each.add("(UPPER(" + column + ") LIKE UPPER('%" + keyword + "%'))");
+            }
+            condition.add("(" + SQL.join(" OR ", each) + ")");
+        }
+        return SQL.join(" AND ", condition);
     }
 }

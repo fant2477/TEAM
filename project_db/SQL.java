@@ -1,6 +1,5 @@
 package project_db;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SQL {
@@ -19,18 +18,6 @@ public class SQL {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static String search(String[] ColumnName, String searchLine) {
-        List<String> condition = new ArrayList<>();
-        for (String keyword : searchLine.split("\\s+")) {
-            List<String> each = new ArrayList<>();
-            for (String column : ColumnName) {
-                each.add("(UPPER(" + column + ") LIKE UPPER('%" + keyword + "%'))");
-            }
-            condition.add("(" + SQL.join(" OR ", each) + ")");
-        }
-        return SQL.join(" AND ", condition);
     }
 
     public static String join(String delimiter, List<String> elements) {

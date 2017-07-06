@@ -52,29 +52,23 @@ public class Log {
         }
     }
 
-    public static List<String[]> getLog() {
-        List<String[]> table = new ArrayList<>();
-        try {
-            String sql = "SELECT * FROM Event_log ORDER BY Time";
-            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
-            while (rs.next()) {
-                table.add(new String[] {Time.datetoString(rs.getTimestamp(1)), rs.getString(2)});
-            }
-            rs.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return table;
+    public static List<String[]> getLog(int pageNo, int pageMax) {
+        return getLog(pageNo, pageMax, "", "Time");
     }
 
-    public static List<String[]> getLog(String textline) {
+    public static List<String[]> getLog(int pageNo, int pageMax, String searchLine, String order) {
         List<String[]> table = new ArrayList<>();
         try {
             String sql =
-                    "SELECT * FROM Event_log "
-                            + "WHERE "
-                            + SQL.search(new String[] {"CONVERT(VARCHAR(MAX), Event)"}, textline)
-                            + " ORDER BY Time";
+                    View.paging(
+                                    (pageMax * pageNo) - pageMax + 1,
+                                    (pageMax * pageNo),
+                                    String.format(
+                                            "* FROM Event_log WHERE %s ",
+                                            View.search(
+                                                    new String[] {"CONVERT(VARCHAR(MAX), Event)"},
+                                                    searchLine)))
+                            + String.format("ORDER BY %s", order);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
                 table.add(new String[] {Time.datetoString(rs.getTimestamp(1)), rs.getString(2)});
@@ -86,17 +80,12 @@ public class Log {
         return table;
     }
 
-    public static void toStr() {
-        for (String[] row : Log.getLog()) {
-            for (String s : row) {
-                System.out.printf("%s ", s);
-            }
-            System.out.println();
-        }
+    public static void toStr(int pageNo, int pageMax) {
+        toStr(pageNo, pageMax, "", "Time");
     }
 
-    public static void toStr(String textline) {
-        for (String[] row : Log.getLog(textline)) {
+    public static void toStr(int pageNo, int pageMax, String searchLine, String order) {
+        for (String[] row : Log.getLog(pageNo, pageMax, searchLine, order)) {
             for (String s : row) {
                 System.out.printf("%s ", s);
             }
