@@ -362,7 +362,7 @@ public class DocumentManager {
         }
 
         Log.addLog(
-                Time.currentTimetoString(),
+                Time.currentTime,
                 String.format(
                         "%s was upload failed by %s",
                         file.getName(), getCurrentUser().getUsername()));

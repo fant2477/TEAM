@@ -138,11 +138,48 @@ public class View {
         return table;
     }
 
+    public static List<DocumentHeader> toListofDocHeader(
+            int pageNo, int pageMax, int User_ID_created, String searchLine, String order) {
+        List<DocumentHeader> table = new ArrayList<DocumentHeader>();
+        try {
+            String sql =
+                    paging(
+                                    (pageMax * pageNo) - pageMax + 1,
+                                    (pageMax * pageNo),
+                                    String.format(
+                                            "* FROM Document_header WHERE %s AND User_ID_created = %d",
+                                            search(
+                                                    new String[] {
+                                                        "Doc_header_ID",
+                                                        "Doc_header_subject",
+                                                        "CONVERT(VARCHAR(MAX), Doc_header_description)"
+                                                    },
+                                                    searchLine),
+                                            User_ID_created))
+                            + String.format("ORDER BY %s", order);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            while (rs.next()) {
+                table.add(
+                        new DocumentHeader(
+                                rs.getInt("Doc_header_ID"),
+                                rs.getString("Doc_header_subject"),
+                                rs.getInt("User_ID_created"),
+                                rs.getInt("User_ID_modified"),
+                                rs.getTimestamp("Date_created"),
+                                rs.getTimestamp("Date_modified"),
+                                rs.getString("Doc_header_description")));
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return table;
+    }
+
     public static String paging(int pageNo, int pageMax, String sql) {
         return String.format(
-                "SELECT * FROM (SELECT Row_Number() OVER (ORDER BY (SELECT NULL))"
-                        + "AS RowIndex, %s"
-                        + ") AS Sub WHERE Sub.RowIndex BETWEEN %d AND %d ",
+                "SELECT * FROM (SELECT Row_Number() OVER (ORDER BY (SELECT NULL)) AS "
+                        + "RowIndex, %s) AS Sub WHERE Sub.RowIndex BETWEEN %d AND %d ",
                 sql, pageNo, pageMax);
     }
 

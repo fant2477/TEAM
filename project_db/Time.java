@@ -28,7 +28,7 @@ public class Time {
     public static Date getCurrentTime() {
         Date d = null;
         try {
-            String sql = "CURRENT_TIMESTAMP";
+            String sql = "SELECT CURRENT_TIMESTAMP";
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 d = rs.getTimestamp(1);

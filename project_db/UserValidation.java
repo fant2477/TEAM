@@ -98,7 +98,7 @@ public class UserValidation {
     }
 
     public static String ValidConfirmpass(String password, String confirmpass) {
-        if (password.equals(confirmpass) == true) {
+        if (password.equals(confirmpass)) {
             return "";
         }
         return "Your password is't match!";
@@ -118,16 +118,15 @@ public class UserValidation {
                 && isValidConfirmpass(password, confirmpass);
     }
 
-    // ========================= user_info ===============
+    // ====================== user_info ===============
     public static String UserValidUsername(String username, String current_username) {
-        if (current_username.equals(username)) return "OK";
-        else {
-            return UserValidation.validUsername(username);
+        if (current_username.equals(username)) {
+            return "OK";
         }
+        return UserValidation.validUsername(username);
     }
 
     public static boolean isUserValidUsername(String username, String current_username) {
-
         return UserValidation.UserValidUsername(username, current_username).equals("OK");
     }
 
