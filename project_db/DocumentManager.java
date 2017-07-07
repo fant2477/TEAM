@@ -201,8 +201,8 @@ public class DocumentManager {
 
     private boolean isFileExists(int Doc_ID) {
         try {
-            String sql = String
-                .format("SELECT Doc_ID FROM Document_detail WHERE Doc_ID = %d", Doc_ID);
+            String sql =
+                    String.format("SELECT Doc_ID FROM Document_detail WHERE Doc_ID = %d", Doc_ID);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 rs.close();
@@ -221,7 +221,6 @@ public class DocumentManager {
             System.err.println("File doesn't exist.");
         }
     }
-
 
     public void deleteRecordFile(int Doc_ID) {
         try {

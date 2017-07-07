@@ -65,13 +65,11 @@ public class UserValidation {
 
         return "OK";
     }
-    
 
     public static boolean isValidUsername(String username) {
         // return true if username is valid.
         return UserValidation.validUsername(username).equals("OK");
     }
-
 
     // use in Text Box of Password
     public static String validPassword(String password) {
@@ -94,19 +92,16 @@ public class UserValidation {
         return "OK";
     }
 
-
-
     public static boolean isValidPass(String password) {
         // return true iff password is valid.
         return UserValidation.validPassword(password).equals("OK");
     }
 
     public static String ValidConfirmpass(String password, String confirmpass) {
-      if(password.equals(confirmpass)==true)
-      {
-        return "";
-      }
-      return "Your password is't match!";
+        if (password.equals(confirmpass) == true) {
+            return "";
+        }
+        return "Your password is't match!";
     }
     // use in Text Box of confirm password
     public static boolean isValidConfirmpass(String password, String confirmpass) {
@@ -115,32 +110,27 @@ public class UserValidation {
     }
 
     public static boolean isValidAll(
-            String username,
-            String password,
-            String confirmpass,
-            String name,
-            String surname) {
+            String username, String password, String confirmpass, String name, String surname) {
         return isValidName(name)
                 && isValidName(surname)
                 && isValidUsername(username)
                 && isValidPass(password)
                 && isValidConfirmpass(password, confirmpass);
     }
-    
-    // ============================================= user_info =============================================
-    public static String UserValidUsername(String username,String current_username) {
-    	if(current_username.equals(username))
-    		return "OK";
-    	else{
-    		return UserValidation.validUsername(username);}
+
+    // ========================= user_info ===============
+    public static String UserValidUsername(String username, String current_username) {
+        if (current_username.equals(username)) return "OK";
+        else {
+            return UserValidation.validUsername(username);
+        }
     }
-    
-    public static boolean isUserValidUsername(String username,String current_username) {
-    	
-        return UserValidation.UserValidUsername(username,current_username).equals("OK");
+
+    public static boolean isUserValidUsername(String username, String current_username) {
+
+        return UserValidation.UserValidUsername(username, current_username).equals("OK");
     }
-    
-    
+
     public static boolean isUserValidAll(
             String username,
             String password,
@@ -149,18 +139,12 @@ public class UserValidation {
             String current_username) {
         return isValidName(name)
                 && isValidName(surname)
-                && isUserValidUsername(username,current_username)
+                && isUserValidUsername(username, current_username)
                 && isValidPass(password);
     }
-    // ============================================= user_info end =============================================
-    
-    // ============================================= Login =============================================
-    // ----------------------------- check login ---------------------------------
-//   public static boolean isValidLogin(String username , String password) {
-//     if(UserValidation.validUsernameLogin(username).equals("OK") && UserValidation.validPasswordLogin(username, password).equals("OK"))
-//       return true;
-//     return false;
-//   }
+
+    // ==================================== user_info end ==================================
+    // ======================================== Login ==================================
 
     // use in Text box of username at Login
     public static String validUsernameLogin(String username) {
@@ -173,18 +157,13 @@ public class UserValidation {
     }
 
     // use in Text box of password
-    public static String validPasswordLogin(String username ,String password) {
+    public static String validPasswordLogin(String username, String password) {
         if (password.isEmpty()) {
             return "You can't leave this empty.";
+        } else if (UserValidation.validUsernameLogin(username).equals("OK")
+                && !UserValidation.validLogin(username, password)) {
+            return "Password won't match!";
         }
-        else if(UserValidation.validUsernameLogin(username)=="OK" && UserValidation.validLogin(username,password) == false){
-        	return "Password won't match!";
-
-        }
-//        else if(UserValidation.validUsernameLogin(username)=="You can't leave this empty." ){
-//        	return "";
-//
-//        }
         return "";
     }
 

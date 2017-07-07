@@ -71,7 +71,10 @@ public class Log {
                             + String.format("ORDER BY %s", order);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
-                table.add(new String[] {Time.datetoString(rs.getTimestamp("Time")), rs.getString("Event")});
+                table.add(
+                        new String[] {
+                            Time.datetoString(rs.getTimestamp("Time")), rs.getString("Event")
+                        });
             }
             rs.close();
         } catch (Exception e) {
