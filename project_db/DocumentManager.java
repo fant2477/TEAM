@@ -18,10 +18,10 @@ public class DocumentManager {
         DocumentManager.currentUser = currentUser;
     }
 
-    public static DocumentDetail getFile(int id) {
+    public static DocumentDetail getFile(int Doc_ID) {
         DocumentDetail d = null;
         try {
-            String sql = String.format("SELECT * FROM Document_detail WHERE Doc_ID = %d", id);
+            String sql = String.format("SELECT * FROM Document_detail WHERE Doc_ID = %d", Doc_ID);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 d =
@@ -43,7 +43,7 @@ public class DocumentManager {
         return d;
     }
 
-    public static DocumentDetail getGeneralFile(int id) {
+    public static DocumentDetail getGeneralFile(int Doc_ID) {
         DocumentDetail d = null;
         try {
             String sql =
@@ -57,7 +57,7 @@ public class DocumentManager {
                                     + "User_ID_modified, "
                                     + "Size "
                                     + "FROM Document_detail WHERE Doc_ID = %d",
-                            id);
+                            Doc_ID);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 d =
@@ -116,7 +116,6 @@ public class DocumentManager {
         int currentID = getLatestID() + 1;
         try {
             // Add file to DocumentHeader
-            //String currentTime = Time.currentTimetoString();
             String sql =
                     String.format(
                             "INSERT INTO Document_header "
@@ -151,7 +150,8 @@ public class DocumentManager {
         try {
             String sql =
                     String.format(
-                            "SELECT Doc_header_subject FROM Document_header WHERE Doc_header_ID = %d",
+                            "SELECT Doc_header_subject FROM Document_header "
+                                    + "WHERE Doc_header_ID = %d",
                             Doc_header_ID);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
@@ -191,7 +191,6 @@ public class DocumentManager {
             if (rs.next()) {
                 name = rs.getString("Doc_name");
                 rs.close();
-                return name;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -318,7 +317,6 @@ public class DocumentManager {
             pstmt.setInt(4, getCurrentUser().getUser_ID());
             pstmt.setLong(5, file.length());
 
-            // Add log
             System.out.println(file.getName() + " start uploading.");
 
             Log.addLog(
@@ -330,9 +328,9 @@ public class DocumentManager {
             pstmt.setBinaryStream(6, new FileInputStream(file));
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
-            int id = 0;
+            int Doc_ID = 0;
             if (rs.next()) {
-                id = rs.getInt(1);
+                Doc_ID = rs.getInt(1);
             }
             rs.close();
             pstmt.close();
@@ -341,12 +339,14 @@ public class DocumentManager {
             // Add log successfully
             Log.addLog(
                     String.format(
-                            "(SELECT Date_created FROM Document_detail WHERE Doc_ID = %d)", id),
+                            "(SELECT Date_created FROM Document_detail WHERE Doc_ID = %d)", Doc_ID),
                     String.format(
                             "%d: %s was uploaded successfully by %s",
-                            id, file.getName(), getCurrentUser().getUsername()));
+                            Doc_ID, file.getName(), getCurrentUser().getUsername()));
 
-            sql = String.format("SELECT Date_created FROM Document_detail WHERE Doc_ID = %d", id);
+            sql =
+                    String.format(
+                            "SELECT Date_created FROM Document_detail WHERE Doc_ID = %d", Doc_ID);
             rs = ConnectionDB.statement.executeQuery(sql);
             Date uploaded = null;
             if (rs.next()) {
@@ -356,7 +356,7 @@ public class DocumentManager {
             // Update Header
             this.updateHeaderModified(uploaded);
 
-            return getFile(id);
+            return getFile(Doc_ID);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -394,6 +394,7 @@ public class DocumentManager {
                 target = new File(targetPath, id + filename);
                 OutputStream targetFile = new FileOutputStream(target.getPath());
                 targetFile.write(fileBytes);
+
                 downloaded = Time.currentTimetoString();
                 rs.close();
                 targetFile.close();

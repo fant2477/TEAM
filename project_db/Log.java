@@ -57,6 +57,7 @@ public class Log {
     }
 
     public static List<String[]> getLog(int pageNo, int pageMax, String searchLine, String order) {
+        Log.sortedLog();
         List<String[]> table = new ArrayList<String[]>();
         try {
             String sql =
