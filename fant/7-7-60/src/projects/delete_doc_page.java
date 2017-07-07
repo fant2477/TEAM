@@ -40,7 +40,8 @@ public class delete_doc_page extends HttpServlet {
 		System.out.println("in delete_doc_page get");
 
 
-		response.setContentType("text/html");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 		ConnectionDB.connect();
 		current_user = (User) request.getSession().getAttribute("current_user");
 		request.getSession(false).invalidate();
@@ -59,7 +60,8 @@ public class delete_doc_page extends HttpServlet {
 
 		System.out.println("in delete_doc_page post");
 
-		response.setContentType("text/html");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 		ConnectionDB.connect();
 		DocumentManager doc = new DocumentManager(current_user);
 
@@ -70,7 +72,7 @@ public class delete_doc_page extends HttpServlet {
 			System.out.println("no bt was press");
 			change_page = "delete_doc_page";
 			from_page = "delete_doc_page";
-			
+
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("current_user", current_user);
@@ -86,7 +88,7 @@ public class delete_doc_page extends HttpServlet {
 
 			change_page = "main_page";
 			from_page = "add_doc_page";
-			
+
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("current_user", current_user);
@@ -102,7 +104,7 @@ public class delete_doc_page extends HttpServlet {
 			System.out.println("Upload bt was press");
 			change_page = "history_page";
 			from_page = "add_doc_page";
-			
+
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("current_user", current_user);
@@ -118,7 +120,7 @@ public class delete_doc_page extends HttpServlet {
 			System.out.println("adde page was press");
 			change_page = "add_doc_page";
 			from_page = "delete_doc_page";
-			
+
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("current_user", current_user);
@@ -127,14 +129,14 @@ public class delete_doc_page extends HttpServlet {
 			//go to get fn
 			response.sendRedirect("UI_Manager");
 
-			
-			
+
+
 		} else if (bt.equals("User_info")) {
 			//Login button was pressed
 			System.out.println("User_info was press");
 			change_page = "user_info_page";
 			from_page = "history_page";
-			
+
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("current_user", current_user);
@@ -142,7 +144,7 @@ public class delete_doc_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-	
+
 
 
 		} else if (bt.equals("Log Out")) {
@@ -150,7 +152,7 @@ public class delete_doc_page extends HttpServlet {
 			System.out.println("logout was press");
 			change_page = "login_page";
 			from_page = "add_doc_page";
-			
+
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("current_user", current_user);
@@ -164,17 +166,17 @@ public class delete_doc_page extends HttpServlet {
 		} else if (bt.equals("Delete")) {
 		    //Login button was pressed
 			System.out.println("Delete bt was press");
-			
-			
+
+
 			String id_group = request.getParameter("id_group");
 			String search_input = request.getParameter("search_input");
-			
+
 			int search_int = Integer.valueOf(search_input);
-			
+
 			PrintWriter out = response.getWriter();
 			request.getSession().setAttribute("current_user", current_user);
-			
-			
+
+
 			if(id_group.equals("doc_code"))
 			{
 				doc.deleteHeader(search_int);
@@ -184,14 +186,14 @@ public class delete_doc_page extends HttpServlet {
 				out.println("</script>");
 			}
 			else if(id_group.equals("file_id"))
-			{	
+			{
 				doc.deleteFile(search_int);
 				out.println("<script type=\"text/javascript\">");
 				out.println("alert('\\nYour File ID : "+search_int+" was successfully delete.') " );
 				out.println("location='delete_doc_page';");
 				out.println("</script>");
 			}
-			
+
 
 		} else {
 		    //someone has altered the HTML and sent a different value!
@@ -201,9 +203,9 @@ public class delete_doc_page extends HttpServlet {
 			from_page = "delete_doc_page";
 
 		}
-		
-		
-		
+
+
+
 		ConnectionDB.disconnect();
 
 	}

@@ -38,7 +38,8 @@ public class register_page extends HttpServlet {
 		System.out.println("in register_page get");
 
 
-		response.setContentType("text/html");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher("register_ui.jsp");
@@ -53,9 +54,10 @@ public class register_page extends HttpServlet {
 		// TODO Auto-generated method stub
 		System.out.println("in register_page post");
 
-		response.setContentType("text/html");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 		ConnectionDB.connect();
-		
+
 
 		String firstname = request.getParameter("firstname");// ("inside this") get by name
 		String lastname = request.getParameter("lastname");
@@ -91,7 +93,7 @@ public class register_page extends HttpServlet {
 			{
 
 				user.createNewUser(username,password,confirm_password,firstname,lastname,business_group);
-				
+
 
 				change_page = "login_page";
 				from_page = "register_page";
@@ -112,7 +114,7 @@ public class register_page extends HttpServlet {
 				String username_check = user_va.validUsername(username);
 				String password_check = user_va.validPassword(password);
 				String confirm_password_check = user_va.ValidConfirmpass(password,confirm_password);
-				
+
 
 				System.out.println("business_group: "+business_group);
 				request.setAttribute("firstname_check",firstname_check);// ("inside this") get by name

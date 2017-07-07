@@ -43,7 +43,8 @@ public class UI_Manager extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 
 		change_page = (String) request.getSession().getAttribute("change_page");
 		from_page = (String) request.getSession().getAttribute("from_page");
@@ -52,7 +53,7 @@ public class UI_Manager extends HttpServlet {
 		doc_id = (String) request.getSession().getAttribute("doc_id");
 		System.out.println("UI current_user: "+ current_user);
 		request.getSession(false).invalidate();
-		
+
 		System.out.println("ui change_page2: "+change_page);
 		String sstate ="";
 		if(from_page=="login_page")
