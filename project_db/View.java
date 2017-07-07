@@ -7,10 +7,8 @@ import java.util.List;
 public class View {
 
     public static int getPossibleMaxPage(List<?> table, int pageMax) {
-        if (table.size() == 0) {
-            return 1;
-        }
-        return (int) Math.ceil(table.size() / (double) pageMax);
+        assert pageMax > 0 : "Maximum page must > 0.";
+        return (table.size() == 0) ? 1 : (int) Math.ceil(table.size() / (double) pageMax);
     }
 
     public static List<DocumentDetail> toListofDocDetail(int pageNo, int pageMax) {
