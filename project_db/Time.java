@@ -25,6 +25,22 @@ public class Time {
         }
     }
 
+    public static int getCurrentPrefixID() {
+        int id = 0;
+        try {
+            String sql = "SELECT FORMAT(DATEADD(YEAR, 543, CURRENT_TIMESTAMP), 'yyMM')";
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                id = Integer.parseInt(rs.getString(1));
+                rs.close();
+            }
+        } catch (Exception e) {
+            return Integer.parseInt(
+                new SimpleDateFormat("yyMM", new Locale("th", "TH")).format(new Date()));
+        }
+        return id;
+    }
+
     public static Date getCurrentTime() {
         Date d = null;
         try {

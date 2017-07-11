@@ -91,21 +91,21 @@ public class DocumentManager {
     }
 
     private int getLatestID() {
-        int currentYear = Time.getCurrentBEYear();
+        int currentPrefix = Time.getCurrentPrefixID();
         int LatestID;
         try {
             String sql = "SELECT MAX(ID) FROM Event_log";
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 LatestID = rs.getInt(1);
-                if (currentYear == LatestID / 10000) {
+                if (currentPrefix == LatestID / 10000) {
                     return LatestID;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return currentYear * 10000;
+        return currentPrefix * 10000;
     }
 
     public DocumentHeader createHeader(String subject) {
