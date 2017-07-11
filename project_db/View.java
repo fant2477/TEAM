@@ -6,9 +6,14 @@ import java.util.List;
 
 public class View {
 
-    public static int getPossibleMaxPage(List<?> table, int pageMax) {
-        assert pageMax > 0 : "Maximum page must > 0.";
-        return (table.size() == 0) ? 1 : (int) Math.ceil(table.size() / (double) pageMax);
+    public static int MaximumPageNo = 1;
+
+    public static int getMaximumPageNo() {
+        return MaximumPageNo;
+    }
+
+    public static void setMaximumPageNo(int maximumPageNo) {
+        MaximumPageNo = maximumPageNo;
     }
 
     public static List<DocumentDetail> toListofDocDetail(int pageNo, int pageMax) {
@@ -106,6 +111,22 @@ public class View {
         List<DocumentHeader> table = new ArrayList<DocumentHeader>();
         try {
             String sql =
+                    String.format(
+                            "SELECT COUNT(*) FROM Document_header WHERE %s ",
+                            search(
+                                    new String[] {
+                                        "Doc_header_ID",
+                                        "Doc_header_subject",
+                                        "CONVERT(VARCHAR(MAX), Doc_header_description)"
+                                    },
+                                    searchLine));
+            System.out.println(sql);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                setMaximumPageNo(rs.getInt(1));
+            }
+            rs.close();
+            sql =
                     paging(
                                     (pageMax * pageNo) - pageMax + 1,
                                     (pageMax * pageNo),
@@ -119,7 +140,8 @@ public class View {
                                                     },
                                                     searchLine)))
                             + String.format("ORDER BY %s", order);
-            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            System.out.println(sql);
+            rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
                 table.add(
                         new DocumentHeader(
@@ -143,6 +165,22 @@ public class View {
         List<DocumentHeader> table = new ArrayList<DocumentHeader>();
         try {
             String sql =
+                    String.format(
+                            "SELECT COUNT(*) FROM Document_header WHERE %s AND User_ID_created = %d",
+                            search(
+                                    new String[] {
+                                        "Doc_header_ID",
+                                        "Doc_header_subject",
+                                        "CONVERT(VARCHAR(MAX), Doc_header_description)"
+                                    },
+                                    searchLine),
+                            User_ID_created);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                setMaximumPageNo(rs.getInt(1));
+            }
+            rs.close();
+            sql =
                     paging(
                                     (pageMax * pageNo) - pageMax + 1,
                                     (pageMax * pageNo),
@@ -157,7 +195,7 @@ public class View {
                                                     searchLine),
                                             User_ID_created))
                             + String.format("ORDER BY %s", order);
-            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
                 table.add(
                         new DocumentHeader(

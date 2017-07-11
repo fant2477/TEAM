@@ -54,7 +54,7 @@ public class UserValidation {
             return String.format("Please use between %d and 50 characters.", min);
         }
 
-        pattern = String.format("[a-zA-Z0-9\\._\\-].{%d,50}", min);
+        pattern = String.format("[a-zA-Z0-9._-]{%d,50}", min);
         if (!username.matches(pattern)) {
             return "Please use only letters (a-z, A-Z), numbers and full stops.";
         }
