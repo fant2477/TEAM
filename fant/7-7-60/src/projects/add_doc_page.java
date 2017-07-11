@@ -40,8 +40,8 @@ public class add_doc_page extends HttpServlet {
 
 		System.out.println("in add_doc_page get");
 
-
-		response.setContentType("text/html");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 		ConnectionDB.connect();
 		current_user = (User) request.getSession().getAttribute("current_user");
 		request.getSession(false).invalidate();
@@ -60,7 +60,8 @@ public class add_doc_page extends HttpServlet {
 
 		System.out.println("in add_doc_page post");
 
-		response.setContentType("text/html");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 		ConnectionDB.connect();
 
 
@@ -165,27 +166,27 @@ public class add_doc_page extends HttpServlet {
 		    //Register button was pressed
 			System.out.println("Save bt was press");
 			DocumentManager doc = new DocumentManager(current_user);
-			
-			
+
+
 			//filee = filee.replace('\\', '/');
 			System.out.println("subject : "+subject);
 			System.out.println("tag : "+tag);
 			System.out.println("descriptions : "+descriptions);
 			System.out.println("filee : "+filee);
 
-				
+
 			DocumentHeader doc_head = doc.createHeader(subject,descriptions);
 			doc.setCurrentHeader(doc_head);
-			
+
 			doc.createFile(filee);
-			
+
 
 			int header_id = doc_head.getDoc_header_ID();
 			System.out.println("header_id : "+header_id);
 			request.getSession().setAttribute("current_user", current_user);
 //
 			PrintWriter out = response.getWriter();
-			
+
 			out.println("<script type=\"text/javascript\">");
 			out.println("alert('your file was successfully created.\\n\\nYour Document id is "+header_id+".')");
 			out.println("location='add_doc_page';");

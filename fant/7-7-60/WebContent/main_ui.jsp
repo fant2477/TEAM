@@ -1,18 +1,14 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <%@ page import="java.util.*"%>
 <%@ page import = "java.io.*"%>
 <%@ page import= "project_db.*" %>
-<%--@ page import= "project_db.UserManager" %>
-<%@ page import= "project_db.ConnectionDB" %>
-<%@ page import= "project_db.DocumentHeader" %>
-<%@ page import= "project_db.Time" %>
-<%@ page import= "project_db.*" --%>
+
 
 <html>
 <head>
 <title>Running Document</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -46,7 +42,7 @@
 
                         </button>
 
-                        <h4 class="navbar-text">Running Document</h4>
+                        <h4 class="navbar-text">สวัสดี</h4>
                   </div>
 
 
@@ -96,7 +92,7 @@
 
 
 
-      </br></br> <h1>Document Details</h1> </br></br>
+      </br></br> <h1>ทดสอบภาษาไทย</h1> </br></br>
 
       <div class="container">
 
@@ -149,10 +145,10 @@
                         			<td><% out.print(ti.datetoReadableString( ( (DocumentHeader)pageContext.getAttribute("doc1") ).getDate_modified()) );%></td>
 
                         			<td>${doc.getDoc_header_description()}</td>
-                        			
-                        			
-									
-                              		
+
+
+
+
                         		</tr>
                         	</c:forEach>
 

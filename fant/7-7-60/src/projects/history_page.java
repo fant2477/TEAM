@@ -42,20 +42,22 @@ public class history_page extends HttpServlet {
 		System.out.println("in history_page get");
 
 
-		response.setContentType("text/html");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+
 		current_user = (User) request.getSession().getAttribute("current_user");
 		request.getSession(false).invalidate();
-		
+
 		ConnectionDB.connect();
-		
-		
-		
+
+
+
 		List<String[]> lg = Log.getLog(1,1000);
-		
+
 		request.getSession().setAttribute("lg", lg);
-		
-		
-		
+
+
+
 
 		// go to fn same as sent fn (sent by post go to post )
 		RequestDispatcher dispatcher = request.getRequestDispatcher("history_ui.jsp");
@@ -71,7 +73,8 @@ public class history_page extends HttpServlet {
 
 		System.out.println("in history_page post");
 
-		response.setContentType("text/html");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 		ConnectionDB.connect();
 
 
@@ -81,7 +84,7 @@ public class history_page extends HttpServlet {
 			System.out.println("no bt was press");
 			change_page = "history_page";
 			from_page = "history_page";
-			
+
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("current_user", current_user);
@@ -98,7 +101,7 @@ public class history_page extends HttpServlet {
 
 			change_page = "main_page";
 			from_page = "history_page";
-			
+
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("current_user", current_user);
@@ -114,7 +117,7 @@ public class history_page extends HttpServlet {
 
 			change_page = "add_doc_page";
 			from_page = "history_page";
-			
+
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("current_user", current_user);
@@ -130,7 +133,7 @@ public class history_page extends HttpServlet {
 
 			change_page = "delete_doc_page";
 			from_page = "history_page";
-			
+
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("current_user", current_user);
@@ -139,14 +142,14 @@ public class history_page extends HttpServlet {
 			//go to get fn
 			response.sendRedirect("UI_Manager");
 
-			
-			
+
+
 		} else if (bt.equals("User_info")) {
 			//Login button was pressed
 			System.out.println("User_info was press");
 			change_page = "user_info_page";
 			from_page = "history_page";
-			
+
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("current_user", current_user);
@@ -154,15 +157,15 @@ public class history_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-	
-			
+
+
 
 		} else if (bt.equals("Log Out")) {
 			//Login button was pressed
 			System.out.println("logout was press");
 			change_page = "login_page";
 			from_page = "history_page";
-			
+
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("current_user", current_user);
@@ -170,19 +173,19 @@ public class history_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			
-			
+
+
 		} else if (bt.equals("search_bt")) {
 			//Login button was pressed
 			System.out.println("search_bt was press");
-			
-			
+
+
 //			List<String[]> lg = Log.getLog();
-//			
+//
 //			request.getSession().setAttribute("lg", lg);
-			
+
 			String search_input = request.getParameter("search_input");
-			
+
 			if(search_input!= null)
 			{
 				List<String[]> lg = Log.getLog(1,1000,search_input,"Time");
@@ -191,13 +194,13 @@ public class history_page extends HttpServlet {
 				System.out.println("search doclist " +lg);
 				//go to get fn
 //				response.sendRedirect("register_ui.jsp");
-				
+
 				request.getRequestDispatcher("history_ui.jsp").forward(request, response);
 				System.out.println("go to history_ui.jsp again");
-				
-				
+
+
 			}
-			
+
 		} else {
 		    //someone has altered the HTML and sent a different value!
 
@@ -213,7 +216,7 @@ public class history_page extends HttpServlet {
 			//go to get fn
 			response.sendRedirect("UI_Manager");
 
-			
+
 		}
 		ConnectionDB.disconnect();
 

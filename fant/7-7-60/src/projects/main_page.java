@@ -43,20 +43,21 @@ public class main_page extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("in main_page get");
 
-		
-		response.setContentType("text/html");
+
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 		ConnectionDB.connect();
 		current_user = (User) request.getSession().getAttribute("current_user");
 		request.getSession(false).invalidate();
-		
+
 		System.out.println("main current_user: "+ current_user);
-		
-		
+
+
 		List<DocumentHeader> doclist = View.toListofDocHeader(1,1000);
-		
+
 		// go to fn same as sent fn (sent by post go to post )
 		request.getSession().setAttribute("doclist", doclist);
-		
+
 		RequestDispatcher dispatcher = request.getRequestDispatcher("main_ui.jsp");
 		dispatcher.forward(request, response);
 		ConnectionDB.disconnect();
@@ -69,7 +70,8 @@ public class main_page extends HttpServlet {
 
 		System.out.println("in main_page post");
 
-		response.setContentType("text/html");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 		ConnectionDB.connect();
 
 
@@ -129,18 +131,18 @@ public class main_page extends HttpServlet {
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
-			
-			
+
+
 		} else if (bt.equals("User_info")) {
 			//Login button was pressed
 			System.out.println("User_info was press");
 			change_page = "user_info_page";
 			from_page = "main_page";
-	
+
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("current_user", current_user);
-	
+
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
@@ -151,39 +153,40 @@ public class main_page extends HttpServlet {
 			System.out.println("logout was press");
 			change_page = "login_page";
 			from_page = "main_page";
-	
+
 			request.getSession().setAttribute("change_page", change_page);
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("current_user", current_user);
-	
+
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			
+
 		} else if (bt.equals("search_bt")) {
 			//Login button was pressed
 			System.out.println("search_bt was press");
-			
-			
+
+
 //			List<String[]> lg = Log.getLog();
-//			
+//
 //			request.getSession().setAttribute("lg", lg);
-			
-			String search_input = request.getParameter("search_input");
-			
+
+			String search_input = (String)request.getParameter("search_input");
+			System.out.println("search_input"+search_input);
+
 			if(search_input!= null)
 			{
 				List<DocumentHeader> doclist = View.toListofDocHeader(1,1000,search_input,"Doc_header_ID");
 				request.setAttribute("doclist",doclist);
-				
+
 				//go to get fn
 //				response.sendRedirect("register_ui.jsp");
 				request.getRequestDispatcher("main_ui.jsp").forward(request, response);
 				System.out.println("go to main.jsp again");
 			}
 
-			
-			
+
+
 
 		} else {
 		    //someone has altered the HTML and sent a different value!
@@ -196,7 +199,7 @@ public class main_page extends HttpServlet {
 			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("head_id", bt);
 			request.getSession().setAttribute("current_user", current_user);
-			
+
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");

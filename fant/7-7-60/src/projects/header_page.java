@@ -45,13 +45,15 @@ public class header_page extends HttpServlet {
 		System.out.println("in header_page get");
 
 
-		response.setContentType("text/html");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+
 		ConnectionDB.connect();
 		current_user = (User) request.getSession().getAttribute("current_user");
 		head_id= (String)( request.getSession().getAttribute("head_id"));
 		request.getSession(false).invalidate();
-		
-		
+
+
 		System.out.println("header_page current_user: "+ current_user);
 		System.out.println("header_page head_id: "+ head_id);
 
@@ -72,14 +74,16 @@ public class header_page extends HttpServlet {
 
 		System.out.println("in header_page post");
 
-		response.setContentType("text/html");
-		ConnectionDB.connect();
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 		
+		ConnectionDB.connect();
+
 
 		DocumentManager doc = new DocumentManager(current_user);
 
 		doc.setCurrentHeader(doc.getHeader(Integer.valueOf(head_id)));
-		
+
 
 		String filee =request.getParameter("file-6[]");
 
@@ -98,8 +102,8 @@ public class header_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			
-			
+
+
 		} else if (bt.equals("Main Page")) {
 			//Register button was pressed
 			System.out.println("Main page was press");
@@ -113,7 +117,7 @@ public class header_page extends HttpServlet {
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
-			
+
 
 		} else if (bt.equals("Add Page")) {
 		    //Login button was pressed
@@ -191,12 +195,12 @@ public class header_page extends HttpServlet {
 			//Login button was pressed
 			System.out.println("search_bt was press");
 
-			
+
 			String search_input = request.getParameter("search_input");
-			
+
 			if(search_input!= null)
 			{
-			List<DocumentDetail> doclist = View.toListofDocDetail(1,1000,search_input,"Doc_header_ID");
+			List<DocumentDetail> doclist = View.toListofDocDetail(1,1000,Integer.valueOf(head_id),search_input,"Doc_header_ID");
 			System.out.println("search input!=null: " +search_input);
 			request.getSession().setAttribute("doclist", doclist);
 //			request.getSession().setAttribute("current_user", current_user);
@@ -225,14 +229,14 @@ public class header_page extends HttpServlet {
 			out.println("</script>");
 
 			System.out.println("go to header_ui.jsp again");
-			
-			
+
+
 		} else if (bt.equals("Delete Document")) {
 			//Login button was pressed
 			System.out.println("Delete Document was press");
 
 			int head_del = Integer.valueOf(head_id);
-			
+
 			doc.deleteHeader(Integer.valueOf(head_id));
 
 			request.getSession().setAttribute("current_user", current_user);
@@ -244,7 +248,7 @@ public class header_page extends HttpServlet {
 			out.println("</script>");
 
 			System.out.println("go to main_ui.jsp");
-			
+
 
 		} else {
 		    //someone has altered the HTML and sent a different value!
@@ -261,7 +265,7 @@ public class header_page extends HttpServlet {
 			System.out.println("change_page: "+ change_page);
 			//go to get fn
 			response.sendRedirect("UI_Manager");
-			
+
 		}
 		ConnectionDB.disconnect();
 

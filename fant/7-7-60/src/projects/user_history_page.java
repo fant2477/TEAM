@@ -39,16 +39,18 @@ public class user_history_page extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("in user_history_page get");
-		
-		response.setContentType("text/html");
+
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+
 		ConnectionDB.connect();
 		current_user = (User) request.getSession().getAttribute("current_user");
 		request.getSession(false).invalidate();
-		
+
 		System.out.println("user_history_page current_user: "+ current_user);
-		
+
 		List<DocumentHeader> doclist = View.toListofDocHeader(1,1000,current_user.getUser_ID(),"","Doc_header_ID");
-		
+
 		// go to fn same as sent fn (sent by post go to post )
 		request.getSession().setAttribute("doclist", doclist);
 
@@ -64,7 +66,8 @@ public class user_history_page extends HttpServlet {
 
 						System.out.println("in user_history_page post");
 
-						response.setContentType("text/html");
+						request.setCharacterEncoding("UTF-8");
+						response.setContentType("text/html;charset=UTF-8");
 
 
 						String bt = request.getParameter("bt");
@@ -81,22 +84,22 @@ public class user_history_page extends HttpServlet {
 							System.out.println("change_page: "+ change_page);
 							//go to get fn
 							response.sendRedirect("UI_Manager");
-							
-							
+
+
 						} else if (bt.equals("Main Page")) {
 							//Register button was pressed
 							System.out.println("Main page was press");
-	
+
 							change_page = "main_page";
 							from_page = "user_history_page";
-	
+
 							request.getSession().setAttribute("change_page", change_page);
 							request.getSession().setAttribute("from_page", from_page);
 							request.getSession().setAttribute("current_user", current_user);
-	
+
 							System.out.println("change_page: "+ change_page);
 							response.sendRedirect("UI_Manager");
-						
+
 
 						} else if (bt.equals("Add Page")) {
 						    //Login button was pressed
@@ -161,11 +164,11 @@ public class user_history_page extends HttpServlet {
 							System.out.println("User_info was press");
 							change_page = "user_info_page";
 							from_page = "user_history_page";
-					
+
 							request.getSession().setAttribute("change_page", change_page);
 							request.getSession().setAttribute("from_page", from_page);
 							request.getSession().setAttribute("current_user", current_user);
-					
+
 							System.out.println("change_page: "+ change_page);
 							//go to get fn
 							response.sendRedirect("UI_Manager");

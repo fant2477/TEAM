@@ -46,35 +46,37 @@ public class detail_page extends HttpServlet {
 		System.out.println("in detail_page get");
 
 
-		response.setContentType("text/html");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+
 		current_user = (User) request.getSession().getAttribute("current_user");
 		doc_id = (String) request.getSession().getAttribute("doc_id");
 		request.getSession(false).invalidate();
-		
+
 		System.out.println("file id: "+doc_id);
-		
+
 
 		ConnectionDB.connect();
 		DocumentManager doc = new DocumentManager(current_user);
 
-		
-		
-		
+
+
+
 		DocumentDetail detail = doc.getGeneralFile(Integer.valueOf(doc_id));
-		
+
 		head_id = detail.getDoc_header_ID();
-		
+
 		DocumentHeader header = doc.getHeader(head_id);
-		
-		
+
+
 		String head_name = header.getDoc_header_subject();
 		String descriptions = header.getDoc_header_description();
-		
+
 
 		request.getSession().setAttribute("file_name", detail.getDoc_name());
 		request.getSession().setAttribute("file_id", detail.getDoc_ID());
 		request.getSession().setAttribute("file_size", detail.getSizetoString());
-		
+
 		request.getSession().setAttribute("head_name", head_name);  ///////////////////
 		request.getSession().setAttribute("head_id", head_id);
 		request.getSession().setAttribute("add_date", (Time.datetoReadableString(detail.getDate_created())).toString() );
@@ -82,12 +84,12 @@ public class detail_page extends HttpServlet {
 		request.getSession().setAttribute("last_edit",(Time.datetoReadableString(detail.getDate_modified())).toString() );
 		request.getSession().setAttribute("last_edit_by", UserManager.getUsername(detail.getUser_ID_modified()));
 		request.getSession().setAttribute("descriptions", descriptions);  ///////////////////
-		
+
         System.out.println("head_id: "+head_id);
-        
-        
-		
-		
+
+
+
+
 		// go to fn same as sent fn (sent by post go to post )
 		RequestDispatcher dispatcher = request.getRequestDispatcher("detail_ui.jsp");
 		dispatcher.forward(request, response);
@@ -102,27 +104,29 @@ public class detail_page extends HttpServlet {
 
 		System.out.println("in detail_page post");
 
-		response.setContentType("text/html");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		
 		ConnectionDB.connect();
 		DocumentManager doc = new DocumentManager(current_user);
 		DocumentDetail detail = doc.getGeneralFile(Integer.valueOf(doc_id));
 		DocumentHeader header = doc.getHeader(head_id);
-		
-		
+
+
 
 //		String file_name = detail.getDoc_name();
 //		int file_id = detail.getDoc_ID();
 //		String file_size = detail.getSizetoString();
-//		
+//
 //		String head_name = header.getDoc_header_subject();;
 //		String add_date = Time.datetoReadableString(detail.getDate_created());
 //		String add_by = UserManager.getUsername(detail.getUser_ID_created());
 //		String last_edit = Time.datetoReadableString(detail.getDate_modified());
 //		String last_edit_by = UserManager.getUsername(detail.getUser_ID_modified());
 //		String descriptions = header.getDoc_header_description();
-//		
-//		
-		
+//
+//
+
 
 
 		String bt = request.getParameter("bt");
@@ -227,14 +231,14 @@ public class detail_page extends HttpServlet {
 			//go to get fn
 			response.sendRedirect("UI_Manager");
 
-			
-			
+
+
 		} else if (bt.equals("Back")) {
 		    //Register button was pressed
 			System.out.println("Back bt was press");
 
-			
-			
+
+
 	        System.out.println("head_id: "+head_id);
 //	        System.out.print(detail.getDoc_ID());
 //	        System.out.print('\t');
@@ -251,12 +255,12 @@ public class detail_page extends HttpServlet {
 //	        System.out.print(UserManager.getUsername(detail.getUser_ID_modified()));
 //	        System.out.print('\t');
 //	        System.out.print(detail.getSizetoString());
-	        
-	        
-			
+
+
+
 			String head_str = String.valueOf(head_id);
-			
-			
+
+
 			change_page = "header_page";
 			from_page = "detail_page";
 
@@ -267,8 +271,8 @@ public class detail_page extends HttpServlet {
 
 			System.out.println("change_page: "+ change_page);
 			response.sendRedirect("UI_Manager");
-			
-			
+
+
 		} else if (bt.equals("Save")) {
 		    //Register button was pressed
 			System.out.println("Save bt was press");
@@ -288,10 +292,10 @@ public class detail_page extends HttpServlet {
 		    //Register button was pressed
 			System.out.println("Delete bt was press");
 
-			
+
 			doc.deleteFile(Integer.valueOf(doc_id));
-			
-			
+
+
 			request.getSession().setAttribute("current_user", current_user);
 			PrintWriter out = response.getWriter();
 
@@ -303,10 +307,10 @@ public class detail_page extends HttpServlet {
 
 
 
-			
+
 //			String head_str = String.valueOf(head_id);
-//			
-//			
+//
+//
 //			change_page = "header_page";
 //			from_page = "detail_page";
 //
@@ -350,8 +354,8 @@ public class detail_page extends HttpServlet {
 
 
 		String head_str = String.valueOf(head_id);
-		
-		
+
+
 		request.getSession().setAttribute("head_id", head_str);
 
 		ConnectionDB.disconnect();
