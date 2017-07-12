@@ -123,7 +123,8 @@ public class View {
             System.out.println(sql);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
-                setMaximumPageNo(rs.getInt(1));
+                int result = rs.getInt(1);
+                setMaximumPageNo((result == 0) ? 1 : (int) Math.ceil(result / (double) pageMax));
             }
             rs.close();
             sql =
@@ -140,7 +141,6 @@ public class View {
                                                     },
                                                     searchLine)))
                             + String.format("ORDER BY %s", order);
-            System.out.println(sql);
             rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
                 table.add(
@@ -177,7 +177,8 @@ public class View {
                             User_ID_created);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
-                setMaximumPageNo(rs.getInt(1));
+                int result = rs.getInt(1);
+                setMaximumPageNo((result == 0) ? 1 : (int) Math.ceil(result / (double) pageMax));
             }
             rs.close();
             sql =
