@@ -98,17 +98,4 @@ public class Log {
         }
         return table;
     }
-
-    public static void toStr(int pageNo, int pageMax) {
-        toStr(pageNo, pageMax, "", "Time");
-    }
-
-    public static void toStr(int pageNo, int pageMax, String searchLine, String order) {
-        for (String[] row : Log.getLog(pageNo, pageMax, searchLine, order)) {
-            for (String s : row) {
-                System.out.printf("%s ", s);
-            }
-            System.out.println();
-        }
-    }
 }

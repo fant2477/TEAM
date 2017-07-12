@@ -419,6 +419,36 @@ public class DocumentManager {
         }
     }
 
+    public void updateDocumentDetail(DocumentDetail file) {
+        try {
+            String sql =
+                    String.format(
+                            "UPDATE Document_detail "
+                                    + "SET Doc_header_ID = %d, "
+                                    + "Doc_name = '%s', "
+                                    + "Date_modified = %s, "
+                                    + "User_ID_modified = '%s' "
+                                    + "WHERE Doc_ID = %d",
+                            file.getDoc_header_ID(),
+                            file.getDoc_name(),
+                            Time.currentTime,
+                            getCurrentUser().getUser_ID(),
+                            file.getDoc_ID());
+            ConnectionDB.statement.executeUpdate(sql);
+            sql =
+                    String.format(
+                            "SELECT Date_modified FROM Document_detail WHERE Doc_ID = %d",
+                            file.getDoc_ID());
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                updateHeaderModified(rs.getTimestamp(1));
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void updateHeaderModified(Date currentTime) {
         this.getCurrentHeader().setDate_modified(currentTime);
         this.getCurrentHeader().setUser_ID_modified(getCurrentUser().getUser_ID());
