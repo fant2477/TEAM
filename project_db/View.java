@@ -25,21 +25,27 @@ public class View {
         List<DocumentDetail> table = new ArrayList<DocumentDetail>();
         try {
             String sql =
+                    String.format(
+                            "SELECT COUNT(*) FROM Document_detail WHERE %s ",
+                            search(
+                                    new String[] {"Doc_ID", "Doc_header_ID", "Doc_name"},
+                                    searchLine));
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                int result = rs.getInt(1);
+                setMaximumPageNo((result == 0) ? 1 : (int) Math.ceil(result / (double) pageMax));
+            }
+            sql =
                     paging(
                                     (pageMax * pageNo) - pageMax + 1,
                                     (pageMax * pageNo),
-                                    String.format(
-                                            "Doc_ID, Doc_header_ID, Doc_name, Date_created, "
-                                                    + "Date_modified, User_ID_created, "
-                                                    + "User_ID_modified, Size "
-                                                    + "FROM Document_detail WHERE %s ",
-                                            search(
-                                                    new String[] {
-                                                        "Doc_ID", "Doc_header_ID", "Doc_name"
-                                                    },
-                                                    searchLine)))
+                                    sql.replace(
+                                            "SELECT COUNT(*)",
+                                            "Doc_ID, Doc_header_ID, Doc_name, "
+                                                    + "Date_created, Date_modified, "
+                                                    + "User_ID_created, User_ID_modified, Size"))
                             + String.format("ORDER BY %s", order);
-            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
                 table.add(
                         new DocumentDetail(
@@ -69,20 +75,30 @@ public class View {
         List<DocumentDetail> table = new ArrayList<DocumentDetail>();
         try {
             String sql =
+                    String.format(
+                            "SELECT COUNT(*) FROM Document_detail WHERE %s AND "
+                                    + "Doc_header_ID = %d",
+                            search(
+                                    new String[] {"Doc_ID", "Doc_header_ID", "Doc_name"},
+                                    searchLine),
+                            Doc_header_ID);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                int result = rs.getInt(1);
+                setMaximumPageNo((result == 0) ? 1 : (int) Math.ceil(result / (double) pageMax));
+            }
+            rs.close();
+            sql =
                     paging(
                                     (pageMax * pageNo) - pageMax + 1,
                                     (pageMax * pageNo),
-                                    String.format(
-                                            "* FROM Document_detail WHERE %s AND "
-                                                    + "Doc_header_ID = %d",
-                                            search(
-                                                    new String[] {
-                                                        "Doc_ID", "Doc_header_ID", "Doc_name"
-                                                    },
-                                                    searchLine),
-                                            Doc_header_ID))
+                                    sql.replace(
+                                            "SELECT COUNT(*)",
+                                            "Doc_ID, Doc_header_ID, Doc_name, "
+                                                    + "Date_created, Date_modified, "
+                                                    + "User_ID_created, User_ID_modified, Size"))
                             + String.format("ORDER BY %s", order);
-            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
                 table.add(
                         new DocumentDetail(
@@ -120,7 +136,6 @@ public class View {
                                         "CONVERT(VARCHAR(MAX), Doc_header_description)"
                                     },
                                     searchLine));
-            System.out.println(sql);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
                 int result = rs.getInt(1);
@@ -131,15 +146,7 @@ public class View {
                     paging(
                                     (pageMax * pageNo) - pageMax + 1,
                                     (pageMax * pageNo),
-                                    String.format(
-                                            "* FROM Document_header WHERE %s ",
-                                            search(
-                                                    new String[] {
-                                                        "Doc_header_ID",
-                                                        "Doc_header_subject",
-                                                        "CONVERT(VARCHAR(MAX), Doc_header_description)"
-                                                    },
-                                                    searchLine)))
+                                    sql.replace("SELECT COUNT(*)", "*"))
                             + String.format("ORDER BY %s", order);
             rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
@@ -185,16 +192,7 @@ public class View {
                     paging(
                                     (pageMax * pageNo) - pageMax + 1,
                                     (pageMax * pageNo),
-                                    String.format(
-                                            "* FROM Document_header WHERE %s AND User_ID_created = %d",
-                                            search(
-                                                    new String[] {
-                                                        "Doc_header_ID",
-                                                        "Doc_header_subject",
-                                                        "CONVERT(VARCHAR(MAX), Doc_header_description)"
-                                                    },
-                                                    searchLine),
-                                            User_ID_created))
+                                    sql.replace("SELECT COUNT(*)", "*"))
                             + String.format("ORDER BY %s", order);
             rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
