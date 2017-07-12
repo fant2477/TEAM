@@ -6,6 +6,16 @@ import java.util.List;
 
 public class Log {
 
+    private static int MaximumPageNo = 1;
+
+    public static int getMaximumPageNo() {
+        return MaximumPageNo;
+    }
+
+    private static void setMaximumPageNo(int maximumPageNo) {
+        MaximumPageNo = maximumPageNo;
+    }
+
     static void addLog(String currentTime, String eventDetail) {
         try {
             new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(currentTime);
@@ -61,16 +71,21 @@ public class Log {
         List<String[]> table = new ArrayList<String[]>();
         try {
             String sql =
+                    String.format(
+                            "SELECT COUNT(*) FROM Event_log WHERE %s ",
+                            View.search(new String[] {"CONVERT(VARCHAR(MAX), Event)"}, searchLine));
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                int result = rs.getInt(1);
+                setMaximumPageNo((result == 0) ? 1 : (int) Math.ceil(result / (double) pageMax));
+            }
+            sql =
                     View.paging(
                                     (pageMax * pageNo) - pageMax + 1,
                                     (pageMax * pageNo),
-                                    String.format(
-                                            "* FROM Event_log WHERE %s ",
-                                            View.search(
-                                                    new String[] {"CONVERT(VARCHAR(MAX), Event)"},
-                                                    searchLine)))
+                                    sql.replace("SELECT COUNT(*)", "*"))
                             + String.format("ORDER BY %s", order);
-            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            rs = ConnectionDB.statement.executeQuery(sql);
             while (rs.next()) {
                 table.add(
                         new String[] {
