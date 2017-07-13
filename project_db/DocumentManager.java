@@ -419,6 +419,24 @@ public class DocumentManager {
         }
     }
 
+    public byte[] getDataFile(int Doc_ID) {
+        byte[] fileBytes = new byte[4096];
+        try {
+            String sql =
+                    String.format(
+                            "SELECT Data_file FROM Document_detail WHERE Doc_ID = %d", Doc_ID);
+
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                fileBytes = rs.getBytes("Data_file");
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return fileBytes;
+    }
+
     public void updateDocumentDetail(DocumentDetail file) {
         try {
             String sql =
@@ -444,6 +462,27 @@ public class DocumentManager {
                 updateHeaderModified(rs.getTimestamp(1));
             }
             rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateHeader(DocumentHeader h) {
+        try {
+            String sql =
+                    String.format(
+                            "UPDATE Document_header SET "
+                                    + "Doc_header_subject = '%s', "
+                                    + "User_ID_modified = '%s', "
+                                    + "Date_modified = %s, "
+                                    + "Doc_header_description = '%s' "
+                                    + "WHERE Doc_header_ID = %d",
+                            h.getDoc_header_subject(),
+                            getCurrentUser().getUser_ID(),
+                            Time.currentTime,
+                            h.getDoc_header_description(),
+                            h.getDoc_header_ID());
+            ConnectionDB.statement.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
