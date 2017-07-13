@@ -3,6 +3,7 @@ package project_db;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -366,6 +367,82 @@ public class DocumentManager {
                 String.format(
                         "%s was upload failed by %s",
                         file.getName(), getCurrentUser().getUsername()));
+        return null;
+    }
+
+    private DocumentDetail uploadFile(String Doc_name, long size, InputStream Data_file) {
+        PreparedStatement pstmt;
+        try {
+            // Add Data of file to DataFile.
+            String sql =
+                String.format(
+                    "INSERT INTO Document_detail "
+                        + "(Doc_header_ID, "
+                        + "Doc_name, "
+                        + "Date_created, "
+                        + "Date_modified, "
+                        + "User_ID_created, "
+                        + "User_ID_modified, "
+                        + "Size, "
+                        + "Data_file) "
+                        + "VALUES(?, ?, %s, %s, ?, ?, ?, ?)",
+                    Time.currentTime, Time.currentTime);
+            pstmt = ConnectionDB.connect.prepareStatement(sql, new String[] {"Doc_ID"});
+            pstmt.setInt(1, getCurrentHeader().getDoc_header_ID());
+            pstmt.setString(2, Doc_name);
+            pstmt.setInt(3, getCurrentUser().getUser_ID());
+            pstmt.setInt(4, getCurrentUser().getUser_ID());
+            pstmt.setLong(5, size);
+
+            System.out.println(Doc_name + " start uploading.");
+
+            Log.addLog(
+                Time.currentTime,
+                String.format(
+                    "%s start uploading by %s",
+                    Doc_name, getCurrentUser().getUsername()));
+
+            pstmt.setBinaryStream(6, Data_file);
+            pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            int Doc_ID = 0;
+            if (rs.next()) {
+                Doc_ID = rs.getInt(1);
+            }
+            rs.close();
+            pstmt.close();
+
+            System.out.println(String.format("Added %s Correctly.", Doc_name));
+            // Add log successfully
+            Log.addLog(
+                String.format(
+                    "(SELECT Date_created FROM Document_detail WHERE Doc_ID = %d)", Doc_ID),
+                String.format(
+                    "%d: %s was uploaded successfully by %s",
+                    Doc_ID, Doc_name, getCurrentUser().getUsername()));
+
+            sql =
+                String.format(
+                    "SELECT Date_created FROM Document_detail WHERE Doc_ID = %d", Doc_ID);
+            rs = ConnectionDB.statement.executeQuery(sql);
+            Date uploaded = null;
+            if (rs.next()) {
+                uploaded = rs.getTimestamp(1);
+            }
+            rs.close();
+            // Update Header
+            this.updateHeaderModified(uploaded);
+
+            return getFile(Doc_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Log.addLog(
+            Time.currentTime,
+            String.format(
+                "%s was upload failed by %s",
+                Doc_name, getCurrentUser().getUsername()));
         return null;
     }
 
