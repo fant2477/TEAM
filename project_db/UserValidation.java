@@ -43,18 +43,20 @@ public class UserValidation {
     // Use in Text Box of username
     public static String validUsername(String username) {
         // You can use letter, numbers and full stops.
-        final int min = 3;
+        final int minimumLength = 3;
+        final int maximumLength = 50;
 
         if (username.isEmpty()) {
             return "You can't leave this empty.";
         }
 
-        String pattern = String.format("(?).{%d,50}", min);
+        String pattern = String.format("(?).{%d,%d}", minimumLength, maximumLength);
         if (!username.matches(pattern)) {
-            return String.format("Please use between %d and 50 characters.", min);
+            return String.format(
+                    "Please use between %d and %d characters.", minimumLength, maximumLength);
         }
 
-        pattern = String.format("[a-zA-Z0-9._-]{%d,50}", min);
+        pattern = String.format("[a-zA-Z0-9._-]{%d,50}", minimumLength);
         if (!username.matches(pattern)) {
             return "Please use only letters (a-z, A-Z), numbers and full stops.";
         }
@@ -73,20 +75,22 @@ public class UserValidation {
 
     // use in Text Box of Password
     public static String validPassword(String password) {
-        final int min = 4;
+        final int minimumLength = 4;
+        final int maximumLength = 100;
         if (password.isEmpty()) {
             return "You can't leave this empty.";
         }
 
-        String pattern = String.format("(?).{%d,}", min);
+        String pattern = String.format("(?).{%d,}", minimumLength);
         if (!password.matches(pattern)) {
             return String.format(
-                    "Short passwords are easy to guess. Try one with at least %d characters.", min);
+                    "Short passwords are easy to guess. " + "Try one with at least %d characters.",
+                    minimumLength);
         }
 
-        pattern = String.format("(?).{%d,50}", min);
+        pattern = String.format("(?).{%d,%d}", minimumLength, maximumLength);
         if (!password.matches(pattern)) {
-            return "Too long passwords. Try one with at less than 51 characters.";
+            return String.format("Must have at most %d characters", maximumLength);
         }
 
         return "OK";
@@ -173,8 +177,8 @@ public class UserValidation {
                     String.format("SELECT Password FROM Account WHERE Username = '%s'", username);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
-                if (rs.getString("Password").equals(password)) {
-                    System.out.println("Login correctly");
+                if (UserManager.decrypt(rs.getString("Password")).equals(password)) {
+                    Log.addLog(Time.currentTime, String.format("%s login successfully.", username));
                     rs.close();
                     return true;
                 }
@@ -183,6 +187,7 @@ public class UserValidation {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.addLog(Time.currentTime, String.format("%s login fail.", username));
         return false;
     }
 

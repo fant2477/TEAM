@@ -375,18 +375,18 @@ public class DocumentManager {
         try {
             // Add Data of file to DataFile.
             String sql =
-                String.format(
-                    "INSERT INTO Document_detail "
-                        + "(Doc_header_ID, "
-                        + "Doc_name, "
-                        + "Date_created, "
-                        + "Date_modified, "
-                        + "User_ID_created, "
-                        + "User_ID_modified, "
-                        + "Size, "
-                        + "Data_file) "
-                        + "VALUES(?, ?, %s, %s, ?, ?, ?, ?)",
-                    Time.currentTime, Time.currentTime);
+                    String.format(
+                            "INSERT INTO Document_detail "
+                                    + "(Doc_header_ID, "
+                                    + "Doc_name, "
+                                    + "Date_created, "
+                                    + "Date_modified, "
+                                    + "User_ID_created, "
+                                    + "User_ID_modified, "
+                                    + "Size, "
+                                    + "Data_file) "
+                                    + "VALUES(?, ?, %s, %s, ?, ?, ?, ?)",
+                            Time.currentTime, Time.currentTime);
             pstmt = ConnectionDB.connect.prepareStatement(sql, new String[] {"Doc_ID"});
             pstmt.setInt(1, getCurrentHeader().getDoc_header_ID());
             pstmt.setString(2, Doc_name);
@@ -397,10 +397,9 @@ public class DocumentManager {
             System.out.println(Doc_name + " start uploading.");
 
             Log.addLog(
-                Time.currentTime,
-                String.format(
-                    "%s start uploading by %s",
-                    Doc_name, getCurrentUser().getUsername()));
+                    Time.currentTime,
+                    String.format(
+                            "%s start uploading by %s", Doc_name, getCurrentUser().getUsername()));
 
             pstmt.setBinaryStream(6, Data_file);
             pstmt.executeUpdate();
@@ -415,15 +414,15 @@ public class DocumentManager {
             System.out.println(String.format("Added %s Correctly.", Doc_name));
             // Add log successfully
             Log.addLog(
-                String.format(
-                    "(SELECT Date_created FROM Document_detail WHERE Doc_ID = %d)", Doc_ID),
-                String.format(
-                    "%d: %s was uploaded successfully by %s",
-                    Doc_ID, Doc_name, getCurrentUser().getUsername()));
+                    String.format(
+                            "(SELECT Date_created FROM Document_detail WHERE Doc_ID = %d)", Doc_ID),
+                    String.format(
+                            "%d: %s was uploaded successfully by %s",
+                            Doc_ID, Doc_name, getCurrentUser().getUsername()));
 
             sql =
-                String.format(
-                    "SELECT Date_created FROM Document_detail WHERE Doc_ID = %d", Doc_ID);
+                    String.format(
+                            "SELECT Date_created FROM Document_detail WHERE Doc_ID = %d", Doc_ID);
             rs = ConnectionDB.statement.executeQuery(sql);
             Date uploaded = null;
             if (rs.next()) {
@@ -439,10 +438,9 @@ public class DocumentManager {
         }
 
         Log.addLog(
-            Time.currentTime,
-            String.format(
-                "%s was upload failed by %s",
-                Doc_name, getCurrentUser().getUsername()));
+                Time.currentTime,
+                String.format(
+                        "%s was upload failed by %s", Doc_name, getCurrentUser().getUsername()));
         return null;
     }
 
