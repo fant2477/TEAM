@@ -1,8 +1,35 @@
 package project_db;
 
 import java.sql.ResultSet;
+import javax.xml.bind.DatatypeConverter;
 
 public class UserManager {
+
+    static String encrypt(String password) {
+        int times = 7;
+        try {
+            for (int i = 0; i < times; i++) {
+                password = DatatypeConverter.printBase64Binary(password.getBytes("UTF-8"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return password;
+    }
+
+    static String decrypt(String encoded) {
+        int times = 7;
+        try {
+            for (int i = 0; i < times; i++) {
+                encoded = new String(DatatypeConverter.parseBase64Binary(encoded), "UTF-8");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return encoded;
+    }
 
     public static User getUser(int User_ID) {
         User u = null;
@@ -14,7 +41,7 @@ public class UserManager {
                         new User(
                                 rs.getInt("User_ID"),
                                 rs.getString("Username"),
-                                rs.getString("Password"),
+                                decrypt(rs.getString("Password")),
                                 rs.getString("Name"),
                                 rs.getString("Surname"),
                                 rs.getString("BusinessGroup"),
@@ -56,7 +83,7 @@ public class UserManager {
                                     + "Date_modified = %s "
                                     + "WHERE User_ID = %d",
                             user.getUsername(),
-                            user.getPassword(),
+                            encrypt(user.getPassword()),
                             user.getName(),
                             user.getSurname(),
                             user.getBusinessGroup(),
@@ -106,7 +133,7 @@ public class UserManager {
                                     + "Date_modified) "
                                     + "VALUES('%s', '%s', '%s', '%s', '%s', %s, %s)",
                             username,
-                            password,
+                            encrypt(password),
                             name,
                             surname,
                             businessGroup,
@@ -139,7 +166,7 @@ public class UserManager {
                         new User(
                                 rs.getInt("User_ID"),
                                 rs.getString("Username"),
-                                rs.getString("Password"),
+                                decrypt(rs.getString("Password")),
                                 rs.getString("Name"),
                                 rs.getString("Surname"),
                                 rs.getString("BusinessGroup"),
@@ -165,5 +192,21 @@ public class UserManager {
         } else {
             System.err.println(id + " is not found.");
         }
+    }
+
+    public static String getBusinessGroup(int User_ID) {
+        String BusinessGroup = null;
+        try {
+            String sql =
+                    String.format("SELECT BusinessGroup FROM Account WHERE User_ID = %d", User_ID);
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                BusinessGroup = rs.getString("BusinessGroup");
+                rs.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return BusinessGroup;
     }
 }
