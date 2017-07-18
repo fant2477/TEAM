@@ -39,9 +39,6 @@ public class User {
         return Username;
     }
     
-    public void setUsername(String username) {		
-        Username = username;		
-    }
 
     public String getPassword() {
         return Password;

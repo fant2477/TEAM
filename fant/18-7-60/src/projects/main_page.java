@@ -1,6 +1,7 @@
 package projects;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -257,7 +258,61 @@ public class main_page extends HttpServlet {
 				System.out.println("go to main_page again");
 			}
 
+		} else if (bt.equals("Delete")) {
+			//Login button was pressed
+			System.out.println("Delete was press");
 
+			DocumentManager doc = new DocumentManager(current_user);
+
+			String[] head_cb =request.getParameterValues("head_cb");
+			
+			
+			if(head_cb.length >=1)
+			{
+				String code_del = "";
+				
+				for (int i = 0; i < head_cb.length; i++) {
+				    System.out.println("head_cb[i]: "+head_cb[i]);
+				    if(i==0)
+				    {
+				    	code_del = head_cb[i];
+				    }
+				    else
+				    {
+				    	code_del = code_del+" , "+head_cb[i];
+				    }
+	
+				    System.out.println("code_del: "+code_del);
+				    
+				    doc.setCurrentHeader(doc.getHeader(Integer.valueOf(head_cb[i])));
+				    doc.deleteHeader(Integer.valueOf(head_cb[i]));
+				}
+	
+	
+				request.getSession().setAttribute("current_user", current_user);
+				PrintWriter out = response.getWriter();
+	
+				out.println("<script type=\"text/javascript\">");
+				out.println("alert('your Document "+code_del+" was successfully delete.') " );
+				out.println("location='main_page';");
+				out.println("</script>");
+	
+				System.out.println("go to main_ui.jsp");
+			}
+			else
+			{
+			
+				change_page = "main_page";
+				from_page = "main_page";
+	
+				request.getSession().setAttribute("change_page", change_page);
+				request.getSession().setAttribute("from_page", from_page);
+				request.getSession().setAttribute("current_user", current_user);
+	
+				System.out.println("change_page: "+ change_page);
+				//go to get fn
+				response.sendRedirect("UI_Manager");
+			}
 
 
 		} else {

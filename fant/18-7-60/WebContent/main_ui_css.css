@@ -76,7 +76,20 @@ h1
 
  }
 
+ input#delete_bt
+   {
+       /*font-family: "GeosansLight";*/
+       font-size: 18px;
+       color : rgb(0, 0, 0);
+       padding-left:15px;
+       padding-right: 15px;
+       padding-top: 5px;
+       padding-bottom: 3px;
 
+       background-color: rgb(102, 102, 102);
+
+       margin-left: 700px;
+   }
 
 /*.container2
 {
@@ -159,6 +172,3 @@ p
     background-color: #ddd;
     border-radius: 5px;
 }*/
-
-
-

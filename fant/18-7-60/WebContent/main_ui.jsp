@@ -125,10 +125,12 @@
                         			<th>ID</th>
                         			<th>Doc Header</th>
                         			<th>Descriptions</th>
+                              <th>File</th>
                         			<th>Created by</th>
                         			<th>Business Group</th>
                         			<th>Last Modified</th>
-                        			
+                              <th>Delete</th>
+
                         		</tr>
 
                         	<c:forEach items="${doclist}" var="doc" varStatus="pstatus">
@@ -147,11 +149,18 @@
                         			<td>${doc.getDoc_header_subject()}</td>
                         			<td>${doc.getDoc_header_description()}</td>
 
+                              <td><% out.print( ( (DocumentHeader)pageContext.getAttribute("doc1") ).size() );%></td>
+
                         			<td><% out.print(um.getUsername( ( (DocumentHeader)pageContext.getAttribute("doc1") ).getUser_ID_created()) );%></td>
                         			<td><% out.print(um.getBusinessGroup( ( (DocumentHeader)pageContext.getAttribute("doc1") ).getUser_ID_created()) );%></td>
                         			<td><% out.print(ti.datetoReadableString( ( (DocumentHeader)pageContext.getAttribute("doc1") ).getDate_modified()) );%></td>
 
-                        			
+
+                              <td align="center"><input type="checkbox" name="head_cb" value="${doc.getDoc_header_ID()}" ></td>
+                              <%-- <td><input type="submit" name="bt" value="Delete" class="link_detail" id = "${doc.getDoc_header_ID()}"></td> --%>
+                        			<%-- </td> --%>
+
+
 
 
 
@@ -238,6 +247,7 @@
 
 
 <%-- ========================end of paging======================== --%>
+      <input type="submit" class="btn btn-default btn-lg bt" name = "bt"  value="Delete" id = "delete_bt"  />
 
 
 

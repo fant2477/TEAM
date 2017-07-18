@@ -126,8 +126,9 @@
                                     <th>Num</th>
                                     <th>ID</th>
                                     <th>Doc Header</th>
-                                    <th>Last Modified</th>
                                     <th>Descriptions</th>
+                                    <th>File</th>
+                                    <th>Last Modified</th>
                                   </tr>
 
                                 <c:forEach items="${doclist}" var="doc" varStatus="pstatus">
@@ -145,9 +146,12 @@
                                     <td><p><input type="submit" name="bt" value="${doc.getDoc_header_ID()}" class="link_detail" id = "submit"></p></td>
                                     <td>${doc.getDoc_header_subject()}</td>
 
+                                    <td>${doc.getDoc_header_description()}</td>
+
+                                    <td><% out.print( ( (DocumentHeader)pageContext.getAttribute("doc1") ).size() );%></td>
+
                                     <td><% out.print(ti.datetoReadableString( ( (DocumentHeader)pageContext.getAttribute("doc1") ).getDate_modified()) );%></td>
 
-                                    <td>${doc.getDoc_header_description()}</td>
 
 
 

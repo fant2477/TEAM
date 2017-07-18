@@ -123,26 +123,26 @@ public class UserValidation {
     }
 
     // ====================== user_info ===============
-    public static String UserValidUsername(String username, String current_username) {
-        if (current_username.equals(username)) {
-            return "OK";
-        }
-        return UserValidation.validUsername(username);
-    }
-
-    public static boolean isUserValidUsername(String username, String current_username) {
-        return UserValidation.UserValidUsername(username, current_username).equals("OK");
-    }
+//    public static String UserValidUsername(String username, String current_username) {
+//        if (current_username.equals(username)) {
+//            return "OK";
+//        }
+//        return UserValidation.validUsername(username);
+//    }
+//
+//    public static boolean isUserValidUsername(String username, String current_username) {
+//        return UserValidation.UserValidUsername(username, current_username).equals("OK");
+//    }
 
     public static boolean isUserValidAll(
-            String username,
+//            String username,
             String password,
             String name,
-            String surname,
-            String current_username) {
+            String surname) {
+//            String current_username) {
         return isValidName(name)
                 && isValidName(surname)
-                && isUserValidUsername(username, current_username)
+//                && isUserValidUsername(username, current_username)
                 && isValidPass(password);
     }
 
@@ -177,7 +177,7 @@ public class UserValidation {
                     String.format("SELECT Password FROM Account WHERE Username = '%s'", username);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
-                if (UserManager.decrypt(rs.getString("Password")).equals(password)) {
+                if (rs.getString("Password").equals(UserManager.hash(password))) {
                     Log.addLog(Time.currentTime, String.format("%s login successfully.", username));
                     rs.close();
                     return true;

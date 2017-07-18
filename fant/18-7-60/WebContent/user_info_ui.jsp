@@ -114,18 +114,22 @@
                           <!-- <p align = "center"> -->
                           <div class = "form-group">
                           <p>Name :          <input type= "text" id="firstname" name="firstname" class="form-inline form-control" title ="please enter your firstname" size="42.7" value = "${firstname}"/><small id = "small">${firstname_check}</small></p>
-                          </div>
-                          <div class = "form-group">
+                          <%-- </div>
+                          <div class = "form-group"> --%>
                           <p>Lastname :      <input type=  "text" id="lastname" name="lastname" class="form-inline form-control" title ="please enter your lastname" size="37" value = "${lastname}"/><small id = "small">${lastname_check}</small></p>
-                          </div>
-                          <div class = "form-group">
+                          <%-- </div>
+                          <div class = "form-group"></br> --%>
+                          <p>Username  :  ${username}</p>
+                          <%-- </div> --%>
+                          <%-- <div class = "form-group">
                           <p>Username  :     <input type = "text" id = "username" name= "username" class="form-inline form-control" title = "please fill your username" size = "37" value = "${username}"><small id = "small">${username_check}</small></p>
-                          </div>
-                          <div class = "form-group">
+                          </div> --%>
+                          <%-- <div class = "form-group"> --%>
                           <p>Password  :     <input type = "password" id = "password" name = "password" class="form-inline form-control" title = "please fill your password" size = "37.7" value = "${password}"><small id = "small">${password_check}</small></p>
+                          <%-- </div>
+                          <div class = "form-group"> --%>
+                          <p>Business group  :     ${business_group} </p>
                           </div>
-                          <div class = "form-group">
-                          <p>Business group  :     ${business_group} </p></div>
 
 
                           </br></br>

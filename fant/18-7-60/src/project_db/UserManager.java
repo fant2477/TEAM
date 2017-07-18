@@ -1,34 +1,20 @@
 package project_db;
 
+import java.security.MessageDigest;
 import java.sql.ResultSet;
 import javax.xml.bind.DatatypeConverter;
 
 public class UserManager {
 
-    static String encrypt(String password) {
-        int times = 7;
+    public static String hash(String password) {
+        MessageDigest md = null;
         try {
-            for (int i = 0; i < times; i++) {
-                password = DatatypeConverter.printBase64Binary(password.getBytes("UTF-8"));
-            }
+            md = MessageDigest.getInstance("SHA-256");
+            md.update(password.getBytes("UTF-8"));
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
-        return password;
-    }
-
-    static String decrypt(String encoded) {
-        int times = 7;
-        try {
-            for (int i = 0; i < times; i++) {
-                encoded = new String(DatatypeConverter.parseBase64Binary(encoded), "UTF-8");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return encoded;
+        return DatatypeConverter.printBase64Binary(md.digest());
     }
 
     public static User getUser(int User_ID) {
@@ -41,7 +27,7 @@ public class UserManager {
                         new User(
                                 rs.getInt("User_ID"),
                                 rs.getString("Username"),
-                                decrypt(rs.getString("Password")),
+                                rs.getString("Password"),
                                 rs.getString("Name"),
                                 rs.getString("Surname"),
                                 rs.getString("BusinessGroup"),
@@ -83,7 +69,7 @@ public class UserManager {
                                     + "Date_modified = %s "
                                     + "WHERE User_ID = %d",
                             user.getUsername(),
-                            encrypt(user.getPassword()),
+                            hash(user.getPassword()),
                             user.getName(),
                             user.getSurname(),
                             user.getBusinessGroup(),
@@ -133,7 +119,7 @@ public class UserManager {
                                     + "Date_modified) "
                                     + "VALUES('%s', '%s', '%s', '%s', '%s', %s, %s)",
                             username,
-                            encrypt(password),
+                            hash(password),
                             name,
                             surname,
                             businessGroup,
@@ -166,7 +152,7 @@ public class UserManager {
                         new User(
                                 rs.getInt("User_ID"),
                                 rs.getString("Username"),
-                                decrypt(rs.getString("Password")),
+                                rs.getString("Password"),
                                 rs.getString("Name"),
                                 rs.getString("Surname"),
                                 rs.getString("BusinessGroup"),

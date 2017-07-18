@@ -223,11 +223,12 @@ public class user_info_page extends HttpServlet {
 
 					String firstname = request.getParameter("firstname");
 					String lastname = request.getParameter("lastname");
-					String username = request.getParameter("username");
+//					String username = request.getParameter("username");
 					String password = request.getParameter("password");
 					String business_group = current_user.getBusinessGroup();
 					String current_username = current_user.getUsername();
-					if(user_va.isUserValidAll(username,password,firstname,lastname,current_username)==true)
+					if(user_va.isUserValidAll(password,firstname,lastname)==true)
+//						if(user_va.isUserValidAll(username,password,firstname,lastname,current_username)==true)
 					{
 
 
@@ -235,7 +236,7 @@ public class user_info_page extends HttpServlet {
 
 						current_user.setName(firstname);
 						current_user.setSurname(lastname);
-						current_user.setUsername(username);
+//						current_user.setUsername(username);
 						current_user.setPassword(password);
 
 						UserManager.updateUser(current_user);
@@ -246,24 +247,24 @@ public class user_info_page extends HttpServlet {
 						PrintWriter out = response.getWriter();
 
 						out.println("<script type=\"text/javascript\">");
-						out.println("alert('Your profile was sucessfully update. \\n\\nYour username is "+username+", Password is "+password+" ') " );
+						out.println("alert('Your profile was sucessfully update. \\n\\nYour username is "+current_username+", Password is "+password+" ') " );
 						out.println("location='user_info_page';");
 						out.println("</script>");
 					}
 					else
 					{
-						System.out.print("username: "+username);
+//						System.out.print("username: "+username);
 						System.out.print(" current_username: "+current_username);
 						String firstname_check = user_va.validName(firstname);
 						String lastname_check = user_va.validName(lastname);
-						String username_check = user_va.UserValidUsername(username,current_username);
+//						String username_check = user_va.UserValidUsername(username,current_username);
 						String password_check = user_va.validPassword(password);
-						System.out.print(" username_check: "+username_check);
+//						System.out.print(" username_check: "+username_check);
 
 						request.setAttribute("firstname_check",firstname_check);// ("inside this") get by name
 						request.setAttribute("lastname_check",lastname_check);
 
-						request.setAttribute("username_check",username_check);
+//						request.setAttribute("username_check",username_check);
 						request.setAttribute("password_check",password_check);
 
 
@@ -271,7 +272,7 @@ public class user_info_page extends HttpServlet {
 						request.setAttribute("firstname",firstname);// ("inside this") get by name
 						request.setAttribute("lastname",lastname);
 
-						request.setAttribute("username",username);
+						request.setAttribute("username",current_username);
 						request.setAttribute("password",password);
 						request.setAttribute("business_group",business_group);
 
