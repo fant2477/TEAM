@@ -177,7 +177,7 @@ public class UserValidation {
                     String.format("SELECT Password FROM Account WHERE Username = '%s'", username);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
-                if (UserManager.decrypt(rs.getString("Password")).equals(password)) {
+                if (rs.getString("Password").equals(UserManager.hash(password))) {
                     Log.addLog(Time.currentTime, String.format("%s login successfully.", username));
                     rs.close();
                     return true;
