@@ -145,7 +145,7 @@
                         			<td><% out.print(um.getUsername( ( (DocumentDetail)pageContext.getAttribute("doc1") ).getUser_ID_created()) );%></td>
                         			<td><% out.print(ti.datetoReadableString( ( (DocumentDetail)pageContext.getAttribute("doc1") ).getDate_modified()) );%></td>
 
-                              <td align="center"><input type="checkbox" name="head_cb" value="${doc.getDoc_header_ID()}" ></td>
+                              <td align="center"><input type="checkbox" name="file_cb" value="${doc.getDoc_header_ID()}" ></td>
 
 
                         		</tr>
