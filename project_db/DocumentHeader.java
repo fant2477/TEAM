@@ -1,5 +1,6 @@
 package project_db;
 
+import java.sql.ResultSet;
 import java.util.Date;
 
 public class DocumentHeader {
@@ -88,5 +89,22 @@ public class DocumentHeader {
 
     public void setDoc_header_description(String doc_header_description) {
         Doc_header_description = doc_header_description;
+    }
+
+    public int size() {
+        int size = 0;
+        try {
+            String sql =
+                    String.format(
+                            "SELECT COUNT(*) FROM Document_detail WHERE Doc_header_ID = %d",
+                            this.getDoc_header_ID());
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                size = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return size;
     }
 }
