@@ -16,10 +16,8 @@ public class Main {
         User m = x.getUser("khonfuu");
 
         DocumentManager a = new DocumentManager(m);
-//        a.setCurrentHeader(a.getHeader(600006));
-        
-        
-        a.downloadFile(103, "C:\\Users\\User\\Desktop\\testdownload");
+        a.setCurrentHeader(a.getHeader(600006));
+
         //Log.toStr("917 start");
 
         Log.sortedLog();

@@ -6,13 +6,13 @@ import java.util.List;
 
 public class View {
 
-    public static int MaximumPageNo = 1;
+    private static int MaximumPageNo = 1;
 
     public static int getMaximumPageNo() {
         return MaximumPageNo;
     }
 
-    public static void setMaximumPageNo(int maximumPageNo) {
+    private static void setMaximumPageNo(int maximumPageNo) {
         MaximumPageNo = maximumPageNo;
     }
 

@@ -54,7 +54,7 @@ public class main_page extends HttpServlet {
 		System.out.println("before main current_user: "+ current_user);
 		System.out.println("before pg: "+ pg);
 
-		if(current_user==null)
+		if((User) request.getSession().getAttribute("current_user")!=null)
 		{
 		current_user = (User) request.getSession().getAttribute("current_user");
 		}

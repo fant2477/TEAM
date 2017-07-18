@@ -52,7 +52,7 @@ public class header_page extends HttpServlet {
 
 		ConnectionDB.connect();
 
-		if(current_user==null)
+		if((User) request.getSession().getAttribute("current_user")!=null)
 		{
 		current_user = (User) request.getSession().getAttribute("current_user");
 		}

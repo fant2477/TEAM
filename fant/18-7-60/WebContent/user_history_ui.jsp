@@ -12,7 +12,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="./column.css">
+    <link rel="stylesheet" href="./user_history_ui_css.css">
     <title></title>
   </head>
   <body>
@@ -116,7 +116,7 @@
                         <button type="submit" name="bt" class="btn btn-default" id="search_bt" value="search_bt"><i class="glyphicon glyphicon-search" style="font-size:20px" ></i></button>
                     </div>
                 </div>
-    </div>
+   			 </div>
 <%-- ======================== start of table ======================== --%>
                   </br>
                       <%-- <div class="container2"> --%>
@@ -190,7 +190,7 @@
            	                          <button type="submit" class="link_detail" ><i class="glyphicon glyphicon-chevron-left" style="font-size:26px;"></i> </button>
            	                      </div> --%>
                      						  <div class="input-group">
-                     						      <p>Page: </p>
+                     						      <p id="page_txt">Page: </p>
                      						  </div>
 
            	                      <div class="input-group">

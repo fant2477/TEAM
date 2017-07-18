@@ -44,7 +44,7 @@ public class delete_doc_page extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		ConnectionDB.connect();
 		
-		if(current_user==null)
+		if((User) request.getSession().getAttribute("current_user")!=null)
 		{
 		current_user = (User) request.getSession().getAttribute("current_user");
 		}

@@ -1,5 +1,6 @@
 package project_db;
 
+import java.sql.ResultSet;
 import java.util.Date;
 
 public class DocumentHeader {
@@ -46,25 +47,6 @@ public class DocumentHeader {
         Doc_header_description = doc_header_description;
     }
 
-    public static void toStr(int pageNo, int maxPage, String searchLine, String order) {
-        for (DocumentHeader record : View.toListofDocHeader(pageNo, maxPage, searchLine, order)) {
-            System.out.print(record.getDoc_header_ID());
-            System.out.print('\t');
-            System.out.print(record.getDoc_header_subject());
-            System.out.print('\t');
-            System.out.print(UserManager.getUsername(record.getUser_ID_created()));
-            System.out.print('\t');
-            System.out.print(UserManager.getUsername(record.getUser_ID_modified()));
-            System.out.print('\t');
-            System.out.print(Time.datetoReadableString(record.getDate_created()));
-            System.out.print('\t');
-            System.out.print(Time.datetoReadableString(record.getDate_modified()));
-            System.out.print('\t');
-            System.out.print(record.getDoc_header_description());
-            System.out.println();
-        }
-    }
-
     public int getDoc_header_ID() {
         return Doc_header_ID;
     }
@@ -107,5 +89,22 @@ public class DocumentHeader {
 
     public void setDoc_header_description(String doc_header_description) {
         Doc_header_description = doc_header_description;
+    }
+
+    public int size() {
+        int size = 0;
+        try {
+            String sql =
+                    String.format(
+                            "SELECT COUNT(*) FROM Document_detail WHERE Doc_header_ID = %d",
+                            this.getDoc_header_ID());
+            ResultSet rs = ConnectionDB.statement.executeQuery(sql);
+            if (rs.next()) {
+                size = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return size;
     }
 }

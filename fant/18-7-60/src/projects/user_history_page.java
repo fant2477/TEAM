@@ -47,7 +47,7 @@ public class user_history_page extends HttpServlet {
 
 		ConnectionDB.connect();
 
-		if(current_user==null )
+		if((User) request.getSession().getAttribute("current_user")!=null)
 		{
 		current_user = (User) request.getSession().getAttribute("current_user");
 		}
@@ -67,7 +67,7 @@ public class user_history_page extends HttpServlet {
 		}
 
 		List<DocumentHeader> doclist;
-		int max_rpg = 10;
+		int max_rpg = 5;
 
 		if(search_input!= null)
 		{

@@ -27,7 +27,7 @@ public class detail_page extends HttpServlet {
 	String change_page;
 	String from_page;
 	String doc_id;
-	int head_id;
+	String head_id;
 	User current_user;
 	private static final long serialVersionUID = 1L;
 
@@ -49,14 +49,16 @@ public class detail_page extends HttpServlet {
 
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
-		if(current_user==null)
+		if((User) request.getSession().getAttribute("current_user")!=null)
 		{
 			current_user = (User) request.getSession().getAttribute("current_user");
 		}
 //		if(doc_id==null)
 //		{
+		if((String) request.getSession().getAttribute("doc_id")!=null)
+		{
 		doc_id = (String) request.getSession().getAttribute("doc_id");
-//		}
+		}
 		request.getSession(false).invalidate();
 
 		System.out.println("file id: "+doc_id);
@@ -70,9 +72,9 @@ public class detail_page extends HttpServlet {
 
 		DocumentDetail detail = doc.getGeneralFile(Integer.valueOf(doc_id));
 
-		head_id = detail.getDoc_header_ID();
+		head_id = String.valueOf(detail.getDoc_header_ID());
 
-		DocumentHeader header = doc.getHeader(head_id);
+		DocumentHeader header = doc.getHeader(Integer.valueOf(head_id));
 
 
 		String head_name = header.getDoc_header_subject();
@@ -117,7 +119,7 @@ public class detail_page extends HttpServlet {
 		ConnectionDB.connect();
 		DocumentManager doc = new DocumentManager(current_user);
 		DocumentDetail detail = doc.getGeneralFile(Integer.valueOf(doc_id));
-		DocumentHeader header = doc.getHeader(head_id);
+		DocumentHeader header = doc.getHeader(Integer.valueOf(head_id));
 
 
 
@@ -370,10 +372,7 @@ public class detail_page extends HttpServlet {
 		}
 
 
-		String head_str = String.valueOf(head_id);
-
-
-		request.getSession().setAttribute("head_id", head_str);
+		request.getSession().setAttribute("head_id", head_id);
 
 		ConnectionDB.disconnect();
 	}

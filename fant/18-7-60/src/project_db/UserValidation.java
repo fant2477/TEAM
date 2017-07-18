@@ -43,18 +43,20 @@ public class UserValidation {
     // Use in Text Box of username
     public static String validUsername(String username) {
         // You can use letter, numbers and full stops.
-        final int min = 3;
+        final int minimumLength = 3;
+        final int maximumLength = 50;
 
         if (username.isEmpty()) {
             return "You can't leave this empty.";
         }
 
-        String pattern = String.format("(?).{%d,50}", min);
+        String pattern = String.format("(?).{%d,%d}", minimumLength, maximumLength);
         if (!username.matches(pattern)) {
-            return String.format("Please use between %d and 50 characters.", min);
+            return String.format(
+                    "Please use between %d and %d characters.", minimumLength, maximumLength);
         }
 
-        pattern = String.format("[a-zA-Z0-9\\._\\-].{%d,50}", min);
+        pattern = String.format("[a-zA-Z0-9._-]{%d,50}", minimumLength);
         if (!username.matches(pattern)) {
             return "Please use only letters (a-z, A-Z), numbers and full stops.";
         }
@@ -65,36 +67,34 @@ public class UserValidation {
 
         return "OK";
     }
-    
 
     public static boolean isValidUsername(String username) {
         // return true if username is valid.
         return UserValidation.validUsername(username).equals("OK");
     }
 
-
     // use in Text Box of Password
     public static String validPassword(String password) {
-        final int min = 4;
+        final int minimumLength = 4;
+        final int maximumLength = 100;
         if (password.isEmpty()) {
             return "You can't leave this empty.";
         }
 
-        String pattern = String.format("(?).{%d,}", min);
+        String pattern = String.format("(?).{%d,}", minimumLength);
         if (!password.matches(pattern)) {
             return String.format(
-                    "Short passwords are easy to guess. Try one with at least %d characters.", min);
+                    "Short passwords are easy to guess. " + "Try one with at least %d characters.",
+                    minimumLength);
         }
 
-        pattern = String.format("(?).{%d,50}", min);
+        pattern = String.format("(?).{%d,%d}", minimumLength, maximumLength);
         if (!password.matches(pattern)) {
-            return "Too long passwords. Try one with at less than 51 characters.";
+            return String.format("Must have at most %d characters", maximumLength);
         }
 
         return "OK";
     }
-
-
 
     public static boolean isValidPass(String password) {
         // return true iff password is valid.
@@ -102,11 +102,10 @@ public class UserValidation {
     }
 
     public static String ValidConfirmpass(String password, String confirmpass) {
-      if(password.equals(confirmpass)==true)
-      {
-        return "";
-      }
-      return "Your password is't match!";
+        if (password.equals(confirmpass)) {
+            return "";
+        }
+        return "Your password is't match!";
     }
     // use in Text Box of confirm password
     public static boolean isValidConfirmpass(String password, String confirmpass) {
@@ -115,32 +114,26 @@ public class UserValidation {
     }
 
     public static boolean isValidAll(
-            String username,
-            String password,
-            String confirmpass,
-            String name,
-            String surname) {
+            String username, String password, String confirmpass, String name, String surname) {
         return isValidName(name)
                 && isValidName(surname)
                 && isValidUsername(username)
                 && isValidPass(password)
                 && isValidConfirmpass(password, confirmpass);
     }
-    
-    // ============================================= user_info =============================================
-    public static String UserValidUsername(String username,String current_username) {
-    	if(current_username.equals(username))
-    		return "OK";
-    	else{
-    		return UserValidation.validUsername(username);}
+
+    // ====================== user_info ===============
+    public static String UserValidUsername(String username, String current_username) {
+        if (current_username.equals(username)) {
+            return "OK";
+        }
+        return UserValidation.validUsername(username);
     }
-    
-    public static boolean isUserValidUsername(String username,String current_username) {
-    	
-        return UserValidation.UserValidUsername(username,current_username).equals("OK");
+
+    public static boolean isUserValidUsername(String username, String current_username) {
+        return UserValidation.UserValidUsername(username, current_username).equals("OK");
     }
-    
-    
+
     public static boolean isUserValidAll(
             String username,
             String password,
@@ -149,18 +142,12 @@ public class UserValidation {
             String current_username) {
         return isValidName(name)
                 && isValidName(surname)
-                && isUserValidUsername(username,current_username)
+                && isUserValidUsername(username, current_username)
                 && isValidPass(password);
     }
-    // ============================================= user_info end =============================================
-    
-    // ============================================= Login =============================================
-    // ----------------------------- check login ---------------------------------
-//   public static boolean isValidLogin(String username , String password) {
-//     if(UserValidation.validUsernameLogin(username).equals("OK") && UserValidation.validPasswordLogin(username, password).equals("OK"))
-//       return true;
-//     return false;
-//   }
+
+    // ==================================== user_info end ==================================
+    // ======================================== Login ==================================
 
     // use in Text box of username at Login
     public static String validUsernameLogin(String username) {
@@ -173,18 +160,13 @@ public class UserValidation {
     }
 
     // use in Text box of password
-    public static String validPasswordLogin(String username ,String password) {
+    public static String validPasswordLogin(String username, String password) {
         if (password.isEmpty()) {
             return "You can't leave this empty.";
+        } else if (UserValidation.validUsernameLogin(username).equals("OK")
+                && !UserValidation.validLogin(username, password)) {
+            return "Password won't match!";
         }
-        else if(UserValidation.validUsernameLogin(username)=="OK" && UserValidation.validLogin(username,password) == false){
-        	return "Password won't match!";
-
-        }
-//        else if(UserValidation.validUsernameLogin(username)=="You can't leave this empty." ){
-//        	return "";
-//
-//        }
         return "";
     }
 
@@ -195,8 +177,8 @@ public class UserValidation {
                     String.format("SELECT Password FROM Account WHERE Username = '%s'", username);
             ResultSet rs = ConnectionDB.statement.executeQuery(sql);
             if (rs.next()) {
-                if (rs.getString("Password").equals(password)) {
-                    System.out.println("Login correctly");
+                if (UserManager.decrypt(rs.getString("Password")).equals(password)) {
+                    Log.addLog(Time.currentTime, String.format("%s login successfully.", username));
                     rs.close();
                     return true;
                 }
@@ -205,6 +187,7 @@ public class UserValidation {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.addLog(Time.currentTime, String.format("%s login fail.", username));
         return false;
     }
 
