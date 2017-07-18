@@ -1,0 +1,91 @@
+	} else if (bt.equals("Save")) {
+//			System.out.println("Save bt was press");
+//			DocumentManager doc = new DocumentManager(current_user);
+//
+//			System.out.println("subject : "+subject);
+//			System.out.println("tag : "+tag);
+//			System.out.println("descriptions : "+descriptions);
+//			System.out.println("filee : "+filee);
+//
+//
+//			DocumentHeader doc_head = doc.createHeader(subject,descriptions);
+//			doc.setCurrentHeader(doc_head);
+//
+//			doc.createFile(filee);
+//
+//
+//			int header_id = doc_head.getDoc_header_ID();
+//			System.out.println("header_id : "+header_id);
+//			request.getSession().setAttribute("current_user", current_user);
+//
+//			PrintWriter out = response.getWriter();
+//
+//			out.println("<script type=\"text/javascript\">");
+//			out.println("alert('your file was successfully created.\\n\\nYour Document id is "+header_id+".')");
+//			out.println("location='add_doc_page';");
+//			out.println("</script>");
+//
+//			System.out.println("go to add_doc_ui.jsp again");
+			
+			
+			
+//			================== start of new file download ==================
+			
+//			Connection conn = null;
+			
+			
+			DocumentManager doc = new DocumentManager(current_user);
+	        try {
+	            // Connection to Database
+	            // (See more in JDBC Tutorial).
+//	            conn = ConnectionUtils.getMyConnection();
+//	            conn.setAutoCommit(false);
+	 
+	            String description = request.getParameter("description");
+	 
+	            // Part list (multi files).
+	            for (Part part : request.getParts()) {
+	                String fileName = extractFileName(part);
+//	                if (fileName != null && fileName.length() > 0) {
+	                    // File data
+	                    InputStream is = part.getInputStream();
+	                    // Write to file
+	                    doc.uploadFile(fileName,1,is);
+//	                }
+	            }
+//	            conn.commit();
+	 
+	            // Upload successfully!.
+	            response.sendRedirect(request.getContextPath() + "/uploadToDBResults");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            request.setAttribute("errorMessage", "Error: " + e.getMessage());
+	            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsps/uploadToDB.jsp");
+	            dispatcher.forward(request, response);
+	        } 
+
+
+
+
+
+
+
+	private String extractFileName(Part part) {
+        // form-data; name="file"; filename="C:\file1.zip"
+        // form-data; name="file"; filename="C:\Note\file2.zip"
+        String contentDisp = part.getHeader("content-disposition");
+        String[] items = contentDisp.split(";");
+        for (String s : items) {
+            if (s.trim().startsWith("filename")) {
+                // C:\file1.zip
+                // C:\Note\file2.zip
+                String clientFileName = s.substring(s.indexOf("=") + 2, s.length() - 1);
+                clientFileName = clientFileName.replace("\\", "/");
+                int i = clientFileName.lastIndexOf('/');
+                // file1.zip
+                // file2.zip
+                return clientFileName.substring(i + 1);
+            }
+        }
+        return null;
+    }

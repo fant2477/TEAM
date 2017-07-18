@@ -1,0 +1,128 @@
+@CHARSET "UTF-8";
+
+
+/*.btn-link{
+  border:none;
+  outline:none;
+  background:none;
+  cursor:pointer;
+  color:#0000EE;
+  padding:0;
+  text-decoration:underline;
+  font-family:inherit;
+  font-size:inherit;
+}*/
+
+
+
+
+.btn-link
+  {
+      /*background-color: transparent;*/
+      background-color: 	transparent;
+      /*padding: auto;*/
+      border-width: 0;
+      cursor: none;
+      /*text-decoration: underline;*/
+      float: right;
+      margin-left: 15px;
+      margin-right: 15px;
+      margin-top: 12px;
+  }
+
+  #User_info
+  {
+    /*height: 30px;
+    width: 30px;*/
+    /*padding-bottom: 10px;
+    margin-bottom: 5px;*/
+    font-size:26px;
+
+  }
+
+h1
+{
+  padding-left: 200px;
+  font-family: "GeosansLight";
+}
+
+
+.container
+    {
+       background-color: rgb(214, 214, 194);
+       border-color : rgb(204, 204, 179);
+       border-width : 3px;
+       border-style : outset;
+       border-radius: 10px;
+       font-size: 30px;
+       width: 55%; /*itself*/
+
+       padding-top: 100px;
+  		 padding-left: 100px;
+  		 padding-right: auto;
+  		 padding-bottom: 90px;
+       margin-top: 50px;
+    }
+
+
+
+    p
+    	{
+    		color : rgb(61, 61, 92);
+    		font-family: "GeosansLight";
+    	}
+
+input#search_input
+    {
+      width: 350;
+      font-family: "GeosansLight";
+      font-size: 20px;
+    }
+
+input#delete_bt
+  {
+      /*font-family: "GeosansLight";*/
+      font-size: 18px;
+      color : rgb(0, 0, 0);
+      padding-left:15px;
+      padding-right: 15px;
+      padding-top: 5px;
+      padding-bottom: 3px;
+
+      background-color: rgb(102, 102, 102);
+  }
+
+  input#save
+    {
+      width: 100px;
+      background-color: rgb(78, 78, 64);
+      color: rgb(0, 0, 0);
+
+      border-color : rgb(0, 0, 0);
+      border-width : 1px;
+      border-style : outset;
+
+      margin-left: 480px;
+      margin-right: auto;
+    }
+
+
+
+
+  #small
+  {
+  		font-family: "GeosansLight";
+  		font-size:18px;
+      padding-left: 15px;
+  }
+
+  li
+  {
+  		font-size:18px;
+  }
+
+
+  h4
+  {
+  		font-size:20px;
+  }

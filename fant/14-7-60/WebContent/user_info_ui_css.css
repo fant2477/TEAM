@@ -1,0 +1,197 @@
+@CHARSET "UTF-8";
+
+
+/*.btn-link{
+  border:none;
+  outline:none;
+  background:none;
+  cursor:pointer;
+  color:#0000EE;
+  padding:0;
+  text-decoration:underline;
+  font-family:inherit;
+  font-size:inherit;
+}*/
+
+
+
+
+.btn-link
+  {
+      /*background-color: transparent;*/
+      background-color: 	transparent;
+      /*padding: auto;*/
+      border-width: 0;
+      cursor: none;
+      /*text-decoration: underline;*/
+      float: right;
+      margin-left: 15px;
+      margin-right: 15px;
+      margin-top: 12px;
+  }
+
+
+
+  #User_info
+  {
+    /*height: 30px;
+    width: 30px;*/
+    /*padding-bottom: 10px;
+    margin-bottom: 5px;*/
+    font-size:26px;
+
+  }
+
+/*h1
+{
+  padding-left: 200px;
+  font-family: "GeosansLight";
+}*/
+
+
+.container
+    {
+      /*-webkit-column-count:2;*/
+       background-color: rgb(214, 214, 194);
+       border-color : rgb(204, 204, 179);
+       border-width : 3px;
+       border-style : outset;
+       border-radius: 10px;
+       font-size: 30px;
+       width: 70%; /*itself*/
+
+       /*padding-top: 80px;
+  		 padding-left: 100px;
+  		 padding-right: auto;
+  		 padding-bottom: 90px;*/
+       margin-top: 30px;
+    }
+
+
+
+    p
+    	{
+    		color : rgb(61, 61, 92);
+    		font-family: "GeosansLight";
+    	}
+
+div.col-xs-2
+    {
+      width: 200;
+      height: 500px;
+      border-width: 1px;
+      border-color : rgb(0,0,0);
+      /*border-style: dotted;*/
+      border-style: none;
+      padding-left: 0px;
+      padding-right: 0px;
+      background-color: rgb(160,160,160);
+    }
+
+/*history_bt2 is notting but can't delete*/
+#history_bt2
+{
+    height: 100px;
+    background-color: rgb(78, 78, 64);
+}
+#pf
+{
+    height: 100px;
+    background-color: rgb(78, 78, 64);
+    color: rgb(255,255,255);
+    font-family: "GeosansLight";
+    font-size: 22px;
+}
+#history_bt3
+{
+    height: 100px;
+    background-color: rgb(115,115,115);
+    font-family: "GeosansLight";
+    font-size: 22px;
+    /*background-color: rgb(78, 78, 64);*/
+}
+
+
+div.col-xs-3
+    {
+      width: 79.62%;
+      height: 500px;
+      border-width: 1px;
+      border-color : rgb(0,0,0);
+      /*border-style: dotted;*/
+      border-style: none;
+
+      padding-left: 120px;
+      padding-right: 0px;
+      padding-top: 70px;
+
+      /*padding-left: 0px;
+      padding-right: 0px;
+      margin-left: 0px;
+      margin-right: 0px;*/
+
+    }
+
+input#firstname
+{
+    font-family: "GeosansLight";
+    font-size: 22px;
+}
+
+input#lastname
+{
+    font-family: "GeosansLight";
+    font-size: 22px;
+}
+
+input#username
+{
+    font-family: "GeosansLight";
+    font-size: 22px;
+}
+
+input#password
+{
+    font-family: "GeosansLight";
+    font-size: 22px;
+}
+
+input#confirm_password
+{
+    font-family: "GeosansLight";
+    font-size: 22px;
+}
+
+  input#save
+    {
+      width: 100px;
+      background-color: rgb(78, 78, 64);
+      color: rgb(0, 0, 0);
+
+      border-color : rgb(0, 0, 0);
+      border-width : 1px;
+      border-style : outset;
+
+      margin-left: 480px;
+      margin-right: auto;
+    }
+
+
+
+  #small
+  {
+  		font-family: "GeosansLight";
+  		font-size:18px;
+      padding-left: 15px;
+  }
+
+  li
+  {
+  		font-size:18px;
+  }
+
+
+  h4
+  {
+  		font-size:20px;
+  }
