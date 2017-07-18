@@ -51,13 +51,28 @@
       border-width : 1px;
       border-style : outset;
 
-      margin-left: 330px;
+      margin-left: 122.8px;
       margin-right: 0px;
     }
 
 #delete_doc
     {
       width: 170px;
+      background-color: rgb(78, 78, 64);
+      color: rgb(0, 0, 0);
+
+      border-color : rgb(0, 0, 0);
+      border-width : 1px;
+      border-style : outset;
+
+      margin-left: 5px;
+      margin-right: 0px;
+      border-left: 0px;
+    }
+    
+#delete_file
+    {
+      width: 200px;
       background-color: rgb(78, 78, 64);
       color: rgb(0, 0, 0);
 

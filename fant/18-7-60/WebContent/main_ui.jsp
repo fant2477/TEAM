@@ -121,15 +121,15 @@
                   <div class="row">
                       <table class="table table-striped table-bordered" >
                         		<tr>
-                        			<th>Num</th>
-                        			<th>ID</th>
-                        			<th>Doc Header</th>
+                        			<th align="center">Num</th>
+                        			<th align="center">ID</th>
+                        			<th align="center">Doc Header</th>
                         			<th>Descriptions</th>
-                              <th>File</th>
-                        			<th>Created by</th>
-                        			<th>Business Group</th>
-                        			<th>Last Modified</th>
-                              <th>Delete</th>
+                              <th align="center">File</th>
+                        			<th align="center">Created by</th>
+                        			<th align="center">Business Group</th>
+                        			<th align="center">Last Modified</th>
+                              <th align="center">Select</th>
 
                         		</tr>
 
@@ -141,18 +141,18 @@
                         			<c:set var="doc1" value="${doc}"></c:set>
 
 
-                              <td>${(pstatus.index)+(start_pg)}</td>
+                              <td align="center">${(pstatus.index)+(start_pg)}</td>
                         			<%-- <td>${(pstatus.index)+1}</td> --%>
 
 
-                        			<td><p><input type="submit" name="bt" value="${doc.getDoc_header_ID()}" class="link_detail" id = "submit"></p></td>
-                        			<td>${doc.getDoc_header_subject()}</td>
+                        			<td align="center"><p><input type="submit" name="bt" value="${doc.getDoc_header_ID()}" class="link_detail" id = "submit"></p></td>
+                        			<td align="center">${doc.getDoc_header_subject()}</td>
                         			<td>${doc.getDoc_header_description()}</td>
 
-                              <td><% out.print( ( (DocumentHeader)pageContext.getAttribute("doc1") ).size() );%></td>
+                              <td align="center"><% out.print( ( (DocumentHeader)pageContext.getAttribute("doc1") ).size() );%></td>
 
-                        			<td><% out.print(um.getUsername( ( (DocumentHeader)pageContext.getAttribute("doc1") ).getUser_ID_created()) );%></td>
-                        			<td><% out.print(um.getBusinessGroup( ( (DocumentHeader)pageContext.getAttribute("doc1") ).getUser_ID_created()) );%></td>
+                        			<td align="center"><% out.print(um.getUsername( ( (DocumentHeader)pageContext.getAttribute("doc1") ).getUser_ID_created()) );%></td>
+                        			<td align="center"><% out.print(um.getBusinessGroup( ( (DocumentHeader)pageContext.getAttribute("doc1") ).getUser_ID_created()) );%></td>
                         			<td><% out.print(ti.datetoReadableString( ( (DocumentHeader)pageContext.getAttribute("doc1") ).getDate_modified()) );%></td>
 
 

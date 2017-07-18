@@ -55,12 +55,12 @@ h1
        border-style : outset;
        border-radius: 10px;
        font-size: 30px;
-       width: 70%; /*itself*/
+       width: 74%; /*itself*/
 
        padding-top: 80px;
-  		 padding-left: 110px;
-  		 padding-right: 110px;
-  		 padding-bottom: 30px;
+  		 padding-left: 80px;
+  		 padding-right: 80px;
+  		 padding-bottom: 45px;
     }
 
 #search_input
@@ -88,7 +88,7 @@ h1
 
        background-color: rgb(102, 102, 102);
 
-       margin-left: 700px;
+       margin-left: 880px;
    }
 
 /*.container2

@@ -317,6 +317,48 @@ public class header_page extends HttpServlet {
 			out.println("</script>");
 
 			System.out.println("go to main_ui.jsp");
+			
+			
+		} else if (bt.equals("Delete Selected Files")) {
+			//Login button was pressed
+			System.out.println("Delete was press");
+
+
+			String[] file_cb =request.getParameterValues("file_cb");
+			
+			
+			if(file_cb.length >=1)
+			{
+				String code_del = "";
+				
+				for (int i = 0; i < file_cb.length; i++) {
+				    System.out.println("head_cb[i]: "+file_cb[i]);
+				    if(i==0)
+				    {
+				    	code_del = file_cb[i];
+				    }
+				    else
+				    {
+				    	code_del = code_del+" , "+file_cb[i];
+				    }
+	
+				    System.out.println("code_del: "+code_del);
+				    
+				    doc.setCurrentHeader(doc.getHeader(Integer.valueOf(file_cb[i])));
+				    doc..deleteHeader(Integer.valueOf(file_cb[i]));
+				}
+	
+
+				request.getSession().setAttribute("head_id", head_id);
+				request.getSession().setAttribute("current_user", current_user);
+				PrintWriter out = response.getWriter();
+	
+				out.println("<script type=\"text/javascript\">");
+				out.println("alert('your Document "+code_del+" was successfully delete.') " );
+				out.println("location='header_page';");
+				out.println("</script>");
+	
+				System.out.println("go to main_ui.jsp");
 
 
 		} else {

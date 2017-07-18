@@ -124,6 +124,7 @@
                         			<th>Doc Name</th>
                         			<th>Created by</th>
                         			<th>Last Modified</th>
+                              <th align="center">Select</th>
                         		</tr>
 
                         	<c:forEach items="${doclist}" var="doc" varStatus="pstatus">
@@ -144,6 +145,7 @@
                         			<td><% out.print(um.getUsername( ( (DocumentDetail)pageContext.getAttribute("doc1") ).getUser_ID_created()) );%></td>
                         			<td><% out.print(ti.datetoReadableString( ( (DocumentDetail)pageContext.getAttribute("doc1") ).getDate_modified()) );%></td>
 
+                              <td align="center"><input type="checkbox" name="head_cb" value="${doc.getDoc_header_ID()}" ></td>
 
 
                         		</tr>
@@ -246,8 +248,8 @@
 
 
         <input type="submit" class="btn btn-default btn-lg bt form-group" name = "bt"  value="Add files" id = "addfile" />
-        <input type="submit" class="btn btn-default btn-lg bt form-group" name = "bt"  value="Delete Document" id = "delete_doc" /></br>
-
+        <input type="submit" class="btn btn-default btn-lg bt form-group" name = "bt"  value="Delete Document" id = "delete_doc" />
+        <input type="submit" class="btn btn-default btn-lg bt form-group" name = "bt"  value="Delete Selected Files" id = "delete_file"  /></br>
 
 <!-- ===============start of script for file button=============== -->
        <script>
