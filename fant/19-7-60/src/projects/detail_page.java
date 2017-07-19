@@ -332,6 +332,7 @@ public class detail_page extends HttpServlet {
 			request.getSession().setAttribute("current_user", current_user);
 			request.getSession().setAttribute("head_id", head_id);
 			request.getSession().setAttribute("doc_id", doc_id);
+			request.getSession().setAttribute("from_page", "detail_page");
 			PrintWriter out = response.getWriter();
 
 			out.println("<script type=\"text/javascript\">");
@@ -349,6 +350,7 @@ public class detail_page extends HttpServlet {
 
 
 			request.getSession().setAttribute("current_user", current_user);
+			request.getSession().setAttribute("from_page", "detail_page");
 			PrintWriter out = response.getWriter();
 
 			out.println("<script type=\"text/javascript\">");

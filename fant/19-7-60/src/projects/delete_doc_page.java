@@ -189,6 +189,7 @@ public class delete_doc_page extends HttpServlet {
 
 			PrintWriter out = response.getWriter();
 			request.getSession().setAttribute("current_user", current_user);
+			request.getSession().setAttribute("from_page", "delete_doc_page");
 
 
 			if(id_group.equals("doc_code"))

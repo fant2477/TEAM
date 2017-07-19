@@ -214,6 +214,7 @@ public class add_doc_page extends HttpServlet {
 //			System.out.println("header_id : "+header_id);
 //			request.getSession().setAttribute("head_id", String.valueOf(header_id));
 			request.getSession().setAttribute("current_user", current_user);
+			request.getSession().setAttribute("from_page", "add_doc_page");
 //
 			PrintWriter out = response.getWriter();
 

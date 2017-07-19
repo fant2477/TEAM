@@ -160,6 +160,7 @@ public class header_page extends HttpServlet {
 			request.getSession().setAttribute("head_id", head_id);
 			request.getSession().setAttribute("pg", pg);
 			request.getSession().setAttribute("search_input", search_input);
+			request.getSession().setAttribute("from_page", "header_page");
 
 			System.out.println("pg_page: "+ pg);
 			//go to get fn
@@ -316,6 +317,7 @@ public class header_page extends HttpServlet {
 
 			request.getSession().setAttribute("current_user", current_user);
 			request.getSession().setAttribute("head_id", head_id);
+			request.getSession().setAttribute("from_page", "header_page");
 			PrintWriter out = response.getWriter();
 
 			out.println("<script type=\"text/javascript\">");
@@ -341,6 +343,7 @@ public class header_page extends HttpServlet {
 			doc.deleteHeader(Integer.valueOf(head_id));
 
 			request.getSession().setAttribute("current_user", current_user);
+			request.getSession().setAttribute("from_page", "header_page");
 			PrintWriter out = response.getWriter();
 
 			out.println("<script type=\"text/javascript\">");
@@ -383,6 +386,7 @@ public class header_page extends HttpServlet {
 
 				request.getSession().setAttribute("head_id", head_id);
 				request.getSession().setAttribute("current_user", current_user);
+				request.getSession().setAttribute("from_page", "header_page");
 				PrintWriter out = response.getWriter();
 
 				out.println("<script type=\"text/javascript\">");

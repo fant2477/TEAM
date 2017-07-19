@@ -150,6 +150,7 @@ public class main_page extends HttpServlet {
 			request.getSession().setAttribute("current_user", current_user);
 			request.getSession().setAttribute("pg", pg);
 			request.getSession().setAttribute("search_input", search_input);
+			request.getSession().setAttribute("from_page", "main_page");
 
 			System.out.println("pg_page: "+ pg);
 			//go to get fn
@@ -300,6 +301,7 @@ public class main_page extends HttpServlet {
 	
 	
 				request.getSession().setAttribute("current_user", current_user);
+				request.getSession().setAttribute("from_page", "main_page");
 				PrintWriter out = response.getWriter();
 	
 				out.println("<script type=\"text/javascript\">");

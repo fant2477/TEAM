@@ -251,8 +251,8 @@ public class user_info_page extends HttpServlet {
 
 						UserManager.updateUser(current_user);
 						request.getSession().setAttribute("current_user", current_user);
-
-
+						request.getSession().setAttribute("from_page", "user_info_page");
+						
 
 						PrintWriter out = response.getWriter();
 
