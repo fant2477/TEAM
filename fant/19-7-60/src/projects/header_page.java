@@ -52,69 +52,78 @@ public class header_page extends HttpServlet {
 
 		ConnectionDB.connect();
 
-		if((User) request.getSession().getAttribute("current_user")!=null)
+		if(request.getSession().getAttribute("from_page")==null ||request.getSession().getAttribute("from_page")=="")
 		{
-		current_user = (User) request.getSession().getAttribute("current_user");
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("login_ui.jsp");
+			dispatcher.forward(request, response);
+			ConnectionDB.disconnect();
 		}
-		head_id= (String)( request.getSession().getAttribute("head_id"));
-		pg = (String) request.getSession().getAttribute("pg");
-		search_input = (String) request.getSession().getAttribute("search_input");
-		request.getSession(false).invalidate();
-
-
-		System.out.println("header_page current_user: "+ current_user);
-		System.out.println("header_page head_id: "+ head_id);
-		System.out.println("pg: "+ pg);
-		System.out.println("search_input: "+ search_input);
-
-
-		if(pg==null || pg=="")
-		{
-			pg = "1";
-			System.out.println("pg if == nul: "+ pg);
+			else{
+			if((User) request.getSession().getAttribute("current_user")!=null)
+			{
+			current_user = (User) request.getSession().getAttribute("current_user");
+			}
+			head_id= (String)( request.getSession().getAttribute("head_id"));
+			pg = (String) request.getSession().getAttribute("pg");
+			search_input = (String) request.getSession().getAttribute("search_input");
+			request.getSession(false).invalidate();
+	
+	
+			System.out.println("header_page current_user: "+ current_user);
+			System.out.println("header_page head_id: "+ head_id);
+			System.out.println("pg: "+ pg);
+			System.out.println("search_input: "+ search_input);
+	
+	
+			if(pg==null || pg=="")
+			{
+				pg = "1";
+				System.out.println("pg if == nul: "+ pg);
+			}
+	
+			List<DocumentDetail> doclist;
+			int max_rpg = 5;
+	
+			if(search_input!= null)
+			{
+				doclist = View.toListofDocDetail(Integer.valueOf(pg) , max_rpg , Integer.valueOf(head_id) ,search_input , "Doc_ID");
+			}
+			else
+			{
+				doclist = View.toListofDocDetail(Integer.valueOf(pg) , max_rpg , Integer.valueOf(head_id) );
+			}
+			int page_total = View.getMaximumPageNo();
+	
+	
+			if(Integer.valueOf(pg) > page_total)
+			{
+				pg= String.valueOf(page_total);
+			}
+	
+	
+			if(search_input!= null)
+			{
+				doclist = View.toListofDocDetail(Integer.valueOf(pg) , max_rpg , Integer.valueOf(head_id) ,search_input , "Doc_ID");
+			}
+			else
+			{
+				doclist = View.toListofDocDetail(Integer.valueOf(pg) , max_rpg, Integer.valueOf(head_id) );
+			}
+	
+			int start_pg = (Integer.valueOf(pg)*max_rpg)-(max_rpg-1);
+	
+			request.getSession().setAttribute("doclist", doclist);
+			request.getSession().setAttribute("page_total", page_total);
+			request.getSession().setAttribute("pg", pg);
+			request.getSession().setAttribute("head_id", head_id);
+			request.getSession().setAttribute("search_input", search_input);
+			request.getSession().setAttribute("start_pg", start_pg);
+	
+			RequestDispatcher dispatcher = request.getRequestDispatcher("header_ui.jsp");
+			dispatcher.forward(request, response);
+			ConnectionDB.disconnect();
 		}
-
-		List<DocumentDetail> doclist;
-		int max_rpg = 5;
-
-		if(search_input!= null)
-		{
-			doclist = View.toListofDocDetail(Integer.valueOf(pg) , max_rpg , Integer.valueOf(head_id) ,search_input , "Doc_ID");
-		}
-		else
-		{
-			doclist = View.toListofDocDetail(Integer.valueOf(pg) , max_rpg , Integer.valueOf(head_id) );
-		}
-		int page_total = View.getMaximumPageNo();
-
-
-		if(Integer.valueOf(pg) > page_total)
-		{
-			pg= String.valueOf(page_total);
-		}
-
-
-		if(search_input!= null)
-		{
-			doclist = View.toListofDocDetail(Integer.valueOf(pg) , max_rpg , Integer.valueOf(head_id) ,search_input , "Doc_ID");
-		}
-		else
-		{
-			doclist = View.toListofDocDetail(Integer.valueOf(pg) , max_rpg, Integer.valueOf(head_id) );
-		}
-
-		int start_pg = (Integer.valueOf(pg)*max_rpg)-(max_rpg-1);
-
-		request.getSession().setAttribute("doclist", doclist);
-		request.getSession().setAttribute("page_total", page_total);
-		request.getSession().setAttribute("pg", pg);
-		request.getSession().setAttribute("head_id", head_id);
-		request.getSession().setAttribute("search_input", search_input);
-		request.getSession().setAttribute("start_pg", start_pg);
-
-		RequestDispatcher dispatcher = request.getRequestDispatcher("header_ui.jsp");
-		dispatcher.forward(request, response);
-		ConnectionDB.disconnect();
 	}
 
 	/**

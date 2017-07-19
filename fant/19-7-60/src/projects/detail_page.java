@@ -49,60 +49,85 @@ public class detail_page extends HttpServlet {
 
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
-		if((User) request.getSession().getAttribute("current_user")!=null)
+		if(request.getSession().getAttribute("from_page")==null ||request.getSession().getAttribute("from_page")=="")
 		{
-			current_user = (User) request.getSession().getAttribute("current_user");
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("login_ui.jsp");
+			dispatcher.forward(request, response);
+			ConnectionDB.disconnect();
 		}
-//		if(doc_id==null)
-//		{
-		if((String) request.getSession().getAttribute("doc_id")!=null)
-		{
-		doc_id = (String) request.getSession().getAttribute("doc_id");
+		else{
+			if((User) request.getSession().getAttribute("current_user")!=null)
+			{
+				current_user = (User) request.getSession().getAttribute("current_user");
+			}
+	//		if(doc_id==null)
+	//		{
+			if((String) request.getSession().getAttribute("doc_id")!=null)
+			{
+			doc_id = (String) request.getSession().getAttribute("doc_id");
+			}
+			request.getSession(false).invalidate();
+	
+			System.out.println("file id: "+doc_id);
+	
+	
+			ConnectionDB.connect();
+			DocumentManager doc = new DocumentManager(current_user);
+	
+	
+	
+	
+			DocumentDetail detail = doc.getGeneralFile(Integer.valueOf(doc_id));
+	
+			head_id = String.valueOf(detail.getDoc_header_ID());
+	
+			DocumentHeader header = doc.getHeader(Integer.valueOf(head_id));
+			
+			String file_user_created = UserManager.getUsername(detail.getUser_ID_created());
+			String file_business_created = UserManager.getBusinessGroup(detail.getUser_ID_created());
+			String file_name_bus_created = file_user_created+"  ( "+ file_business_created+" ) ";
+	
+	
+			String head_name = header.getDoc_header_subject();
+			String descriptions = header.getDoc_header_description();
+			
+			String user_created = UserManager.getUsername(header.getUser_ID_created());
+			String user_modified = UserManager.getUsername(header.getUser_ID_modified());
+			String business_created = UserManager.getBusinessGroup(header.getUser_ID_created());
+			String business_modified = UserManager.getBusinessGroup(header.getUser_ID_modified());
+			
+			String name_bus_created = user_created+"  ( "+ business_created+" ) ";
+			String name_bus_modified = user_modified+"  ( "+ business_modified+" ) ";
+	
+	
+			request.getSession().setAttribute("file_name", detail.getDoc_name());
+			request.getSession().setAttribute("file_id", detail.getDoc_ID());
+			request.getSession().setAttribute("file_size", detail.getSizetoString());
+			request.getSession().setAttribute("file_add_by", file_name_bus_created);
+	
+			request.getSession().setAttribute("head_name", head_name);  ///////////////////
+			request.getSession().setAttribute("head_id", head_id);
+			request.getSession().setAttribute("add_date", (Time.datetoReadableString(detail.getDate_created())).toString() );
+			
+			request.getSession().setAttribute("add_by", name_bus_created);
+			
+			request.getSession().setAttribute("last_edit",(Time.datetoReadableString(detail.getDate_modified())).toString() );
+			
+			request.getSession().setAttribute("last_edit_by", name_bus_modified);
+			
+			request.getSession().setAttribute("descriptions", descriptions);  ///////////////////
+	
+	        System.out.println("head_id: "+head_id);
+	
+	
+	
+	
+			// go to fn same as sent fn (sent by post go to post )
+			RequestDispatcher dispatcher = request.getRequestDispatcher("detail_ui.jsp");
+			dispatcher.forward(request, response);
+			ConnectionDB.disconnect();
 		}
-		request.getSession(false).invalidate();
-
-		System.out.println("file id: "+doc_id);
-
-
-		ConnectionDB.connect();
-		DocumentManager doc = new DocumentManager(current_user);
-
-
-
-
-		DocumentDetail detail = doc.getGeneralFile(Integer.valueOf(doc_id));
-
-		head_id = String.valueOf(detail.getDoc_header_ID());
-
-		DocumentHeader header = doc.getHeader(Integer.valueOf(head_id));
-
-
-		String head_name = header.getDoc_header_subject();
-		String descriptions = header.getDoc_header_description();
-
-
-		request.getSession().setAttribute("file_name", detail.getDoc_name());
-		request.getSession().setAttribute("file_id", detail.getDoc_ID());
-		request.getSession().setAttribute("file_size", detail.getSizetoString());
-
-		request.getSession().setAttribute("head_name", head_name);  ///////////////////
-		request.getSession().setAttribute("head_id", head_id);
-		request.getSession().setAttribute("add_date", (Time.datetoReadableString(detail.getDate_created())).toString() );
-		request.getSession().setAttribute("add_by", UserManager.getUsername(detail.getUser_ID_created()));
-		request.getSession().setAttribute("last_edit",(Time.datetoReadableString(detail.getDate_modified())).toString() );
-		request.getSession().setAttribute("last_edit_by", UserManager.getUsername(detail.getUser_ID_modified()));
-		request.getSession().setAttribute("descriptions", descriptions);  ///////////////////
-
-        System.out.println("head_id: "+head_id);
-
-
-
-
-		// go to fn same as sent fn (sent by post go to post )
-		RequestDispatcher dispatcher = request.getRequestDispatcher("detail_ui.jsp");
-		dispatcher.forward(request, response);
-		ConnectionDB.disconnect();
-
 	}
 
 	/**

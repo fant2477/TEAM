@@ -44,16 +44,26 @@ public class delete_doc_page extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		ConnectionDB.connect();
 		
-		if((User) request.getSession().getAttribute("current_user")!=null)
+		
+		if(request.getSession().getAttribute("from_page")==null ||request.getSession().getAttribute("from_page")=="")
 		{
-		current_user = (User) request.getSession().getAttribute("current_user");
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("login_ui.jsp");
+			dispatcher.forward(request, response);
+			ConnectionDB.disconnect();
 		}
-		request.getSession(false).invalidate();
-
-		// go to fn same as sent fn (sent by post go to post )
-		RequestDispatcher dispatcher = request.getRequestDispatcher("delete_doc_ui.jsp");
-		dispatcher.forward(request, response);
-		ConnectionDB.disconnect();
+		else{
+			if((User) request.getSession().getAttribute("current_user")!=null)
+			{
+			current_user = (User) request.getSession().getAttribute("current_user");
+			}
+			request.getSession(false).invalidate();
+	
+			// go to fn same as sent fn (sent by post go to post )
+			RequestDispatcher dispatcher = request.getRequestDispatcher("delete_doc_ui.jsp");
+			dispatcher.forward(request, response);
+			ConnectionDB.disconnect();
+		}
 
 	}
 

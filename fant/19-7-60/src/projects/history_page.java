@@ -51,76 +51,85 @@ public class history_page extends HttpServlet {
 		System.out.println("before main current_user: "+ current_user);
 		System.out.println("before pg: "+ pg);
 
-		if((User) request.getSession().getAttribute("current_user")!=null)
+		if(request.getSession().getAttribute("from_page")==null ||request.getSession().getAttribute("from_page")=="")
 		{
-		current_user = (User) request.getSession().getAttribute("current_user");
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("login_ui.jsp");
+			dispatcher.forward(request, response);
+			ConnectionDB.disconnect();
 		}
-
-		pg = (String) request.getSession().getAttribute("pg");
-		search_input = (String) request.getSession().getAttribute("search_input");
-		request.getSession(false).invalidate();
-
-		System.out.println("main current_user: "+ current_user);
-		System.out.println("pg: "+ pg);
-		System.out.println("search_input get: "+ search_input);
-
-
-		ConnectionDB.connect();
-
-		if(pg==null || pg=="")
-		{
-			pg = "1";
-			System.out.println("pg if == nul: "+ pg);
+			else{
+			if((User) request.getSession().getAttribute("current_user")!=null)
+			{
+			current_user = (User) request.getSession().getAttribute("current_user");
+			}
+	
+			pg = (String) request.getSession().getAttribute("pg");
+			search_input = (String) request.getSession().getAttribute("search_input");
+			request.getSession(false).invalidate();
+	
+			System.out.println("main current_user: "+ current_user);
+			System.out.println("pg: "+ pg);
+			System.out.println("search_input get: "+ search_input);
+	
+	
+			ConnectionDB.connect();
+	
+			if(pg==null || pg=="")
+			{
+				pg = "1";
+				System.out.println("pg if == nul: "+ pg);
+			}
+	
+			List<String[]> lg;
+			int max_rpg = 25;
+	
+	
+			if(search_input!= null)
+			{
+				lg = Log.getLog(Integer.valueOf(pg),max_rpg,search_input,"Time");
+			}
+			else{
+				lg = Log.getLog(Integer.valueOf(pg),max_rpg);
+			}
+			int page_total = Log.getMaximumPageNo();
+	
+	
+			if(Integer.valueOf(pg) > page_total)
+			{
+				pg= String.valueOf(page_total);
+			}
+	
+	
+			if(search_input!= null)
+			{
+				lg = Log.getLog(Integer.valueOf(pg),max_rpg,search_input,"Time");
+			}
+			else{
+				lg = Log.getLog(Integer.valueOf(pg),max_rpg);
+			}
+	
+	
+			int start_pg = (Integer.valueOf(pg)*max_rpg)-(max_rpg-1);
+	
+			
+			System.out.println("start_pg: "+start_pg);
+			// go to fn same as sent fn (sent by post go to post )
+			request.getSession().setAttribute("lg", lg);
+			request.getSession().setAttribute("page_total", page_total);
+			request.getSession().setAttribute("pg", pg);
+			request.getSession().setAttribute("search_input", search_input);
+			request.getSession().setAttribute("start_pg", start_pg);
+	
+	
+	
+	
+	
+			// go to fn same as sent fn (sent by post go to post )
+			RequestDispatcher dispatcher = request.getRequestDispatcher("history_ui.jsp");
+			dispatcher.forward(request, response);
+			ConnectionDB.disconnect();
 		}
-
-		List<String[]> lg;
-		int max_rpg = 25;
-
-
-		if(search_input!= null)
-		{
-			lg = Log.getLog(Integer.valueOf(pg),max_rpg,search_input,"Time");
-		}
-		else{
-			lg = Log.getLog(Integer.valueOf(pg),max_rpg);
-		}
-		int page_total = Log.getMaximumPageNo();
-
-
-		if(Integer.valueOf(pg) > page_total)
-		{
-			pg= String.valueOf(page_total);
-		}
-
-
-		if(search_input!= null)
-		{
-			lg = Log.getLog(Integer.valueOf(pg),max_rpg,search_input,"Time");
-		}
-		else{
-			lg = Log.getLog(Integer.valueOf(pg),max_rpg);
-		}
-
-
-		int start_pg = (Integer.valueOf(pg)*max_rpg)-(max_rpg-1);
-
-		
-		System.out.println("start_pg: "+start_pg);
-		// go to fn same as sent fn (sent by post go to post )
-		request.getSession().setAttribute("lg", lg);
-		request.getSession().setAttribute("page_total", page_total);
-		request.getSession().setAttribute("pg", pg);
-		request.getSession().setAttribute("search_input", search_input);
-		request.getSession().setAttribute("start_pg", start_pg);
-
-
-
-
-
-		// go to fn same as sent fn (sent by post go to post )
-		RequestDispatcher dispatcher = request.getRequestDispatcher("history_ui.jsp");
-		dispatcher.forward(request, response);
-		ConnectionDB.disconnect();
 
 	}
 

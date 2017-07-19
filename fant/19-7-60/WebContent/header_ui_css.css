@@ -95,6 +95,7 @@ h1
 
 .container
     {
+  		min-height: 530px;
        background-color: rgb(214, 214, 194);
        border-color : rgb(204, 204, 179);
        border-width : 3px;

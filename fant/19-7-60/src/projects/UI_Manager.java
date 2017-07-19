@@ -98,8 +98,9 @@ public class UI_Manager extends HttpServlet {
 		{
 			System.out.println("change = main");
 			current_page = "main_page";
-
+			
 			request.getSession().setAttribute("current_user", current_user);
+			request.getSession().setAttribute("from_page", from_page);
 			response.sendRedirect("main_page");
 		}
 
@@ -110,6 +111,7 @@ public class UI_Manager extends HttpServlet {
 			current_page = "add_doc_page";
 
 			request.getSession().setAttribute("current_user", current_user);
+			request.getSession().setAttribute("from_page", from_page);
 			response.sendRedirect("add_doc_page");
 		}
 
@@ -120,6 +122,7 @@ public class UI_Manager extends HttpServlet {
 			current_page = "delete_doc_page";
 
 			request.getSession().setAttribute("current_user", current_user);
+			request.getSession().setAttribute("from_page", from_page);
 			response.sendRedirect("delete_doc_page");
 		}
 
@@ -129,6 +132,7 @@ public class UI_Manager extends HttpServlet {
 			current_page = "history_page";
 
 			request.getSession().setAttribute("current_user", current_user);
+			request.getSession().setAttribute("from_page", from_page);
 			response.sendRedirect("history_page");
 		}
 
@@ -139,6 +143,7 @@ public class UI_Manager extends HttpServlet {
 			current_page = "header_page";
 
 			request.getSession().setAttribute("current_user", current_user);
+			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("head_id", head_id);
 			response.sendRedirect("header_page");
 		}
@@ -150,6 +155,7 @@ public class UI_Manager extends HttpServlet {
 			current_page = "detail_page";
 
 			request.getSession().setAttribute("current_user", current_user);
+			request.getSession().setAttribute("from_page", from_page);
 			request.getSession().setAttribute("doc_id", doc_id);
 			response.sendRedirect("detail_page");
 		}
@@ -160,6 +166,7 @@ public class UI_Manager extends HttpServlet {
 			current_page = "user_info_page";
 
 			request.getSession().setAttribute("current_user", current_user);
+			request.getSession().setAttribute("from_page", from_page);
 			response.sendRedirect("user_info_page");
 		}
 
@@ -169,6 +176,7 @@ public class UI_Manager extends HttpServlet {
 			current_page = "user_history_page";
 
 			request.getSession().setAttribute("current_user", current_user);
+			request.getSession().setAttribute("from_page", from_page);
 			response.sendRedirect("user_history_page");
 		}
 	}

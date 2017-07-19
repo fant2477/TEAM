@@ -21,7 +21,7 @@ import project_db.User;
 @WebServlet("/add_doc_page")
 public class add_doc_page extends HttpServlet {
 	String change_page;
-	String from_page;
+	String from_page = "";
 	User current_user;
 	private static final long serialVersionUID = 1L;
 
@@ -43,18 +43,27 @@ public class add_doc_page extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 		ConnectionDB.connect();
-
-		if((User) request.getSession().getAttribute("current_user")!=null)
+		
+		if(request.getSession().getAttribute("from_page")==null ||request.getSession().getAttribute("from_page")=="")
 		{
-		current_user = (User) request.getSession().getAttribute("current_user");
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("login_ui.jsp");
+			dispatcher.forward(request, response);
+			ConnectionDB.disconnect();
 		}
-		request.getSession(false).invalidate();
-
-		// go to fn same as sent fn (sent by post go to post )
-		RequestDispatcher dispatcher = request.getRequestDispatcher("add_doc_ui.jsp");
-		dispatcher.forward(request, response);
-		ConnectionDB.disconnect();
-
+		else{
+			if((User) request.getSession().getAttribute("current_user")!=null)
+			{
+			current_user = (User) request.getSession().getAttribute("current_user");
+			}
+			request.getSession(false).invalidate();
+	
+			// go to fn same as sent fn (sent by post go to post )
+			RequestDispatcher dispatcher = request.getRequestDispatcher("add_doc_ui.jsp");
+			dispatcher.forward(request, response);
+			ConnectionDB.disconnect();
+		}
+		System.out.println("from_page: "+request.getSession().getAttribute("from_page"));
 	}
 
 	/**

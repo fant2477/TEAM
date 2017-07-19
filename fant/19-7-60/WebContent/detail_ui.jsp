@@ -92,7 +92,8 @@
          <div class="form-inline">
          	 <p> File Name : ${file_name}</p>
          	 <p> File id : ${file_id}</p>
-         	 <p> File size : ${file_size}</p></br>
+         	 <p> File size : ${file_size}</p>
+         	 <p> File add by : ${file_add_by}</p></br>
              <p> Document Name :     <input type = "text" id = "subject" name= "subject" class="form-control form-group" title = "please fill your subject" size = "37" value = "${head_name}"></p>
              <p> Document code : ${head_id}</p>
              <p> Document add date : ${add_date} </p>

@@ -45,57 +45,67 @@ public class user_info_page extends HttpServlet {
 
 		ConnectionDB.connect();
 		
-		if((User) request.getSession().getAttribute("current_user")!=null)
+		
+		if(request.getSession().getAttribute("from_page")==null ||request.getSession().getAttribute("from_page")=="")
 		{
-		current_user = (User) request.getSession().getAttribute("current_user");
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("login_ui.jsp");
+			dispatcher.forward(request, response);
+			ConnectionDB.disconnect();
 		}
-		request.getSession(false).invalidate();
-
-
-		System.out.println("current_user: "+current_user);
-
-
-		String firstname = current_user.getName();
-		String lastname = current_user.getSurname();
-		String username = current_user.getUsername();
-		String password = current_user.getPassword();
-		String business_group = current_user.getBusinessGroup();
-
-//
-//		String firstname_check = (String)request.getSession().getAttribute("firstname_check");
-//		String lastname_check = (String)request.getSession().getAttribute("lastname_check");
-//		String username_check = (String)request.getSession().getAttribute("username_check");
-//		String password_check = (String)request.getSession().getAttribute("password_check");
-
-
-
-
-		request.setAttribute("firstname",firstname);
-		request.setAttribute("lastname",lastname);
-		request.setAttribute("username",username);
-		request.setAttribute("password",password);
-		request.setAttribute("business_group",business_group);
-
-//
-//		request.setAttribute("firstname_check",firstname_check);
-//		request.setAttribute("lastname_check",lastname_check);
-//		request.setAttribute("username_check",username_check);
-//		request.setAttribute("password_check",password_check);
-
-
-
-
-
-		System.out.println("firstname: "+firstname);
-		System.out.println("lastname: "+lastname);
-		System.out.println("username: "+username);
-		System.out.println("password: "+password);
-		System.out.println("business_group: "+business_group);
-
-		// go to fn same as sent fn (sent by post go to post )
-		RequestDispatcher dispatcher = request.getRequestDispatcher("user_info_ui.jsp");
-		dispatcher.forward(request, response);
-		ConnectionDB.disconnect();
+			else{
+			if((User) request.getSession().getAttribute("current_user")!=null)
+			{
+			current_user = (User) request.getSession().getAttribute("current_user");
+			}
+			request.getSession(false).invalidate();
+	
+	
+			System.out.println("current_user: "+current_user);
+	
+	
+			String firstname = current_user.getName();
+			String lastname = current_user.getSurname();
+			String username = current_user.getUsername();
+			String password = current_user.getPassword();
+			String business_group = current_user.getBusinessGroup();
+	
+	//
+	//		String firstname_check = (String)request.getSession().getAttribute("firstname_check");
+	//		String lastname_check = (String)request.getSession().getAttribute("lastname_check");
+	//		String username_check = (String)request.getSession().getAttribute("username_check");
+	//		String password_check = (String)request.getSession().getAttribute("password_check");
+	
+	
+	
+	
+			request.setAttribute("firstname",firstname);
+			request.setAttribute("lastname",lastname);
+			request.setAttribute("username",username);
+			request.setAttribute("password",password);
+			request.setAttribute("business_group",business_group);
+	
+	//
+	//		request.setAttribute("firstname_check",firstname_check);
+	//		request.setAttribute("lastname_check",lastname_check);
+	//		request.setAttribute("username_check",username_check);
+	//		request.setAttribute("password_check",password_check);
+	
+	
+	
+	
+	
+			System.out.println("firstname: "+firstname);
+			System.out.println("lastname: "+lastname);
+			System.out.println("username: "+username);
+			System.out.println("password: "+password);
+			System.out.println("business_group: "+business_group);
+	
+			// go to fn same as sent fn (sent by post go to post )
+			RequestDispatcher dispatcher = request.getRequestDispatcher("user_info_ui.jsp");
+			dispatcher.forward(request, response);
+			ConnectionDB.disconnect();
+		}
 	}
 
 	/**

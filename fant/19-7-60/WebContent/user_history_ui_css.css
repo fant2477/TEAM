@@ -96,7 +96,8 @@
 {height: 500px;}*/
 .col-xs-3
 {
-  height: 530px;
+ /* height: 530px;*/
+  min-height: 530px;
   border-width: 1px;
   /*border-style: dotted;*/
   border-style: none;
