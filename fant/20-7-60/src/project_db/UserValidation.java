@@ -190,6 +190,12 @@ public class UserValidation {
         Log.addLog(Time.currentTime, String.format("%s login fail.", username));
         return false;
     }
+    public static void logout(DocumentManager dm) {
+        Log.addLog(
+                Time.currentTime,
+                String.format("%s logout successfully.", dm.getCurrentUser().getUsername()));
+        dm = null;
+    }
 
     public static boolean isIDTaken(int id) {
         try {

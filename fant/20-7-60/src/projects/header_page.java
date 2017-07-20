@@ -16,6 +16,7 @@ import project_db.DocumentDetail;
 import project_db.DocumentHeader;
 import project_db.DocumentManager;
 import project_db.User;
+import project_db.UserValidation;
 import project_db.View;
 
 /**
@@ -262,6 +263,9 @@ public class header_page extends HttpServlet {
 		} else if (bt.equals("Log Out")) {
 			//Login button was pressed
 			System.out.println("logout was press");
+			
+			UserValidation.logout(doc);
+			
 			change_page = "login_page";
 			from_page = "header_page";
 

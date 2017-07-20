@@ -14,6 +14,7 @@ import project_db.ConnectionDB;
 import project_db.DocumentHeader;
 import project_db.DocumentManager;
 import project_db.User;
+import project_db.UserValidation;
 
 /**
  * Servlet implementation class add_doc_page
@@ -76,6 +77,8 @@ public class add_doc_page extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 		ConnectionDB.connect();
+
+		DocumentManager doc = new DocumentManager(current_user);
 
 		
 		String subject = request.getParameter("subject");// ("inside this") get by name
@@ -163,6 +166,7 @@ public class add_doc_page extends HttpServlet {
 		} else if (bt.equals("Log Out")) {
 				//Login button was pressed
 			System.out.println("logout was press");
+			UserValidation.logout(doc);
 			change_page = "login_page";
 			from_page = "add_doc_page";
 
@@ -178,7 +182,6 @@ public class add_doc_page extends HttpServlet {
 		} else if (bt.equals("Save")) {
 		    //Register button was pressed
 			System.out.println("Save bt was press");
-			DocumentManager doc = new DocumentManager(current_user);
 
 
 			//filee = filee.replace('\\', '/');

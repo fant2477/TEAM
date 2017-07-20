@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import project_db.ConnectionDB;
 import project_db.DocumentHeader;
+import project_db.DocumentManager;
 import project_db.Log;
 import project_db.User;
+import project_db.UserValidation;
 import project_db.View;
 
 /**
@@ -144,6 +146,8 @@ public class history_page extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		ConnectionDB.connect();
 
+		DocumentManager doc = new DocumentManager(current_user);
+
 
 		search_input = (String)request.getParameter("search_input");
 
@@ -238,6 +242,9 @@ public class history_page extends HttpServlet {
 		} else if (bt.equals("Log Out")) {
 			//Login button was pressed
 			System.out.println("logout was press");
+			
+			UserValidation.logout(doc);
+			
 			change_page = "login_page";
 			from_page = "history_page";
 

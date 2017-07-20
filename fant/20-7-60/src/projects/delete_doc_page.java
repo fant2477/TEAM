@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import project_db.ConnectionDB;
 import project_db.DocumentManager;
 import project_db.User;
+import project_db.UserValidation;
 
 /**
  * Servlet implementation class delete_doc_page
@@ -164,6 +165,9 @@ public class delete_doc_page extends HttpServlet {
 		} else if (bt.equals("Log Out")) {
 				//Login button was pressed
 			System.out.println("logout was press");
+			
+			UserValidation.logout(doc);
+			
 			change_page = "login_page";
 			from_page = "add_doc_page";
 

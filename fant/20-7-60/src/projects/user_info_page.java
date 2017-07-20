@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import project_db.ConnectionDB;
+import project_db.DocumentManager;
 import project_db.User;
 import project_db.UserManager;
 import project_db.UserValidation;
@@ -120,6 +121,8 @@ public class user_info_page extends HttpServlet {
 
 				ConnectionDB.connect();
 
+				DocumentManager doc = new DocumentManager(current_user);
+
 
 				String bt = request.getParameter("bt");
 				if (bt == null) {
@@ -197,6 +200,9 @@ public class user_info_page extends HttpServlet {
 				} else if (bt.equals("Log Out")) {
 					//Login button was pressed
 					System.out.println("logout was press");
+					
+					UserValidation.logout(doc);
+					
 					change_page = "login_page";
 					from_page = "user_info_page";
 

@@ -16,6 +16,7 @@ import project_db.DocumentHeader;
 import project_db.DocumentManager;
 import project_db.User;
 import project_db.UserManager;
+import project_db.UserValidation;
 import project_db.View;
 
 /**
@@ -132,6 +133,8 @@ public class user_history_page extends HttpServlet {
 			response.setContentType("text/html;charset=UTF-8");
 			ConnectionDB.connect();
 
+			DocumentManager doc = new DocumentManager(current_user);
+
 
 			search_input = (String)request.getParameter("search_input");
 			String pg_go = request.getParameter("pg_go");
@@ -213,6 +216,9 @@ public class user_history_page extends HttpServlet {
 			} else if (bt.equals("Log Out")) {
 				//Login button was pressed
 				System.out.println("logout was press");
+				
+				UserValidation.logout(doc);
+				
 				change_page = "login_page";
 				from_page = "user_history_page";
 
@@ -268,8 +274,6 @@ public class user_history_page extends HttpServlet {
 			} else if (bt.equals("Delete")) {
 				//Login button was pressed
 				System.out.println("Delete was press");
-
-				DocumentManager doc = new DocumentManager(current_user);
 
 				String[] head_cb =request.getParameterValues("head_cb");
 				
