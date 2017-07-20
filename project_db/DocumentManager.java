@@ -79,11 +79,11 @@ public class DocumentManager {
         return d;
     }
 
-    private static User getCurrentUser() {
+    public User getCurrentUser() {
         return currentUser;
     }
 
-    private DocumentHeader getCurrentHeader() {
+    public DocumentHeader getCurrentHeader() {
         return currentHeader;
     }
 

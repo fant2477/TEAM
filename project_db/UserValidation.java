@@ -191,6 +191,13 @@ public class UserValidation {
         return false;
     }
 
+    public void logout(DocumentManager dm) {
+        Log.addLog(
+                Time.currentTime,
+                String.format("%s logout successfully.", dm.getCurrentUser().getUsername()));
+        dm = null;
+    }
+
     public static boolean isIDTaken(int id) {
         try {
             String sql = String.format("SELECT User_ID FROM Account WHERE User_ID = %d", id);
