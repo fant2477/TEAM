@@ -1,0 +1,147 @@
+@CHARSET "UTF-8";
+
+
+/*.btn-link{
+  border:none;
+  outline:none;
+  background:none;
+  cursor:pointer;
+  color:#0000EE;
+  padding:0;
+  text-decoration:underline;
+  font-family:inherit;
+  font-size:inherit;
+}*/
+
+
+
+
+.btn-link
+  {
+      /*background-color: transparent;*/
+      background-color: 	transparent;
+      /*padding: auto;*/
+      border-width: 0;
+      cursor: none;
+      /*text-decoration: underline;*/
+      float: right;
+      margin-left: 15px;
+      margin-right: 15px;
+      margin-top: 12px;
+  }
+
+#User_info
+{
+  /*height: 30px;
+  width: 30px;*/
+  /*padding-bottom: 10px;
+  margin-bottom: 5px;*/
+  font-size:26px;
+
+}
+
+h1
+{
+  padding-left: 200px;
+  font-family: "GeosansLight";
+}
+
+
+.container
+    {
+  		min-height: 530px;
+       background-color: rgb(214, 214, 194);
+       border-color : rgb(204, 204, 179);
+       border-width : 3px;
+       border-style : outset;
+       border-radius: 10px;
+       font-size: 30px;
+       width: 55%; /*itself*/
+
+       padding-top: 80px;
+  		 padding-left: 90px;
+  		 padding-right: 90px;
+  		 padding-bottom: 30px;
+    }
+
+#search_input
+  {
+    width: 350;
+    font-family: "GeosansLight";
+    font-size: 20px;
+  }
+
+#search_bt
+ {
+ 	width: 100;
+ 	/*font-family: "GeosansLight";
+    font-size: 14px;*/
+ }
+
+/*th
+{
+  background-color: rgb(255, 102, 102);
+}*/
+
+.co {
+    background-color:blue !important;
+}
+.co.th {
+    color:white !important;
+}
+
+
+    p
+    	{
+    		color : rgb(61, 61, 92);
+    		font-family: "GeosansLight";
+    	}
+
+
+
+
+
+  #small
+  {
+  		font-family: "GeosansLight";
+  		font-size:18px;
+      padding-left: 15px;
+  }
+
+  li
+  {
+  		font-size:18px;
+  }
+
+
+  h4
+  {
+  		font-size:20px;
+  }
+
+/*.text-center
+  {
+      background-color: rgb(128, 128, 128);
+  }*/
+/*.paging
+  {
+    background-color: rgb(128, 128, 128);
+  }
+
+  .pagination.paging {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}*/
+
+.pagination pagination-sm.active {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}
+
+.pagination pagination-sm:hover:not(.active) {
+    background-color: #ddd;
+    border-radius: 5px;
+}
